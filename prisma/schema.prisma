@@ -22,7 +22,6 @@ enum PostStatus {
   DELETED
 }
 
-/// add more type
 enum PostType {
   BLOGPOST
   PRODUCT
@@ -35,6 +34,13 @@ enum ProductStatus {
   DRAFT
 }
 
+enum CommentStatus {
+  PUBLISH
+  PENDING
+  REJECTED
+  DELETED
+}
+
 model Users {
   id             String           @id @default(cuid())
   username       String           @unique
@@ -44,10 +50,13 @@ model Users {
   phoneNumber    String?
   photo          String?          @default("https://0.gravatar.com/avatar/me?s=96") @db.Text
   role           Role?            @default(USER)
-  socialAccounts SocialAccounts[]
-  posts          Posts[]
   createdAt      DateTime?        @default(now())
   updatedAt      DateTime         @updatedAt
+  socialAccounts SocialAccounts[]
+  posts          Posts[]
+  comments       Comments[]
+  commentLikes   CommentLikes[]
+  postLikes      PostLikes[]
 }
 
 model SocialAccounts {
@@ -68,11 +77,22 @@ model Posts {
   tags            Tags[]
   categories      Categories[]
   productVariants ProductVariants[]
+  comments        Comments[]
   status          PostStatus?       @default(DRAFT)
   authorId        String?
   author          Users?            @relation(fields: [authorId], references: [id], onDelete: Cascade)
   createdAt       DateTime?         @default(now())
   updatedAt       DateTime          @updatedAt
+  postLikes       PostLikes[]
+}
+
+model PostLikes {
+  id       String  @id @default(cuid())
+  authorId String?
+  author   Users?  @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  like     Boolean
+  postId   String?
+  post     Posts?  @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 model Categories {
@@ -102,4 +122,27 @@ model ProductVariants {
   image       String?       @db.Text
   products    Posts?        @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId   String?
+}
+
+model Comments {
+  id        String         @id @default(cuid())
+  status    CommentStatus? @default(PENDING)
+  body      String?        @db.Text
+  authorId  String?
+  author    Users?         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  postId    String?
+  post      Posts?         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  comments  Comments[]     @relation("CommentReplies")
+  comment   Comments?      @relation("CommentReplies", fields: [commentId], references: [id])
+  commentId String?
+  likes     CommentLikes[]
+}
+
+model CommentLikes {
+  id        String    @id @default(cuid())
+  authorId  String?
+  author    Users?    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  like      Boolean
+  commentId String?
+  comment   Comments? @relation(fields: [commentId], references: [id], onDelete: Cascade)
 }
