@@ -9,32 +9,32 @@ generator client {
   //previewFeatures = ["referentialActions"] // You won't need this in Prisma 3.X or higher.
 }
 
-enum Role {
+enum EnumRole {
   USER
   SELLER
   ADMIN
 }
 
-enum PostStatus {
+enum EnumPostStatus {
   PUBLISH
   DRAFT
   PRIVATE
   DELETED
 }
 
-enum PostType {
+enum EnumPostType {
   BLOGPOST
   PRODUCT
 }
 
-enum ProductStatus {
+enum EnumProductStatus {
   OUTOFSTOCK
   DELETED
   AVAILABLE
   DRAFT
 }
 
-enum CommentStatus {
+enum EnumCommentStatus {
   PUBLISH
   PENDING
   REJECTED
@@ -42,14 +42,14 @@ enum CommentStatus {
 }
 
 model Users {
-  id             String           @id @default(cuid())
+  id             Int              @id @default(autoincrement())
   username       String           @unique
   password       String
   email          String           @unique
   emailVerified  Boolean?         @default(false)
   phoneNumber    String?
   photo          String?          @default("https://0.gravatar.com/avatar/me?s=96") @db.Text
-  role           Role?            @default(USER)
+  role           EnumRole?        @default(USER)
   createdAt      DateTime?        @default(now())
   updatedAt      DateTime         @updatedAt
   socialAccounts SocialAccounts[]
@@ -60,17 +60,17 @@ model Users {
 }
 
 model SocialAccounts {
-  id           String  @id @default(cuid())
+  id           Int    @id @default(autoincrement())
   provider     String
-  token        String  @db.Text
-  refreshToken String  @db.Text
-  userId       String?
-  user         Users?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token        String @db.Text
+  refreshToken String @db.Text
+  userId       Int?
+  user         Users? @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Posts {
-  id              String            @id @default(cuid())
-  type            PostType          @default(BLOGPOST)
+  id              Int               @id @default(autoincrement())
+  type            EnumPostType      @default(BLOGPOST)
   name            String
   image           String?           @db.Text
   body            String?           @db.LongText
@@ -78,8 +78,8 @@ model Posts {
   categories      Categories[]
   productVariants ProductVariants[]
   comments        Comments[]
-  status          PostStatus?       @default(DRAFT)
-  authorId        String?
+  status          EnumPostStatus?   @default(DRAFT)
+  authorId        Int?
   author          Users?            @relation(fields: [authorId], references: [id], onDelete: Cascade)
   createdAt       DateTime?         @default(now())
   updatedAt       DateTime          @updatedAt
@@ -87,62 +87,62 @@ model Posts {
 }
 
 model PostLikes {
-  id       String  @id @default(cuid())
-  authorId String?
+  id       Int     @id @default(autoincrement())
+  authorId Int?
   author   Users?  @relation(fields: [authorId], references: [id], onDelete: Cascade)
   like     Boolean
-  postId   String?
+  postId   Int?
   post     Posts?  @relation(fields: [postId], references: [id], onDelete: Cascade)
 }
 
 model Categories {
-  id          String   @id @default(cuid())
-  type        PostType @default(BLOGPOST)
+  id          Int          @id @default(autoincrement())
+  type        EnumPostType @default(BLOGPOST)
   name        String
-  description String?  @db.Text
+  description String?      @db.Text
   posts       Posts[]
 }
 
 model Tags {
-  id          String   @id @default(cuid())
-  type        PostType @default(BLOGPOST)
+  id          Int          @id @default(autoincrement())
+  type        EnumPostType @default(BLOGPOST)
   name        String
-  description String?  @db.Text
+  description String?      @db.Text
   posts       Posts[]
 }
 
 model ProductVariants {
-  id          String        @id @default(cuid())
-  type        PostType      @default(PRODUCT)
-  status      ProductStatus @default(DRAFT)
+  id          Int               @id @default(autoincrement())
+  type        EnumPostType      @default(PRODUCT)
+  status      EnumProductStatus @default(DRAFT)
   name        String
-  description String        @db.Text
-  price       Int?          @default(0)
-  stock       Int?          @default(0)
-  image       String?       @db.Text
-  products    Posts?        @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId   String?
+  description String            @db.Text
+  price       Int?              @default(0)
+  stock       Int?              @default(0)
+  image       String?           @db.Text
+  products    Posts?            @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId   Int?
 }
 
 model Comments {
-  id        String         @id @default(cuid())
-  status    CommentStatus? @default(PENDING)
-  body      String?        @db.Text
-  authorId  String?
-  author    Users?         @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  postId    String?
-  post      Posts?         @relation(fields: [postId], references: [id], onDelete: Cascade)
-  comments  Comments[]     @relation("CommentReplies")
-  comment   Comments?      @relation("CommentReplies", fields: [commentId], references: [id])
-  commentId String?
+  id        Int                @id @default(autoincrement())
+  status    EnumCommentStatus? @default(PENDING)
+  body      String?            @db.Text
+  authorId  Int?
+  author    Users?             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  postId    Int?
+  post      Posts?             @relation(fields: [postId], references: [id], onDelete: Cascade)
+  comments  Comments[]         @relation("CommentReplies")
+  comment   Comments?          @relation("CommentReplies", fields: [commentId], references: [id])
+  commentId Int?
   likes     CommentLikes[]
 }
 
 model CommentLikes {
-  id        String    @id @default(cuid())
-  authorId  String?
+  id        Int       @id @default(autoincrement())
+  authorId  Int?
   author    Users?    @relation(fields: [authorId], references: [id], onDelete: Cascade)
   like      Boolean
-  commentId String?
+  commentId Int?
   comment   Comments? @relation(fields: [commentId], references: [id], onDelete: Cascade)
 }
