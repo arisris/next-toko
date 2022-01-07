@@ -2,6 +2,7 @@ import Link from "next/link";
 import clsx from "clsx";
 import SVGRaw from "@/components/Icon/SVGRaw";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 
 export default function FrontPageAuthMenu() {
   const [open, setOpen] = useState(false);
@@ -16,23 +17,21 @@ export default function FrontPageAuthMenu() {
       </button>
       <div
         className={clsx(
-          "w-48 lg:flex gap-0 lg:gap-2 items-center absolute lg:relative flex-col lg:flex-row right-0 lg:inset-x-auto bg-white lg:bg-transparent py-2 lg:py-0",
+          "w-48 lg:flex gap-0 lg:gap-2 items-center absolute lg:relative flex-col lg:flex-row right-0 lg:inset-x-auto bg-white lg:bg-transparent py-2 lg:py-0 rounded-md lg:rounded-none",
           {
             hidden: !open,
             flex: open
           }
         )}
       >
-        <Link href="/auth/register">
+        {/* <Link href="/auth/register">
           <a className="w-full lg:hover:bg-gray-800 lg:bg-gray-700 lg:text-center lg:text-white p-2 lg:p-1 rounded-md">
             Register
           </a>
-        </Link>
-        <Link href="/auth/login">
-          <a className="w-full lg:hover:bg-red-700 lg:bg-red-600 lg:text-center lg:text-white p-2 lg:p-1 rounded-md">
-            Login
-          </a>
-        </Link>
+        </Link> */}
+        <a href="#login" onClick={e => (e.preventDefault(), signIn())} className="w-full lg:hover:bg-red-700 lg:bg-red-600 lg:text-center lg:text-white p-2 lg:p-1 rounded-md">
+          Login
+        </a>
       </div>
     </div>
   );

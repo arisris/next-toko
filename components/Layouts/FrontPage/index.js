@@ -8,6 +8,7 @@ import FrontPageSearchForm from "./SearchForm";
 import FrontPageAuthMenu from "./AuthMenu";
 import FrontPageFooter from "./Footer";
 import FrontPageUserMenu from "./UserMenu";
+import { useSession } from "next-auth/react";
 
 /**
  * @param {{ children: JSX.Element, title?: string, header?: JSX.Element | (e: { isNavHidden: boolean }) => any, headerClass?: string }} param0
@@ -21,6 +22,9 @@ export default function FrontPageLayout({
   /** @type {import('react').MutableRefObject<HTMLElement>} */
   const navbarRef = useRef();
   const [isNavHidden, setIsNavHidden] = useState(false);
+  const session = useSession();
+
+  //console.log(session)
 
   useEffect(() => {
     if (navbarRef?.current?.style) {
@@ -70,8 +74,7 @@ export default function FrontPageLayout({
               <hr className="hidden md:block w-[1px] h-8 bg-gray-200" />
               {/* Regular Menu Icon */}
               <div className="flex gap-2 text-sm items-center">
-                <FrontPageAuthMenu />
-                {/* {session.status === "authenticated" ? <FrontPageUserMenu /> : <FrontPageAuthMenu /> } */}
+                {session.status === "authenticated" ? <FrontPageUserMenu /> : <FrontPageAuthMenu /> }
               </div>
             </div>
           </div>

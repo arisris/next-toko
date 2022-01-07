@@ -1,4 +1,4 @@
-const { PrismaClient, PostType, PostStatus } = require("@prisma/client");
+const { PrismaClient, EnumPostType, EnumPostStatus } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 const faker = require("faker");
 const prisma = new PrismaClient();
@@ -7,11 +7,11 @@ async function main() {
   await prisma.categories.createMany({
     data: [
       {
-        type: PostType.BLOGPOST,
+        type: EnumPostType.BLOGPOST,
         name: "Uncategorized"
       },
       {
-        type: PostType.PRODUCT,
+        type: EnumPostType.PRODUCT,
         name: "Uncategorized"
       }
     ]
@@ -19,11 +19,11 @@ async function main() {
   await prisma.tags.createMany({
     data: [
       {
-        type: PostType.BLOGPOST,
+        type: EnumPostType.BLOGPOST,
         name: "default"
       },
       {
-        type: PostType.PRODUCT,
+        type: EnumPostType.PRODUCT,
         name: "default"
       }
     ]
@@ -31,8 +31,8 @@ async function main() {
 
   /** @returns {import("@prisma/client").Posts} */
   const createBlogPost = () => ({
-    type: PostType.BLOGPOST,
-    status: PostStatus.PUBLISH,
+    type: EnumPostType.BLOGPOST,
+    status: EnumPostStatus.PUBLISH,
     name: faker.lorem.sentence(4),
     body: faker.lorem.paragraph(10),
     image: faker.image.fashion(640, 360)
@@ -40,8 +40,8 @@ async function main() {
 
   /** @returns {import("@prisma/client").Posts} */
   const createProductPost = () => ({
-    type: PostType.PRODUCT,
-    status: PostStatus.PUBLISH,
+    type: EnumPostType.PRODUCT,
+    status: EnumPostStatus.PUBLISH,
     name: faker.lorem.sentence(4),
     body: faker.lorem.paragraph(10),
     image: faker.image.fashion(300, 300)
@@ -64,7 +64,7 @@ async function main() {
   });
 
   const blogPosts = await prisma.posts.findMany({
-    where: { type: PostType.BLOGPOST },
+    where: { type: EnumPostType.BLOGPOST },
     select: { id: true }
   });
   for (let { id } of blogPosts) {
@@ -73,12 +73,12 @@ async function main() {
       data: {
         tags: {
           connect: tags
-            .filter((t) => t.type === PostType.BLOGPOST)
+            .filter((t) => t.type === EnumPostType.BLOGPOST)
             .map(({ id }) => ({ id }))
         },
         categories: {
           connect: categories
-            .filter((t) => t.type === PostType.BLOGPOST)
+            .filter((t) => t.type === EnumPostType.BLOGPOST)
             .map(({ id }) => ({ id }))
         }
       }
@@ -86,7 +86,7 @@ async function main() {
   }
 
   const productPosts = await prisma.posts.findMany({
-    where: { type: PostType.PRODUCT },
+    where: { type: EnumPostType.PRODUCT },
     select: { id: true }
   });
   for (let { id } of productPosts) {
@@ -95,12 +95,12 @@ async function main() {
       data: {
         tags: {
           connect: tags
-            .filter((t) => t.type === PostType.PRODUCT)
+            .filter((t) => t.type === EnumPostType.PRODUCT)
             .map(({ id }) => ({ id }))
         },
         categories: {
           connect: categories
-            .filter((t) => t.type === PostType.PRODUCT)
+            .filter((t) => t.type === EnumPostType.PRODUCT)
             .map(({ id }) => ({ id }))
         }
       }

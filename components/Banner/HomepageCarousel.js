@@ -38,16 +38,16 @@ export default function HomepageCarousel(props = {}) {
     >
       <CarouselItem>
         <Image
-          width={1360}
-          height={310}
+          width={1700}
+          height={360}
           priority={true}
           src="/assets/banner/74d32a7f-6a2d-49a3-b325-114de4b055c5.jpg"
         />
       </CarouselItem>
       <CarouselItem>
         <Image
-          width={1360}
-          height={310}
+          width={1700}
+          height={360}
           priority={true}
           src="/assets/banner/d8a90cd0-bfa4-47e2-b288-3afd54e0cbea.jpg"
         />
