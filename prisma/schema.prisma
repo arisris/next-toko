@@ -1,0 +1,105 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  //shadowDatabaseUrl = env("SHADOW_DATABASE_URL") // Only needed when using a cloud provider that doesn't support the creation of new databases, like Heroku. Learn more: https://pris.ly/migrate-shadow
+}
+
+generator client {
+  provider = "prisma-client-js"
+  //previewFeatures = ["referentialActions"] // You won't need this in Prisma 3.X or higher.
+}
+
+enum Role {
+  USER
+  SELLER
+  ADMIN
+}
+
+enum PostStatus {
+  PUBLISH
+  DRAFT
+  PRIVATE
+  DELETED
+}
+
+/// add more type
+enum PostType {
+  BLOGPOST
+  PRODUCT
+}
+
+enum ProductStatus {
+  OUTOFSTOCK
+  DELETED
+  AVAILABLE
+  DRAFT
+}
+
+model Users {
+  id             String           @id @default(cuid())
+  username       String           @unique
+  password       String
+  email          String           @unique
+  emailVerified  Boolean?         @default(false)
+  phoneNumber    String?
+  photo          String?          @default("https://0.gravatar.com/avatar/me?s=96") @db.Text
+  role           Role?            @default(USER)
+  socialAccounts SocialAccounts[]
+  posts          Posts[]
+  createdAt      DateTime?        @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model SocialAccounts {
+  id           String  @id @default(cuid())
+  provider     String
+  token        String  @db.Text
+  refreshToken String  @db.Text
+  userId       String?
+  user         Users?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Posts {
+  id              String            @id @default(cuid())
+  type            PostType          @default(BLOGPOST)
+  name            String
+  image           String?           @db.Text
+  body            String?           @db.LongText
+  tags            Tags[]
+  categories      Categories[]
+  productVariants ProductVariants[]
+  status          PostStatus?       @default(DRAFT)
+  authorId        String?
+  author          Users?            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt       DateTime?         @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model Categories {
+  id          String   @id @default(cuid())
+  type        PostType @default(BLOGPOST)
+  name        String
+  description String?  @db.Text
+  posts       Posts[]
+}
+
+model Tags {
+  id          String   @id @default(cuid())
+  type        PostType @default(BLOGPOST)
+  name        String
+  description String?  @db.Text
+  posts       Posts[]
+}
+
+model ProductVariants {
+  id          String        @id @default(cuid())
+  type        PostType      @default(PRODUCT)
+  status      ProductStatus @default(DRAFT)
+  name        String
+  description String        @db.Text
+  price       Int?          @default(0)
+  stock       Int?          @default(0)
+  image       String?       @db.Text
+  products    Posts?        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId   String?
+}

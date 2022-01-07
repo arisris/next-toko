@@ -1,0 +1,68 @@
+{
+  "name": "next-toko",
+  "version": "1.0.0",
+  "description": "My expreiment using next.js",
+  "main": "index.js",
+  "keywords": [
+    "Vercel",
+    "Jamstack",
+    "Serverless",
+    "Next.js"
+  ],
+  "author": "Aris Riswanto",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arisris/next-toko.git"
+  },
+  "bugs": {
+    "url": "https://github.com/arisris/next-toko/issues"
+  },
+  "homepage": "https://github.com/arisris/next-toko#readme",
+  "scripts": {
+    "start": "next start",
+    "dev": "next dev",
+    "build": "next build",
+    "export": "next export"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.4.2",
+    "@prisma/client": "^3.7.0",
+    "@reduxjs/toolkit": "^1.6.2",
+    "ahooks": "^2.10.12",
+    "bcryptjs": "^2.4.3",
+    "clsx": "^1.1.1",
+    "color": "^4.1.0",
+    "iron-session": "^6.0.5",
+    "next": "^12.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-hook-form": "^7.19.1",
+    "react-icons": "^4.3.1",
+    "react-redux": "^7.2.5",
+    "react-slick": "^0.28.1",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.3.4",
+    "@tailwindcss/typography": "^0.4.1",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/faker": "^5.5.9",
+    "@types/oauth2-server": "^3.0.13",
+    "autoprefixer": "^10.2.5",
+    "faker": "^5.5.3",
+    "postcss": "^8.2.10",
+    "prettier": "^2.5.1",
+    "prisma": "^3.7.0",
+    "tailwindcss": "^2.1.1"
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "singleQuote": false,
+    "tabWidth": 2,
+    "trailingComma": "none"
+  }
+}
