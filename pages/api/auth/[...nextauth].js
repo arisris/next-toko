@@ -30,21 +30,12 @@ export default async function handler(req, res) {
           if (isEmail(email)) {
             where.email = email;
           } else {
-            where.username = email;
+            where.name = email;
           }
           const user = await prisma.users.findFirst({ where });
           if (user?.password) {
             let matchedPassword = await bcrypt.compare(password, user.password);
-            if (matchedPassword) {
-              /** @type {import("next-auth").User} */
-              let out = {
-                id: user.id,
-                name: user.username,
-                email: user.email,
-                image: user.photo
-              };
-              return out;
-            }
+            if (matchedPassword) return user;
           }
           return null;
         }

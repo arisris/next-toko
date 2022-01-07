@@ -1,7 +1,34 @@
-const { PrismaClient, EnumPostType, EnumPostStatus } = require("@prisma/client");
+const {
+  PrismaClient,
+  EnumPostType,
+  EnumPostStatus,
+  EnumRole
+} = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 const faker = require("faker");
 const prisma = new PrismaClient();
+
+const mapId = ({ id }) => ({ id });
+const filterBlogPostType = ({ type }) => type === EnumPostType.BLOGPOST;
+const filterProductPostType = ({ type }) => type === EnumPostType.PRODUCT;
+
+/** @returns {import("@prisma/client").Posts} */
+const createBlogPost = () => ({
+  type: EnumPostType.BLOGPOST,
+  status: EnumPostStatus.PUBLISH,
+  name: faker.lorem.sentence(4),
+  body: faker.lorem.paragraph(10),
+  image: faker.image.fashion(640, 360)
+});
+
+/** @returns {import("@prisma/client").Posts} */
+const createProductPost = () => ({
+  type: EnumPostType.PRODUCT,
+  status: EnumPostStatus.PUBLISH,
+  name: faker.lorem.sentence(4),
+  body: faker.lorem.paragraph(10),
+  image: faker.image.fashion(300, 300)
+});
 
 async function main() {
   await prisma.categories.createMany({
@@ -29,24 +56,6 @@ async function main() {
     ]
   });
 
-  /** @returns {import("@prisma/client").Posts} */
-  const createBlogPost = () => ({
-    type: EnumPostType.BLOGPOST,
-    status: EnumPostStatus.PUBLISH,
-    name: faker.lorem.sentence(4),
-    body: faker.lorem.paragraph(10),
-    image: faker.image.fashion(640, 360)
-  });
-
-  /** @returns {import("@prisma/client").Posts} */
-  const createProductPost = () => ({
-    type: EnumPostType.PRODUCT,
-    status: EnumPostStatus.PUBLISH,
-    name: faker.lorem.sentence(4),
-    body: faker.lorem.paragraph(10),
-    image: faker.image.fashion(300, 300)
-  });
-
   await prisma.posts.createMany({
     data: [
       ...Array(10).fill(null).map(createBlogPost),
@@ -72,14 +81,10 @@ async function main() {
       where: { id },
       data: {
         tags: {
-          connect: tags
-            .filter((t) => t.type === EnumPostType.BLOGPOST)
-            .map(({ id }) => ({ id }))
+          connect: tags.filter(filterBlogPostType).map(mapId)
         },
         categories: {
-          connect: categories
-            .filter((t) => t.type === EnumPostType.BLOGPOST)
-            .map(({ id }) => ({ id }))
+          connect: categories.filter(filterBlogPostType).map(mapId)
         }
       }
     });
@@ -94,35 +99,31 @@ async function main() {
       where: { id },
       data: {
         tags: {
-          connect: tags
-            .filter((t) => t.type === EnumPostType.PRODUCT)
-            .map(({ id }) => ({ id }))
+          connect: tags.filter(filterProductPostType).map(mapId)
         },
         categories: {
-          connect: categories
-            .filter((t) => t.type === EnumPostType.PRODUCT)
-            .map(({ id }) => ({ id }))
+          connect: categories.filter(filterProductPostType).map(mapId)
         }
       }
     });
   }
 
+  // create admin and assign it example posts
   await prisma.users.create({
     data: {
-      username: "admin",
+      name: "admin",
       email: "admin@example.net",
       password: bcrypt.hashSync("password123", 10),
       phoneNumber: "082240183482",
+      role: EnumRole.ADMIN,
       posts: {
-        connect: [
-          ...blogPosts.map((i) => ({ id: i.id })),
-          ...productPosts.map((i) => ({ id: i.id }))
-        ]
+        connect: [...blogPosts.map(mapId), ...productPosts.map(mapId)]
       }
     }
   });
 }
 
+// run the seed Promise
 main()
   .catch((e) => {
     console.error(e);
