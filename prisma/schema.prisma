@@ -25,6 +25,7 @@ enum EnumPostStatus {
 enum EnumPostType {
   BLOGPOST
   PRODUCT
+  PAGES
 }
 
 enum EnumProductStatus {
@@ -57,6 +58,8 @@ model Users {
   comments       Comments[]
   commentLikes   CommentLikes[]
   postLikes      PostLikes[]
+  wallet         Wallet?          @relation(fields: [walletId], references: [id])
+  walletId       Int?
 }
 
 model SocialAccounts {
@@ -113,13 +116,15 @@ model Tags {
 
 model ProductVariants {
   id          Int               @id @default(autoincrement())
-  type        EnumPostType      @default(PRODUCT)
+  type        String?           @default("default")
   status      EnumProductStatus @default(DRAFT)
+  isMain      Boolean?          @default(false)
   name        String
   description String            @db.Text
   price       Int?              @default(0)
   stock       Int?              @default(0)
   image       String?           @db.Text
+  soldCount   Int?              @default(0)
   products    Posts?            @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId   Int?
 }
@@ -145,4 +150,35 @@ model CommentLikes {
   like      Boolean
   commentId Int?
   comment   Comments? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+}
+
+// todo wallet system
+model Wallet {
+  id         Int               @id @default(autoincrement())
+  users      Users[]
+  mutations  WalletMutations[]
+  amount     Int?              @default(0)
+  isVerified Boolean?          @default(false)
+  verifiedAt DateTime?
+  createdAt  DateTime?         @default(now())
+  updatedAt  DateTime?         @updatedAt
+}
+
+model WalletMutations {
+  id                   Int                 @id @default(autoincrement())
+  type                 WalletMutationType? @relation(fields: [walletMutationTypeId], references: [id])
+  walletId             Int?
+  wallet               Wallet?             @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  amount               Int?                @default(0)
+  isVerified           Boolean?            @default(false)
+  verifiedAt           DateTime?
+  createdAt            DateTime?           @default(now())
+  updatedAt            DateTime?           @updatedAt
+  walletMutationTypeId Int?
+}
+
+model WalletMutationType {
+  id              Int               @id @default(autoincrement())
+  name            String
+  walletMutations WalletMutations[]
 }
