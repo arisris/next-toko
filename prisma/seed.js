@@ -25,8 +25,8 @@ const createBlogPost = () => ({
 const createProductPost = () => ({
   type: EnumPostType.PRODUCT,
   status: EnumPostStatus.PUBLISH,
-  name: faker.lorem.sentence(4),
-  body: faker.lorem.paragraph(10),
+  name: faker.commerce.productName(),
+  body: faker.commerce.productDescription(),
   image: faker.image.fashion(300, 300)
 });
 
@@ -108,16 +108,28 @@ async function main() {
     });
   }
 
+  const wallet = await prisma.wallet.create({
+    data: {
+      amount: 0,
+      isVerified: true,
+      verifiedAt: new Date()
+    }
+  })
+
   // create admin and assign it example posts
   await prisma.users.create({
     data: {
       name: "admin",
       email: "admin@example.net",
       password: bcrypt.hashSync("password123", 10),
-      phoneNumber: "082240183482",
+      phoneNumber: "081234567890",
       role: EnumRole.ADMIN,
+      emailVerified: true,
       posts: {
         connect: [...blogPosts.map(mapId), ...productPosts.map(mapId)]
+      },
+      wallet: {
+        connect: { id: wallet.id }
       }
     }
   });

@@ -42,6 +42,13 @@ enum EnumCommentStatus {
   DELETED
 }
 
+enum EnumWalletMutationType {
+  TOPUP
+  TRANSFER
+  PURCHASE
+  DEFAULT
+}
+
 model Users {
   id             Int              @id @default(autoincrement())
   name           String           @unique
@@ -74,7 +81,7 @@ model SocialAccounts {
 model Posts {
   id              Int               @id @default(autoincrement())
   type            EnumPostType      @default(BLOGPOST)
-  name            String
+  name            String            @db.VarChar(255)
   image           String?           @db.Text
   body            String?           @db.LongText
   tags            Tags[]
@@ -119,12 +126,11 @@ model ProductVariants {
   type        String?           @default("default")
   status      EnumProductStatus @default(DRAFT)
   isMain      Boolean?          @default(false)
-  name        String
+  name        String            @db.VarChar(255)
   description String            @db.Text
   price       Int?              @default(0)
   stock       Int?              @default(0)
   image       String?           @db.Text
-  soldCount   Int?              @default(0)
   products    Posts?            @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId   Int?
 }
@@ -165,20 +171,13 @@ model Wallet {
 }
 
 model WalletMutations {
-  id                   Int                 @id @default(autoincrement())
-  type                 WalletMutationType? @relation(fields: [walletMutationTypeId], references: [id])
-  walletId             Int?
-  wallet               Wallet?             @relation(fields: [walletId], references: [id], onDelete: Cascade)
-  amount               Int?                @default(0)
-  isVerified           Boolean?            @default(false)
-  verifiedAt           DateTime?
-  createdAt            DateTime?           @default(now())
-  updatedAt            DateTime?           @updatedAt
-  walletMutationTypeId Int?
-}
-
-model WalletMutationType {
-  id              Int               @id @default(autoincrement())
-  name            String
-  walletMutations WalletMutations[]
+  id         Int                    @id @default(autoincrement())
+  type       EnumWalletMutationType @default(DEFAULT)
+  walletId   Int?
+  wallet     Wallet?                @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  amount     Int?                   @default(0)
+  isVerified Boolean?               @default(false)
+  verifiedAt DateTime?
+  createdAt  DateTime?              @default(now())
+  updatedAt  DateTime?              @updatedAt
 }
