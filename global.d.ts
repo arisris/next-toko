@@ -20,3 +20,14 @@ declare module "next/app" {
     };
   };
 }
+
+declare global {
+  type ResolverContext = {
+    prisma: PrismaClient,
+    session: Session,
+    req: NextApiRequest,
+    res: NextApiResponse
+  }
+  type ResolverCallback<ParentType = undefined> = (parent: ParentType, args: Record<any, any>, context: ResolverContext) => any
+  type Resolvers<ParentType = undefined> = Record<string, ResolverCallback<ParentType>>
+}

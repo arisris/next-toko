@@ -1,13 +1,12 @@
-import prisma from "@/libs/prisma";
 import { graphqlHTTP } from "express-graphql";
-import schema from "@/libs/graphql";
 import { getSession } from "next-auth/react";
+import prisma from "@/libs/prisma";
+import schema from "@/graphql/index"
 export const config = {
   api: {
     bodyParser: false
   }
 };
-
 /** @type {import("next").NextApiHandler} */
 export default async function handler(req, res) {
   const session = await getSession({ req });

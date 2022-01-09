@@ -8,8 +8,5 @@
       "@/redux/*": ["redux/*"],
       "@/styles/*": ["styles/*"]
     }
-  },
-  "exclude": [
-    "./node_modules/"
-  ]
+  }
 }
