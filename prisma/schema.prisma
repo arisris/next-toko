@@ -37,7 +37,7 @@ enum EnumProductStatus {
 
 enum EnumCommentStatus {
   PUBLISH
-  PENDING
+  PENDING 
   REJECTED
   DELETED
 }
