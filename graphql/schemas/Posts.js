@@ -1,3 +1,4 @@
+import { EnumPostStatus, EnumPostType } from "@prisma/client";
 const schema = `#graphql
 type Posts {
   id: Int!
@@ -15,20 +16,60 @@ type Posts {
   comments: [Comments]
   postLikes: [PostLikes]
 }
+
+input InputPostsQueryOrdering {
+  id: EnumOrderingName
+  name: EnumOrderingName
+  createdAt: EnumOrderingName
+  updatedAt: EnumOrderingName
+}
+
+input InputPostsFilter {
+  type: EnumPostType
+  status: EnumPostStatus
+}
+
 extend type Query {
-  post(id: Int!): Posts
+  getPost(id: Int!): Posts
+  listPosts(take: Int! skip: Int filter: InputPostsFilter, status: EnumPostStatus orderBy: InputPostsQueryOrdering): [Posts]
+}
+
+extend type Mutation {
+  createPost(payload: UserInputPayload): Posts
+  updatePost(id: Int! payload: UserInputPayload): Posts
+  deletePost(id: Int!): Boolean
 }
 `;
 
 const resolvers = {
   /** @type {Resolvers<import("@prisma/client").Posts>} */
   Query: {
-    post(_parent, args, ctx) {
-      //console.log(ctx.session);
-      return ctx.prisma.posts.findUnique({ where: { id: args.id } });
+    getPost(_parent, { id }, ctx) {
+      return ctx.prisma.posts.findUnique({ where: { id } });
+    },
+    listPosts(_parent, { take, skip, filter, orderBy }, ctx) {
+      const where = {
+        status: EnumPostStatus.PUBLISH // todo
+      };
+
+      if (filter?.type) where.type = filter.type;
+      if (filter?.status) where.status = filter.status;
+
+      return ctx.prisma.posts.findMany({ where, take, skip, orderBy });
     }
   },
-  /** @type {Resolvers<import("@prisma/client").Posts>} */
+  Mutation: {
+    createPost(_parent, args, ctx) {
+      return null;
+    },
+    updatePost(_parent, args, ctx) {
+      return null;
+    },
+    deletePost(_parent, args, ctx) {
+      return null;
+    }
+  },
+  /** @type { Resolvers<import("@prisma/client").Posts> } */
   Posts: {
     author(parent, _args, ctx) {
       return ctx.prisma.users.findUnique({

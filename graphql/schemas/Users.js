@@ -46,6 +46,12 @@ const resolvers = {
   Query: {
     getUser(_, args, ctx) {
       return ctx.prisma.users.findUnique({ where: { id: args.id } });
+    },
+    listUser(_, { take, skip }, ctx) {
+      return ctx.prisma.users.findMany({
+        take,
+        skip
+      });
     }
   },
   /** @type {Resolvers} */

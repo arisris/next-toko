@@ -1,4 +1,8 @@
 export default `#graphql
+enum EnumOrderingName {
+  asc
+  desc
+}
 enum EnumRole {
   USER
   SELLER
