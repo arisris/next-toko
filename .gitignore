@@ -4,6 +4,7 @@ node_modules/
 out/
 .bak/
 prisma/migrations
+nexus/generated
 
 #files
 .env

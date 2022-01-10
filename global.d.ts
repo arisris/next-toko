@@ -1,4 +1,4 @@
-import type { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import type {
   NextApiRequest,
   NextApiResponse,
@@ -21,13 +21,9 @@ declare module "next/app" {
   };
 }
 
-declare global {
-  type ResolverContext = {
-    prisma: PrismaClient,
-    session: Session,
-    req: NextApiRequest,
-    res: NextApiResponse
-  }
-  type ResolverCallback<ParentType = undefined> = (parent: ParentType, args: Record<any, any>, context: ResolverContext) => any
-  type Resolvers<ParentType = undefined> = Record<string, ResolverCallback<ParentType>>
+export type ContextTypeObject = {
+  req: NextApiRequest
+  res: NextApiResponse,
+  session: Session,
+  prisma: PrismaClient
 }

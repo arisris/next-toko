@@ -4,9 +4,10 @@
     "paths": {
       "@/components/*": ["components/*"],
       "@/libs/*": ["libs/*"],
-      "@/graphql/*": ["graphql/*"],
+      "@/nexus/*": ["nexus/*"],
       "@/redux/*": ["redux/*"],
       "@/styles/*": ["styles/*"]
     }
-  }
+  },
+  "exclude": ["node_modules", ".bak"]
 }
