@@ -7,6 +7,7 @@ type Users {
   phoneNumber: String
   image: String
   role: EnumRole
+  status: EnumUserStatus
   createdAt: DateTime
   updatedAt: DateTime
   posts: [Posts]
@@ -16,9 +17,53 @@ type Users {
   commentLike: [CommentsLike]
   wallet: Wallet
 }
+
+input UserInputPayload {
+  name: String
+  email: String
+  emailVerified: Boolean
+  password: String
+  phoneNumber: String
+  image: String
+  role: EnumRole
+  status: EnumUserStatus
+}
+
+extend type Query {
+  getUser(id: Int!): Users!
+  listUser(take: Int, skip: Int): [Users]
+}
+
+extend type Mutation {
+  createUser(payload: UserInputPayload): Users
+  updateUser(id: Int! payload: UserInputPayload): Users
+  deleteUser(id: Int!): Boolean
+}
 `;
-/** @type {Resolvers<import("@prisma/client").Users>} */
+
 const resolvers = {
+  /** @type {Resolvers} */
+  Query: {
+    getUser(_, args, ctx) {
+      return ctx.prisma.users.findUnique({ where: { id: args.id } });
+    }
+  },
+  /** @type {Resolvers} */
+  Mutation: {
+    createUser(_, args, ctx) {
+      // todo
+      return null;
+    },
+    updateUser(_, { id, payload }, ctx) {
+      if (!ctx.session?.user?.id) throw new Error("You are not loggedIn");
+      console.log(id);
+      return null;
+    },
+    deleteUser(_, args, ctx) {
+      // todo
+      return null;
+    }
+  },
   /** @type {Resolvers<import("@prisma/client").Users>} */
   Users: {
     posts(parent, _args, ctx) {

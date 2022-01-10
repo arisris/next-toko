@@ -7,6 +7,7 @@ type Categories {
   posts: [Posts]
 }
 `;
+
 const resolvers = {
   /** @type {Resolvers<import("@prisma/client").Categories>} */
   Categories: {
@@ -24,6 +25,5 @@ const resolvers = {
     }
   }
 };
-
 
 export default { schema, resolvers };

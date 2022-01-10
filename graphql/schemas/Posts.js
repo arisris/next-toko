@@ -24,7 +24,7 @@ const resolvers = {
   /** @type {Resolvers<import("@prisma/client").Posts>} */
   Query: {
     post(_parent, args, ctx) {
-      console.log(args);
+      //console.log(ctx.session);
       return ctx.prisma.posts.findUnique({ where: { id: args.id } });
     }
   },

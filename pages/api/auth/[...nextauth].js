@@ -1,8 +1,8 @@
-import NextAuth from "next-auth"
+import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import prisma from "@/libs/prisma";
 import isEmail from "validator/lib/isEmail";
-import { Prisma } from "@prisma/client";
+import { EnumRole, Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 /** @type {import("next").NextApiHandler} */
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
             placeholder: "Password"
           }
         },
-        async authorize({email, password}, req) {
+        async authorize({ email, password }, req) {
           /** @type { Prisma.UsersWhereInput } */
           let where = {};
           if (isEmail(email)) {
@@ -43,11 +43,24 @@ export default async function handler(req, res) {
     ],
     callbacks: {
       async session({ session, token, user }) {
-        if (token?.userId && session.user) session.user.id = token.userId;
+        if (session.user) {
+          if (token?.userId) session.user.id = token.userId;
+          const userData = await prisma.users.findUnique({
+            where: { id: session.user.id },
+            select: {
+              role: true
+            }
+          });
+          if (userData?.role) session.user.role = userData.role;
+        }
+        //console.log(session)
         return session;
       },
       async jwt({ token, user, account, profile, isNewUser }) {
-        if (user?.id) token.userId = user.id;
+        if (user?.id) {
+          // invoked the first time user signIn save it to token object
+          token.userId = user.id;
+        }
         return token;
       }
     },

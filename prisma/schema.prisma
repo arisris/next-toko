@@ -9,6 +9,12 @@ generator client {
   //previewFeatures = ["referentialActions"] // You won't need this in Prisma 3.X or higher.
 }
 
+enum EnumUserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
 enum EnumRole {
   USER
   SELLER
@@ -54,6 +60,7 @@ model Users {
   name           String           @unique
   password       String
   email          String           @unique
+  status         EnumUserStatus   @default(ACTIVE)
   emailVerified  Boolean?         @default(false)
   phoneNumber    String?
   image          String?          @default("https://0.gravatar.com/avatar/me?s=96") @db.Text

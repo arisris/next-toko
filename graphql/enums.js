@@ -4,7 +4,11 @@ enum EnumRole {
   SELLER
   ADMIN
 }
-
+enum EnumUserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
 enum EnumPostStatus {
   PUBLISH
   DRAFT
