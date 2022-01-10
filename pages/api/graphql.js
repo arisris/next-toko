@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     prisma
   }
   const middleware = graphqlHTTP({
-    schema,
+    schema: schema(),
     graphiql: process.env.NODE_ENV !== "production",
     context
   });

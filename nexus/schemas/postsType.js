@@ -5,8 +5,9 @@ const postsType = objectType({
   description: Posts.$description,
   definition(t) {
     t.field(Posts.id);
-    t.field(Posts.name);
     t.field(Posts.type);
+    t.field(Posts.name);
+    t.field(Posts.image);
     t.field(Posts.body);
     t.field(Posts.createdAt);
     t.field(Posts.updatedAt);
