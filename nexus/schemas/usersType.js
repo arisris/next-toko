@@ -1,13 +1,13 @@
 import { EnumPostType } from "@prisma/client";
+import { hash } from "bcryptjs";
 import {
-  enumType,
   extendType,
   intArg,
   nonNull,
   objectType,
   stringArg
 } from "nexus";
-import { Users, Posts } from "nexus-prisma";
+import { Users } from "nexus-prisma";
 
 const UsersType = objectType({
   name: Users.$name,
@@ -141,11 +141,26 @@ const MutationType = extendType({
     t.field("registerUser", {
       type: "RestResponse",
       args: {
-        name: nonNull(stringArg())
+        name: nonNull(stringArg()),
+        email: nonNull(stringArg()),
+        password: nonNull(stringArg()),
+        password_conf: nonNull(stringArg())
       },
-      resolve(root, args, ctx) {
+      async resolve(_, { name, email, password, password_conf }, ctx) {
+        if (password !== password_conf)
+          throw new Error("Password confirmation does't not match");
+        password = await hash(password, 10);
+        const user = await ctx.prisma.users.create({
+          data: {
+            name,
+            password,
+            email
+          }
+        });
+        if (!user) throw new Error("Registratio failed");
         return {
-          data: { hello: "Hiii" }
+          type: "SUCCESS",
+          message: "New User Created!"
         };
       }
     });

@@ -63,7 +63,7 @@ model Users {
   name           String           @unique
   password       String
   email          String           @unique
-  status         EnumUserStatus   @default(ACTIVE)
+  status         EnumUserStatus   @default(INACTIVE)
   emailVerified  Boolean?         @default(false)
   phoneNumber    String?
   image          String?          @default("https://0.gravatar.com/avatar/me?s=96") @db.Text
