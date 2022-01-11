@@ -6,6 +6,30 @@ const CategoriesType = objectType({
   description: Categories.$description,
   definition(t) {
     t.field(Categories.id);
+    t.field(Categories.type);
+    t.field(Categories.name);
+    t.field(Categories.description);
+    t.field(Categories.posts.name, {
+      type: Categories.posts.type,
+      args: {
+        take: intArg({ default: 5 }),
+        skip: intArg({ default: 0 })
+      },
+      resolve(source, { take, skip }, ctx) {
+        return ctx.prisma.posts.findMany({
+          where: {
+            categories: {
+              some: {
+                id: source.id
+              }
+            }
+          },
+          orderBy: { id: "desc" },
+          take,
+          skip
+        });
+      }
+    });
   }
 });
 

@@ -6,6 +6,30 @@ const TagsType = objectType({
   description: Tags.$description,
   definition(t) {
     t.field(Tags.id);
+    t.field(Tags.type);
+    t.field(Tags.name);
+    t.field(Tags.description);
+    t.field(Tags.posts.name, {
+      type: Tags.posts.type,
+      args: {
+        take: intArg({ default: 5 }),
+        skip: intArg({ default: 0 })
+      },
+      resolve(source, { take, skip }, ctx) {
+        return ctx.prisma.posts.findMany({
+          where: {
+            tags: {
+              some: {
+                id: source.id
+              }
+            }
+          },
+          orderBy: { id: "desc" },
+          take,
+          skip
+        });
+      }
+    });
   }
 });
 

@@ -24,11 +24,11 @@ export default function FrontPageAuthMenu() {
           }
         )}
       >
-        {/* <Link href="/auth/register">
+        <Link href="/auth/register">
           <a className="w-full lg:hover:bg-gray-800 lg:bg-gray-700 lg:text-center lg:text-white p-2 lg:p-1 rounded-md">
             Register
           </a>
-        </Link> */}
+        </Link>
         <a href="#login" onClick={e => (e.preventDefault(), signIn())} className="w-full lg:hover:bg-red-700 lg:bg-red-600 lg:text-center lg:text-white p-2 lg:p-1 rounded-md">
           Login
         </a>
