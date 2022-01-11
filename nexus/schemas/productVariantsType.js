@@ -6,6 +6,15 @@ const ProductVariantsType = objectType({
   description: ProductVariants.$description,
   definition(t) {
     t.field(ProductVariants.id);
+    t.field(ProductVariants.type);
+    t.field(ProductVariants.status);
+    t.field(ProductVariants.isMain);
+    t.field(ProductVariants.name);
+    t.field(ProductVariants.description);
+    t.field(ProductVariants.price);
+    t.field(ProductVariants.stock);
+    t.field(ProductVariants.image);
+    t.field(ProductVariants.products);
   }
 });
 

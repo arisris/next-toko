@@ -6,6 +6,10 @@ const SocialAccountsType = objectType({
   description: SocialAccounts.$description,
   definition(t) {
     t.field(SocialAccounts.id);
+    t.field(SocialAccounts.provider);
+    t.field(SocialAccounts.token);
+    t.field(SocialAccounts.refreshToken);
+    t.field(SocialAccounts.user);
   }
 });
 

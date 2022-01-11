@@ -6,6 +6,9 @@ const PostLikesType = objectType({
   description: PostLikes.$description,
   definition(t) {
     t.field(PostLikes.id);
+    t.field(PostLikes.like);
+    t.field(PostLikes.author);
+    t.field(PostLikes.post);
   }
 });
 

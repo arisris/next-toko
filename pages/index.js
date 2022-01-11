@@ -1,8 +1,17 @@
-import HomepageCarousel from '@/components/Banner/HomepageCarousel';
-import Skeleton from '@/components/Card/Skeleton';
-import FrontPageLayout from 'components/Layouts/FrontPage';
+import HomepageCarousel from "@/components/Banner/HomepageCarousel";
+import Skeleton from "@/components/Card/Skeleton";
+import { useSimpleQuery } from "@/redux/services/graphql";
+import FrontPageLayout from "components/Layouts/FrontPage";
 
 export default function index() {
+  const { data } = useSimpleQuery(`
+    getPost(id: 1) {
+      id
+      name
+      type
+    }
+  `);
+  console.log(data);
   return (
     <FrontPageLayout>
       <div className="grid grid-cols-12 gap-4">

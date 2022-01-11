@@ -6,6 +6,13 @@ const WalletMutationsType = objectType({
   description: WalletMutations.$description,
   definition(t) {
     t.field(WalletMutations.id);
+    t.field(WalletMutations.type);
+    t.field(WalletMutations.wallet);
+    t.field(WalletMutations.amount);
+    t.field(WalletMutations.isVerified);
+    t.field(WalletMutations.verifiedAt);
+    t.field(WalletMutations.createdAt);
+    t.field(WalletMutations.updatedAt);
   }
 });
 

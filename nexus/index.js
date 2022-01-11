@@ -1,15 +1,6 @@
 import path from "path";
-import { asNexusMethod, enumType, makeSchema } from "nexus";
-import { DateTimeResolver } from "graphql-scalars";
-import {
-  EnumCommentStatus,
-  EnumPostStatus,
-  EnumPostType,
-  EnumProductStatus,
-  EnumRole,
-  EnumUserStatus,
-  EnumWalletMutationType
-} from "nexus-prisma";
+import { makeSchema, fieldAuthorizePlugin } from "nexus";
+import allTypes from "./schemas";
 import postsType from "./schemas/postsType";
 import usersType from "./schemas/usersType";
 import categoriesType from "./schemas/categoriesType";
@@ -21,24 +12,13 @@ import socialAccountsType from "./schemas/socialAccountsType";
 import tagsType from "./schemas/tagsType";
 import walletMutationsType from "./schemas/walletMutationsType";
 import walletType from "./schemas/walletType";
+import { prismaNestedLists } from "./helpers";
 
-const registerEnum = [
-  EnumUserStatus,
-  EnumRole,
-  EnumPostStatus,
-  EnumPostType,
-  EnumProductStatus,
-  EnumCommentStatus,
-  EnumWalletMutationType
-].map(({ name, members }) => enumType({ name, members }));
-const registerDateTimeScalar = asNexusMethod(DateTimeResolver, "DateTime");
-export default function schema() {
+function schema() {
   try {
-    
     let build = makeSchema({
       types: [
-        registerDateTimeScalar,
-        ...registerEnum,
+        ...allTypes,
         ...usersType,
         ...postsType,
         ...categoriesType,
@@ -51,6 +31,7 @@ export default function schema() {
         ...walletMutationsType,
         ...walletType
       ],
+      plugins: [fieldAuthorizePlugin(), prismaNestedLists()],
       outputs: {
         schema: path.join(
           process.cwd(),
@@ -78,7 +59,9 @@ export default function schema() {
       }
     });
     return build;
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+    throw err;
   }
 }
+
+export default schema();

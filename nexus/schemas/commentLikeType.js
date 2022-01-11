@@ -6,6 +6,9 @@ const CommentLikesType = objectType({
   description: CommentLikes.$description,
   definition(t) {
     t.field(CommentLikes.id);
+    t.field(CommentLikes.like);
+    t.field(CommentLikes.author);
+    t.field(CommentLikes.comment);
   }
 });
 

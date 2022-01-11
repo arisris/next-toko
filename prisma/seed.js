@@ -2,7 +2,8 @@ const {
   PrismaClient,
   EnumPostType,
   EnumPostStatus,
-  EnumRole
+  EnumRole,
+  EnumProductStatus
 } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 const faker = require("faker");
@@ -28,6 +29,17 @@ const createProductPost = () => ({
   name: faker.commerce.productName(),
   body: faker.commerce.productDescription(),
   image: faker.image.fashion(300, 300)
+});
+
+/** @returns {import("@prisma/client").ProductVariants} */
+const createProductVariants = () => ({
+  type: faker.commerce.productAdjective(),
+  status: EnumProductStatus.AVAILABLE,
+  name: faker.commerce.productName(),
+  description: faker.commerce.productDescription(),
+  image: faker.image.fashion(300, 300),
+  price: Math.abs(faker.commerce.price()),
+  stock: faker.datatype.number()
 });
 
 async function main() {
@@ -76,6 +88,7 @@ async function main() {
     where: { type: EnumPostType.BLOGPOST },
     select: { id: true }
   });
+  
   for (let { id } of blogPosts) {
     await prisma.posts.update({
       where: { id },
@@ -103,6 +116,12 @@ async function main() {
         },
         categories: {
           connect: categories.filter(filterProductPostType).map(mapId)
+        },
+        productVariants: {
+          createMany: {
+            data: Array(6).fill(null).map(() => createProductVariants()),
+            skipDuplicates: true
+          }
         }
       }
     });

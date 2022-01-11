@@ -6,6 +6,45 @@ const CommentsType = objectType({
   description: Comments.$description,
   definition(t) {
     t.field(Comments.id);
+    t.field(Comments.status);
+    t.field(Comments.body);
+    t.field(Comments.author);
+    t.field(Comments.comment);
+    t.field(Comments.post);
+    t.field(Comments.likes.name, {
+      type: Comments.likes.type,
+      args: {
+        take: intArg({ default: 5 }),
+        skip: intArg({ default: 0 })
+      },
+      resolve(source, { take, skip }, ctx) {
+        return ctx.prisma.commentLikes.findMany({
+          where: {
+            commentId: source.id
+          },
+          orderBy: { id: "desc" },
+          take,
+          skip
+        });
+      }
+    });
+    t.field(Comments.comments.name, {
+      type: Comments.comments.type,
+      args: {
+        take: intArg({ default: 5 }),
+        skip: intArg({ default: 0 })
+      },
+      resolve(source, { take, skip }, ctx) {
+        return ctx.prisma.comments.findMany({
+          where: {
+            commentId: source.id
+          },
+          orderBy: { id: "desc" },
+          take,
+          skip
+        });
+      }
+    });
   }
 });
 
