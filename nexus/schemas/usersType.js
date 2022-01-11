@@ -1,8 +1,15 @@
 import { EnumPostType } from "@prisma/client";
-import { extendType, intArg, nonNull, objectType } from "nexus";
+import {
+  enumType,
+  extendType,
+  intArg,
+  nonNull,
+  objectType,
+  stringArg
+} from "nexus";
 import { Users, Posts } from "nexus-prisma";
 
-const usersType = objectType({
+const UsersType = objectType({
   name: Users.$name,
   description: Users.$description,
   definition(t) {
@@ -127,7 +134,25 @@ const usersType = objectType({
     });
   }
 });
-const queryType = extendType({
+
+const MutationType = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("registerUser", {
+      type: "RestResponse",
+      args: {
+        name: nonNull(stringArg())
+      },
+      resolve(root, args, ctx) {
+        return {
+          data: { hello: "Hiii" }
+        };
+      }
+    });
+  }
+});
+
+const QueryType = extendType({
   type: "Query",
   definition(t) {
     t.field("getUser", {
@@ -144,4 +169,4 @@ const queryType = extendType({
   }
 });
 
-export default [usersType, queryType];
+export default [UsersType, QueryType, MutationType];
