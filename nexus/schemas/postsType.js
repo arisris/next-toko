@@ -89,6 +89,23 @@ const postsType = objectType({
         });
       }
     });
+    t.field(Posts.productVariants.name, {
+      type: Posts.productVariants.type,
+      args: {
+        take: intArg({ default: 5 }),
+        skip: intArg({ default: 0 })
+      },
+      resolve(source, { take, skip }, ctx) {
+        return ctx.prisma.productVariants.findMany({
+          where: {
+            productId: source.id
+          },
+          orderBy: { id: "desc" },
+          take,
+          skip
+        });
+      }
+    });
   }
 });
 const queryType = extendType({

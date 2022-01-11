@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query/react";
-import { helloApi } from "./services/hello";
+import { graphqlApi } from "./services/graphql";
 
 const store = configureStore({
   reducer: {
-    [helloApi.reducerPath]: helloApi.reducer
+    [graphqlApi.reducerPath]: graphqlApi.reducer
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(helloApi.middleware)
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(graphqlApi.middleware)
 });
 
 setupListeners(store.dispatch);
