@@ -9,6 +9,8 @@ const PostLikesType = objectType({
     t.field(PostLikes.like);
     t.field(PostLikes.author);
     t.field(PostLikes.post);
+    t.field(PostLikes.createdAt);
+    t.field(PostLikes.updatedAt);
   }
 });
 

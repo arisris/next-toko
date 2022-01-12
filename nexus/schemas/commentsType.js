@@ -11,6 +11,8 @@ const CommentsType = objectType({
     t.field(Comments.author);
     t.field(Comments.comment);
     t.field(Comments.post);
+    t.field(Comments.createdAt);
+    t.field(Comments.updatedAt);
     t.field(Comments.likes.name, {
       type: Comments.likes.type,
       args: {

@@ -1,4 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaAbility, Subjects } from "@casl/prisma";
+import { Posts, PrismaClient, Users } from "@prisma/client";
 import type {
   NextApiRequest,
   NextApiResponse,
@@ -25,5 +26,6 @@ export type ContextTypeObject = {
   req: NextApiRequest
   res: NextApiResponse,
   session: Session,
-  prisma: PrismaClient
+  prisma: PrismaClient,
+  can: (i: string | number) => boolean
 }

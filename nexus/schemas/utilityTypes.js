@@ -9,7 +9,6 @@ import {
   EnumPostStatus,
   EnumPostType,
   EnumProductStatus,
-  EnumRole,
   EnumUserStatus,
   EnumWalletMutationType
 } from "nexus-prisma";
@@ -22,7 +21,6 @@ const registerJsonScalar = asNexusMethod(JSONResolver, "json");
 const registerDateTimeScalar = asNexusMethod(DateTimeResolver, "date");
 const registerEnum = [
   EnumUserStatus,
-  EnumRole,
   EnumPostStatus,
   EnumPostType,
   EnumProductStatus,

@@ -1,6 +1,7 @@
 import { graphqlHTTP } from "express-graphql";
 import { getSession } from "next-auth/react";
 import prisma from "@/libs/prisma";
+import { initializePermissions, can } from "@/libs/can";
 import schema from "@/nexus/index";
 export const config = {
   api: {
@@ -16,8 +17,10 @@ export default async function handler(req, res) {
     req,
     res,
     session,
-    prisma
+    prisma,
+    can
   }
+  await initializePermissions(session?.user?.role)
   const middleware = graphqlHTTP({
     schema,
     graphiql: process.env.NODE_ENV !== "production",

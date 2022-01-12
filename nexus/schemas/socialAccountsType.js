@@ -10,6 +10,8 @@ const SocialAccountsType = objectType({
     t.field(SocialAccounts.token);
     t.field(SocialAccounts.refreshToken);
     t.field(SocialAccounts.user);
+    t.field(SocialAccounts.createdAt);
+    t.field(SocialAccounts.updatedAt);
   }
 });
 
