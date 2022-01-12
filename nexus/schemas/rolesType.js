@@ -1,26 +1,25 @@
 import { extendType, objectType, nonNull, intArg } from "nexus";
-import { Tags } from "nexus-prisma";
+import { Roles } from "nexus-prisma";
 
-const TagsType = objectType({
-  name: Tags.$name,
-  description: Tags.$description,
+const RolesType = objectType({
+  name: Roles.$name,
+  description: Roles.$description,
   definition(t) {
-    t.field(Tags.id);
-    t.field(Tags.type);
-    t.field(Tags.name);
-    t.field(Tags.description);
-    t.field(Tags.createdAt);
-    t.field(Tags.updatedAt);
-    t.field(Tags.posts.name, {
-      type: Tags.posts.type,
+    t.field(Roles.id);
+    t.field(Roles.name);
+    t.field(Roles.description);
+    t.field(Roles.createdAt);
+    t.field(Roles.updatedAt);
+    t.field(Roles.permissions.name, {
+      type: Roles.permissions.type,
       args: {
         take: intArg({ default: 5 }),
         skip: intArg({ default: 0 })
       },
       resolve(source, { take, skip }, ctx) {
-        return ctx.prisma.posts.findMany({
+        return ctx.prisma.permissions.findMany({
           where: {
-            tags: {
+            roles: {
               some: {
                 id: source.id
               }
@@ -35,16 +34,16 @@ const TagsType = objectType({
   }
 });
 
-const TagsQueryType = extendType({
+const RolesQueryType = extendType({
   type: "Query",
   definition(t) {
-    t.field("getTags", {
-      type: Tags.$name,
+    t.field("getRoles", {
+      type: Roles.$name,
       args: {
         id: nonNull(intArg())
       },
       resolve(source, { id }, ctx) {
-        return ctx.prisma.tags.findUnique({
+        return ctx.prisma.roles.findUnique({
           where: { id }
         });
       }
@@ -52,4 +51,4 @@ const TagsQueryType = extendType({
 }
 });
 
-export default [TagsType, TagsQueryType];
+export default [RolesType, RolesQueryType];

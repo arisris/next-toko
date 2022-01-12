@@ -9,6 +9,8 @@ const CategoriesType = objectType({
     t.field(Categories.type);
     t.field(Categories.name);
     t.field(Categories.description);
+    t.field(Categories.createdAt);
+    t.field(Categories.updatedAt);
     t.field(Categories.posts.name, {
       type: Categories.posts.type,
       args: {

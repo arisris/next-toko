@@ -1,6 +1,6 @@
 import path from "path";
 import { makeSchema, fieldAuthorizePlugin } from "nexus";
-import allTypes from "./schemas";
+import allTypes from "./schemas/utilityTypes";
 import postsType from "./schemas/postsType";
 import usersType from "./schemas/usersType";
 import categoriesType from "./schemas/categoriesType";
@@ -13,12 +13,16 @@ import tagsType from "./schemas/tagsType";
 import walletMutationsType from "./schemas/walletMutationsType";
 import walletType from "./schemas/walletType";
 import { prismaNestedLists } from "./helpers";
+import permissionsType from "./schemas/permissionsType";
+import rolesType from "./schemas/rolesType";
 
 function schema() {
   try {
     let build = makeSchema({
       types: [
         ...allTypes,
+        ...rolesType,
+        ...permissionsType,
         ...usersType,
         ...postsType,
         ...categoriesType,

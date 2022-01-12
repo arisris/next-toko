@@ -1,8 +1,15 @@
 import { EnumPostType } from "@prisma/client";
-import { extendType, intArg, nonNull, objectType } from "nexus";
-import { Users, Posts } from "nexus-prisma";
+import { hash } from "bcryptjs";
+import {
+  extendType,
+  intArg,
+  nonNull,
+  objectType,
+  stringArg
+} from "nexus";
+import { Users } from "nexus-prisma";
 
-const usersType = objectType({
+const UsersType = objectType({
   name: Users.$name,
   description: Users.$description,
   definition(t) {
@@ -127,7 +134,40 @@ const usersType = objectType({
     });
   }
 });
-const queryType = extendType({
+
+const MutationType = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("registerUser", {
+      type: "RestResponse",
+      args: {
+        name: nonNull(stringArg()),
+        email: nonNull(stringArg()),
+        password: nonNull(stringArg()),
+        password_conf: nonNull(stringArg())
+      },
+      async resolve(_, { name, email, password, password_conf }, ctx) {
+        if (password !== password_conf)
+          throw new Error("Password confirmation does't not match");
+        password = await hash(password, 10);
+        const user = await ctx.prisma.users.create({
+          data: {
+            name,
+            password,
+            email
+          }
+        });
+        if (!user) throw new Error("Registratio failed");
+        return {
+          type: "SUCCESS",
+          message: "New User Created!"
+        };
+      }
+    });
+  }
+});
+
+const QueryType = extendType({
   type: "Query",
   definition(t) {
     t.field("getUser", {
@@ -144,4 +184,4 @@ const queryType = extendType({
   }
 });
 
-export default [usersType, queryType];
+export default [UsersType, QueryType, MutationType];

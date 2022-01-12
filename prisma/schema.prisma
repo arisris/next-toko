@@ -8,6 +8,7 @@ generator client {
   provider = "prisma-client-js"
   //previewFeatures = ["referentialActions"] // You won't need this in Prisma 3.X or higher.
 }
+
 generator nexusPrisma {
   provider = "nexus-prisma"
 }
@@ -16,12 +17,6 @@ enum EnumUserStatus {
   ACTIVE
   INACTIVE
   SUSPENDED
-}
-
-enum EnumRole {
-  USER
-  SELLER
-  ADMIN
 }
 
 enum EnumPostStatus {
@@ -46,7 +41,7 @@ enum EnumProductStatus {
 
 enum EnumCommentStatus {
   PUBLISH
-  PENDING 
+  PENDING
   REJECTED
   DELETED
 }
@@ -58,18 +53,38 @@ enum EnumWalletMutationType {
   DEFAULT
 }
 
+model Roles {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  description String?
+  users       Users[]
+  permissions Permissions[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Permissions {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?  @db.Text
+  roles       Roles[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model Users {
   id             Int              @id @default(autoincrement())
   name           String           @unique
   password       String
   email          String           @unique
-  status         EnumUserStatus   @default(ACTIVE)
+  status         EnumUserStatus   @default(INACTIVE)
   emailVerified  Boolean?         @default(false)
   phoneNumber    String?
   image          String?          @default("https://0.gravatar.com/avatar/me?s=96") @db.Text
-  role           EnumRole?        @default(USER)
   createdAt      DateTime?        @default(now())
   updatedAt      DateTime         @updatedAt
+  role           Roles?           @relation(fields: [roleId], references: [id])
+  roleId         Int?
   socialAccounts SocialAccounts[]
   posts          Posts[]
   comments       Comments[]
@@ -80,12 +95,14 @@ model Users {
 }
 
 model SocialAccounts {
-  id           Int    @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   provider     String
-  token        String @db.Text
-  refreshToken String @db.Text
+  token        String   @db.Text
+  refreshToken String   @db.Text
   userId       Int?
-  user         Users? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         Users?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Posts {
@@ -107,12 +124,14 @@ model Posts {
 }
 
 model PostLikes {
-  id       Int     @id @default(autoincrement())
-  authorId Int?
-  author   Users?  @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  like     Boolean
-  postId   Int?
-  post     Posts?  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  id        Int      @id @default(autoincrement())
+  authorId  Int?
+  author    Users?   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  like      Boolean
+  postId    Int?
+  post      Posts?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Categories {
@@ -121,6 +140,8 @@ model Categories {
   name        String
   description String?      @db.Text
   posts       Posts[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model Tags {
@@ -129,6 +150,8 @@ model Tags {
   name        String
   description String?      @db.Text
   posts       Posts[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model ProductVariants {
@@ -143,6 +166,8 @@ model ProductVariants {
   image       String?           @db.Text
   products    Posts?            @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId   Int?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
 }
 
 model Comments {
@@ -157,6 +182,8 @@ model Comments {
   comment   Comments?          @relation("CommentReplies", fields: [commentId], references: [id])
   commentId Int?
   likes     CommentLikes[]
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
 }
 
 model CommentLikes {
@@ -166,6 +193,8 @@ model CommentLikes {
   like      Boolean
   commentId Int?
   comment   Comments? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 // todo wallet system

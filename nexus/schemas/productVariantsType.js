@@ -15,6 +15,8 @@ const ProductVariantsType = objectType({
     t.field(ProductVariants.stock);
     t.field(ProductVariants.image);
     t.field(ProductVariants.products);
+    t.field(ProductVariants.createdAt);
+    t.field(ProductVariants.updatedAt);
   }
 });
 

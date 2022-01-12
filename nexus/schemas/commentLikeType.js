@@ -9,6 +9,8 @@ const CommentLikesType = objectType({
     t.field(CommentLikes.like);
     t.field(CommentLikes.author);
     t.field(CommentLikes.comment);
+    t.field(CommentLikes.createdAt);
+    t.field(CommentLikes.updatedAt);
   }
 });
 

@@ -2,14 +2,29 @@ const {
   PrismaClient,
   EnumPostType,
   EnumPostStatus,
-  EnumRole,
-  EnumProductStatus
+  EnumProductStatus,
+  EnumUserStatus
 } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
 const faker = require("faker");
 const prisma = new PrismaClient();
 
 const mapId = ({ id }) => ({ id });
+
+// this is simple
+const userPermissions = {
+  user: ["manage:ownPosts"],
+  seller: ["manage:ownProducts", "manage:ownPosts"],
+  admin: ["manage:anything"]
+};
+const permissionsName = Object.values(userPermissions)
+  .reduce((a, b) => (a.push(...b), a), [])
+  .filter((a, i, u) => i === u.indexOf(a));
+
+//process.exit();
+
+// blog & products
+
 const filterBlogPostType = ({ type }) => type === EnumPostType.BLOGPOST;
 const filterProductPostType = ({ type }) => type === EnumPostType.PRODUCT;
 
@@ -39,7 +54,7 @@ const createProductVariants = () => ({
   description: faker.commerce.productDescription(),
   image: faker.image.fashion(300, 300),
   price: Math.abs(faker.commerce.price()),
-  stock: faker.datatype.number()
+  stock: faker.datatype.number(100)
 });
 
 async function main() {
@@ -88,7 +103,7 @@ async function main() {
     where: { type: EnumPostType.BLOGPOST },
     select: { id: true }
   });
-  
+
   for (let { id } of blogPosts) {
     await prisma.posts.update({
       where: { id },
@@ -119,7 +134,9 @@ async function main() {
         },
         productVariants: {
           createMany: {
-            data: Array(6).fill(null).map(() => createProductVariants()),
+            data: Array(6)
+              .fill(null)
+              .map(() => createProductVariants()),
             skipDuplicates: true
           }
         }
@@ -129,11 +146,30 @@ async function main() {
 
   const wallet = await prisma.wallet.create({
     data: {
-      amount: 0,
+      amount: 1000,
       isVerified: true,
       verifiedAt: new Date()
     }
-  })
+  });
+
+  for (let permission of permissionsName) {
+    await prisma.permissions.create({
+      data: {
+        name: permission
+      }
+    });
+  }
+
+  for (let role of Object.keys(userPermissions)) {
+    await prisma.roles.create({
+      data: {
+        name: role,
+        permissions: {
+          connect: userPermissions[role].map((name) => ({ name }))
+        }
+      }
+    });
+  }
 
   // create admin and assign it example posts
   await prisma.users.create({
@@ -141,8 +177,11 @@ async function main() {
       name: "admin",
       email: "admin@example.net",
       password: bcrypt.hashSync("password123", 10),
+      status: EnumUserStatus.ACTIVE,
       phoneNumber: "081234567890",
-      role: EnumRole.ADMIN,
+      role: {
+        connect: { name: "admin" }
+      },
       emailVerified: true,
       posts: {
         connect: [...blogPosts.map(mapId), ...productPosts.map(mapId)]
