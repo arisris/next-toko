@@ -2,11 +2,99 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "./slick-carousel.css";
-
 @layer base {
   html,
   body {
     @apply font-rubik;
+  }
+}
+/* Slick Carousel */
+.slick-slider {
+  @apply relative block select-none box-border z-0;
+}
+.slick-list {
+  @apply relative block overflow-hidden m-0 p-0;
+}
+.slick-list:focus {
+  @apply outline-none;
+}
+.slick-list.dragging {
+  @apply cursor-pointer;
+}
+.slick-slider .slick-track,
+.slick-slider .slick-list {
+  transform: translate3d(0, 0, 0);
+}
+.slick-track {
+  @apply relative top-0 left-0 block;
+}
+.slick-track:before,
+.slick-track:after {
+  @apply table content-none;
+}
+.slick-track:after {
+  @apply clear-both;
+}
+.slick-loading .slick-track {
+  @apply invisible;
+}
+.slick-slide {
+  @apply hidden float-left h-full min-h-[1px];
+}
+[dir="rtl"] .slick-slide {
+  @apply float-right;
+}
+.slick-slide img {
+  @apply block;
+}
+.slick-slide.slick-loading img {
+  @apply hidden;
+}
+.slick-slide.dragging img {
+  @apply pointer-events-none;
+}
+.slick-initialized .slick-slide {
+  @apply block;
+}
+.slick-loading .slick-slide {
+  @apply invisible;
+}
+.slick-vertical .slick-slide {
+  border: 1px solid transparent;
+  @apply block h-auto;
+}
+.slick-arrow.slick-hidden {
+  @apply hidden;
+}
+.slick-arrow {
+  @apply hidden md:block absolute top-[25%] lg:top-[40%] z-10 cursor-pointer bg-gray-100 rounded-full p-3 transition-all duration-500 hover:bg-gray-50 hover:shadow-lg touch-ripple-black;
+  &.slick-next {
+    @apply right-0 md:-translate-x-8 opacity-0;
+  }
+  &.slick-prev {
+    @apply left-0 md:translate-x-8 opacity-0;
+  }
+}
+.slick-slider:hover,
+.slick-slider:focus {
+  .slick-arrow {
+    &.slick-next {
+      @apply md:translate-x-5 opacity-100;
+    }
+    &.slick-prev {
+      @apply md:-translate-x-5 opacity-100;
+    }
+  }
+}
+.slick-dots {
+  @apply absolute bottom-0 inset-x-0 z-10 list-none p-2;
+  li {
+    @apply list-none inline-flex bg-gray-300 m-0.5 rounded-full;
+    button {
+      @apply block text-xs w-2 h-2 text-transparent;
+    }
+  }
+  li.slick-active {
+    @apply bg-gray-400;
   }
 }

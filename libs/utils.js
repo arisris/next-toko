@@ -202,3 +202,5 @@ export function timeAgo(timestamp, options = { format: 'medium' }) {
     range.name[options.format]
   }${plural} ago`;
 }
+
+export const noop = () => {}

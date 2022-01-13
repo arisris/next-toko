@@ -1,4 +1,3 @@
-import SVGRaw from "@/components/Icon/SVGRaw";
 import clsx from "clsx";
 import Head from "next/head";
 import Link from "next/link";
@@ -9,6 +8,9 @@ import FrontPageAuthMenu from "./AuthMenu";
 import FrontPageFooter from "./Footer";
 import FrontPageUserMenu from "./UserMenu";
 import { useSession } from "next-auth/react";
+import { Fab } from "konsta/react";
+import { FaPlus } from "react-icons/fa";
+import FrontPageUserCartMenu from "./UserCartMenu";
 
 /**
  * @param {{ children: JSX.Element, title?: string, header?: JSX.Element | (e: { isNavHidden: boolean }) => any, headerClass?: string }} param0
@@ -23,8 +25,6 @@ export default function FrontPageLayout({
   const navbarRef = useRef();
   const [isNavHidden, setIsNavHidden] = useState(false);
   const session = useSession();
-
-  //console.log(session)
 
   useEffect(() => {
     if (navbarRef?.current?.style) {
@@ -55,13 +55,13 @@ export default function FrontPageLayout({
       <header className={clsx("min-h-[4rem]", headerClass)}>
         <nav
           ref={navbarRef}
-          className="fixed top-0 flex flex-col z-10 w-full bg-white shadow-sm transition-all duration-150 ease-in-out"
+          className="fixed top-0 flex flex-col z-10 w-full bg-white shadow-sm transition-all duration-300 ease-in-out"
         >
           <div className="container mx-auto flex gap-2 items-center">
             <div className="flex gap-2 flex-grow">
               <Link href="/">
-                <a className="ml-2 md:ml-0 flex items-center font-bold whitespace-nowrap p-2 hover:bg-gray-100 text-green-500">
-                  <img className="hidden sm:block" src="/assets/logo.svg" />
+                <a className="ml-2 md:ml-0 flex items-center font-bold whitespace-nowrap p-2 hover:bg-gray-100 text-primary">
+                  <img className="hidden sm:block fill-current" src="/assets/logo.svg" />
                   <span className="block sm:hidden">NT</span>
                 </a>
               </Link>
@@ -74,7 +74,14 @@ export default function FrontPageLayout({
               <hr className="hidden md:block w-[1px] h-8 bg-gray-200" />
               {/* Regular Menu Icon */}
               <div className="flex gap-2 text-sm items-center">
-                {session.status === "authenticated" ? <FrontPageUserMenu /> : <FrontPageAuthMenu /> }
+                {session.status === "authenticated" ? (
+                  <>
+                    <FrontPageUserCartMenu session={session} />
+                    <FrontPageUserMenu session={session} />
+                  </>
+                ) : (
+                  <FrontPageAuthMenu />
+                )}
               </div>
             </div>
           </div>
@@ -89,6 +96,13 @@ export default function FrontPageLayout({
         <section className="container mx-auto">{children}</section>
       </main>
       <footer className="container mx-auto">
+        <Fab
+          className={clsx("fixed right-4-safe bottom-4-safe z-20", {
+            "transition-all duration-300 opacity-0 scale-0": isNavHidden
+          })}
+          icon={<FaPlus />}
+          text="Join Us"
+        />
         <FrontPageFooter />
       </footer>
     </section>

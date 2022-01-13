@@ -18,7 +18,7 @@ export default function FrontPageAuthMenu() {
       </button>
       <div
         className={clsx(
-          "w-48 lg:flex gap-0 lg:gap-2 items-center absolute lg:relative flex-col lg:flex-row right-0 lg:inset-x-auto bg-white lg:bg-transparent py-2 lg:py-0 rounded-md lg:rounded-none",
+          "w-48 lg:flex gap-0 lg:gap-2 items-center absolute lg:relative flex-col lg:flex-row right-0 lg:inset-x-auto bg-white lg:bg-transparent rounded-md lg:rounded-none",
           {
             hidden: !open,
             flex: open
@@ -28,7 +28,7 @@ export default function FrontPageAuthMenu() {
         <Link href="/auth/register">
           <Button
             component="a"
-            className="w-full lg:hover:bg-gray-800 lg:bg-gray-700 lg:text-center lg:text-white p-2 lg:p-1 rounded-md"
+            small
           >
             Register
           </Button>
@@ -37,7 +37,14 @@ export default function FrontPageAuthMenu() {
           component="a"
           href="#login"
           onClick={(e) => (e.preventDefault(), signIn())}
-          className="w-full lg:hover:bg-red-700 lg:bg-red-600 lg:text-center lg:text-white p-2 lg:p-1 rounded-md"
+          colors={{
+            text: "text-red-500",
+            border: "border-red-500",
+            bg: "bg-red-500",
+            activeBg: "active:bg-red-500",
+            activeBgDark: "active:bg-red-600"
+          }}
+          small
         >
           Login
         </Button>
