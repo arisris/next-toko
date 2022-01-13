@@ -17,6 +17,7 @@ specifiers:
   faker: ^5.5.3
   graphql: ^15.3.0
   graphql-scalars: ^1.14.1
+  konsta: ^0.7.0
   next: ^12.0.1
   next-auth: ^4.0.6
   nexus: ^1.1.0
@@ -45,6 +46,7 @@ dependencies:
   express-graphql: 0.12.0_graphql@15.8.0
   graphql: 15.8.0
   graphql-scalars: 1.14.1_graphql@15.8.0
+  konsta: 0.7.0
   next: 12.0.7_react-dom@17.0.2+react@17.0.2
   next-auth: 4.0.6_react-dom@17.0.2+react@17.0.2
   nexus: 1.1.0_graphql@15.8.0
@@ -1812,6 +1814,11 @@ packages:
   /kleur/4.1.4:
     resolution: {integrity: sha512-8QADVssbrFjivHWQU7KkMgptGTl6WAcSdlbBPY4uNF+mWr6DGcKrvY2w4FQJoXch7+fKMjj0dRrL75vk3k23OA==}
     engines: {node: '>=6'}
+    dev: false
+
+  /konsta/0.7.0:
+    resolution: {integrity: sha512-WTOxGBFtvaE/Fs6Mn/tU842/DvMnRSobeTM1x/rny0Y1Fecboia9ewV0SpFSTw+SeFB4e3H1lfrcYTxDubojCA==}
+    engines: {node: '>= 4.7.0'}
     dev: false
 
   /lilconfig/2.0.4:

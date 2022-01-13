@@ -4,7 +4,9 @@ Work in progress
 ### Simple Usage
 
 Create mysql database in your local computer
+
 copy .env.example > .env
+
 edit .env and change DATABASE_URL
 
 In this case i use "pnpm" for now i'm not sure that with other package manager can work. so
@@ -26,7 +28,9 @@ $_ pnpm dev
 ```
 
 After this you already have some seed data in DATABASE
-test login at http://localhost:3000/api/auth/signin
+
+Test login at http://localhost:3000/api/auth/signin
+
 user: admin
 password: password123
 
@@ -39,4 +43,4 @@ Curently i'm working at graphql server api located at folder /nexus/
 
 ### Links
 
-[My Homepage](https://arisis.com/)
+[My Homepage](https://arisris.com/)

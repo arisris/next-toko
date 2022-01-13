@@ -2,6 +2,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { FaEnvelope, FaMap, FaPhone } from "react-icons/fa";
+import CopyrightFooter from "../CopyrightFooter";
 
 function Menu({ title, className, children }) {
   return (
@@ -162,15 +163,7 @@ export default function FrontPageFooter() {
       </Menu>
       <div className="col-span-12 grid grid-cols-12 lg:my-6 text-sm">
         <hr className="col-span-12 py-4" />
-        <div className="col-span-12 lg:col-span-6 flex gap-2 items-center">
-          <span>Copyright &copy;</span>
-          <Link href="/pages/terms-of-use">
-            <a className="hover:text-green-600 hover:underline text-green-500">
-              Super Toko
-            </a>
-          </Link>
-          <span>2022, All rights reserved.</span>
-        </div>
+        <CopyrightFooter className="text-sm" />
         <div className="hidden lg:flex col-span-12 lg:col-span-6 justify-end">
           <Image
             src="/assets/payment-methods.png"
