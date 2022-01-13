@@ -64,6 +64,9 @@ export default async function handler(req, res) {
         return token;
       }
     },
+    pages: {
+      signIn: "/auth/login"
+    },
     secret: process.env.APP_SECRET_KEY
   });
 }

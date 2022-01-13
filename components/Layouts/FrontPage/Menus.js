@@ -1,11 +1,9 @@
 import SVGRaw from "@/components/Icon/SVGRaw";
-import Overlays from "@/components/Overlays";
-import { Transition } from "@headlessui/react";
 import { useUpdateEffect, useKeyPress } from "ahooks";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Fragment, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 /**
  * @type {import('react').ReactElement}

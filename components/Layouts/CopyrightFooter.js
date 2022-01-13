@@ -11,7 +11,7 @@ export default function CopyrightFooter({ className = "" }) {
     >
       <span>Copyright &copy;</span>
       <Link href="/">
-        <a className="hover:text-green-600 hover:underline text-green-500">
+        <a className="hover:text-opacity-90 hover:underline text-primary">
           Super Toko
         </a>
       </Link>
