@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     prisma,
     can
   }
-  await initializePermissions(session?.user?.role)
+  //await initializePermissions(session?.user?.role)
   const middleware = graphqlHTTP({
     schema,
     graphiql: process.env.NODE_ENV !== "production",

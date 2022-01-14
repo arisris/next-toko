@@ -25,7 +25,10 @@ const UsersType = objectType({
     t.field(Users.updatedAt);
     t.field(Users.password.name, {
       type: Users.password.type,
-      authorize: async () => false
+      authorize: async (_, __, ctx) => {
+        return ctx.can("manage:anything");
+        return false;
+      }
     });
     t.field(Users.wallet);
     t.field("latestPosts", {

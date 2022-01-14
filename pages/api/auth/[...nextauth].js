@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import prisma from "@/libs/prisma";
 import isEmail from "validator/lib/isEmail";
-import { EnumRole, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 /** @type {import("next").NextApiHandler} */
@@ -51,7 +51,7 @@ export default async function handler(req, res) {
               role: true
             }
           });
-          if (userData?.role) session.user.role = userData.role;
+          if (userData?.role) session.user.role = userData.role?.id;
         }
         //console.log(session)
         return session;
