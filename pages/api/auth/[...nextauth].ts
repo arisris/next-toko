@@ -54,7 +54,7 @@ export default async function handler(
               role: true
             }
           });
-          if (userData?.role) session.user.role = userData.role?.id;
+          if (userData?.role) session.user.role = userData.role;
         }
         return session;
       },

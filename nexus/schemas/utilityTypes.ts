@@ -10,7 +10,8 @@ import {
   EnumPostType,
   EnumProductStatus,
   EnumUserStatus,
-  EnumWalletMutationType
+  EnumWalletMutationType,
+  EnumRole
 } from "nexus-prisma";
 
 const registerJsonObjectScalar = asNexusMethod(
@@ -25,7 +26,8 @@ const registerEnum = [
   EnumPostType,
   EnumProductStatus,
   EnumCommentStatus,
-  EnumWalletMutationType
+  EnumWalletMutationType,
+  EnumRole
 ].map(({ name, members }) => enumType({ name, members }));
 
 const EnumRestResponse = enumType({
@@ -35,7 +37,7 @@ const EnumRestResponse = enumType({
 const RestResponse = objectType({
   name: "RestResponse",
   definition(t) {
-    t.string("type", { type: "EnumRestResponse" });
+    t.field("type", { type: EnumRestResponse.name });
     t.string("message");
     t.json("data");
   }

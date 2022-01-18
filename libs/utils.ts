@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { ValidationError } from "yup";
 
 export const random = function () {
   return Math.floor(Math.random() * Date.now()).toString(36);
@@ -13,9 +14,18 @@ export const GUID = function (max: number = 40) {
 export const restAsyncHandler =
   (handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>) =>
   (req: NextApiRequest, res: NextApiResponse) =>
-    handler(req, res).catch((e: Error) =>
-      res.json({ success: false, msg: e.message })
-    );
+    handler(req, res).catch((e: Error | string) => {
+      if (e instanceof ValidationError) {
+        return res.status(409).json({
+          success: false,
+          type: "validationError",
+          path: e.path,
+          errors: e.errors
+        });
+      }
+      if (typeof e === "string") e = new Error(e);
+      res.json({ success: false, msg: e.message });
+    });
 
 export function wpcomImageLoader({
   src,

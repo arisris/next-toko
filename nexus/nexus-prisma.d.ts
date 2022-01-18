@@ -54,6 +54,7 @@ export interface NexusGenEnums {
   EnumPostType: "BLOGPOST" | "PAGES" | "PRODUCT"
   EnumProductStatus: "AVAILABLE" | "DELETED" | "DRAFT" | "OUTOFSTOCK"
   EnumRestResponse: "ERROR" | "SUCCESS" | "WARNING"
+  EnumRole: "ADMIN" | "SELLER" | "USER"
   EnumUserStatus: "ACTIVE" | "INACTIVE" | "SUSPENDED"
   EnumWalletMutationType: "DEFAULT" | "PURCHASE" | "TOPUP" | "TRANSFER"
 }
@@ -92,13 +93,6 @@ export interface NexusGenObjects {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Mutation: {};
-  Permissions: { // root type
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
-    description?: string | null; // String
-    id: number; // Int!
-    name: string; // String!
-    updatedAt: NexusGenScalars['DateTime']; // DateTime!
-  }
   PostLikes: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
@@ -134,13 +128,6 @@ export interface NexusGenObjects {
     message?: string | null; // String
     type?: NexusGenEnums['EnumRestResponse'] | null; // EnumRestResponse
   }
-  Roles: { // root type
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
-    description?: string | null; // String
-    id: number; // Int!
-    name: string; // String!
-    updatedAt: NexusGenScalars['DateTime']; // DateTime!
-  }
   SocialAccounts: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
@@ -165,6 +152,7 @@ export interface NexusGenObjects {
     image?: string | null; // String
     name: string; // String!
     phoneNumber?: string | null; // String
+    role?: NexusGenEnums['EnumRole'] | null; // EnumRole
     status: NexusGenEnums['EnumUserStatus']; // EnumUserStatus!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
@@ -227,17 +215,6 @@ export interface NexusGenFieldTypes {
     status: NexusGenEnums['EnumCommentStatus'] | null; // EnumCommentStatus
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
-  Mutation: { // field return type
-    registerUser: NexusGenRootTypes['RestResponse'] | null; // RestResponse
-  }
-  Permissions: { // field return type
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
-    description: string | null; // String
-    id: number; // Int!
-    name: string; // String!
-    roles: NexusGenRootTypes['Roles'][]; // [Roles!]!
-    updatedAt: NexusGenScalars['DateTime']; // DateTime!
-  }
   PostLikes: { // field return type
     author: NexusGenRootTypes['Users'] | null; // Users
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -280,11 +257,9 @@ export interface NexusGenFieldTypes {
     getCategories: NexusGenRootTypes['Categories'] | null; // Categories
     getCommentLikes: NexusGenRootTypes['CommentLikes'] | null; // CommentLikes
     getComments: NexusGenRootTypes['Comments'] | null; // Comments
-    getPermissions: NexusGenRootTypes['Permissions'] | null; // Permissions
     getPost: NexusGenRootTypes['Posts'] | null; // Posts
     getPostLikes: NexusGenRootTypes['PostLikes'] | null; // PostLikes
     getProductVariants: NexusGenRootTypes['ProductVariants'] | null; // ProductVariants
-    getRoles: NexusGenRootTypes['Roles'] | null; // Roles
     getSocialAccounts: NexusGenRootTypes['SocialAccounts'] | null; // SocialAccounts
     getTags: NexusGenRootTypes['Tags'] | null; // Tags
     getUser: NexusGenRootTypes['Users'] | null; // Users
@@ -295,14 +270,6 @@ export interface NexusGenFieldTypes {
     data: NexusGenScalars['JSON'] | null; // JSON
     message: string | null; // String
     type: NexusGenEnums['EnumRestResponse'] | null; // EnumRestResponse
-  }
-  Roles: { // field return type
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
-    description: string | null; // String
-    id: number; // Int!
-    name: string; // String!
-    permissions: NexusGenRootTypes['Permissions'][]; // [Permissions!]!
-    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   SocialAccounts: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -335,7 +302,7 @@ export interface NexusGenFieldTypes {
     name: string; // String!
     phoneNumber: string | null; // String
     postLikes: NexusGenRootTypes['PostLikes'][]; // [PostLikes!]!
-    role: NexusGenRootTypes['Roles'] | null; // Roles
+    role: NexusGenEnums['EnumRole'] | null; // EnumRole
     socialAccounts: NexusGenRootTypes['SocialAccounts'][]; // [SocialAccounts!]!
     status: NexusGenEnums['EnumUserStatus']; // EnumUserStatus!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
@@ -392,17 +359,6 @@ export interface NexusGenFieldTypeNames {
     status: 'EnumCommentStatus'
     updatedAt: 'DateTime'
   }
-  Mutation: { // field return type name
-    registerUser: 'RestResponse'
-  }
-  Permissions: { // field return type name
-    createdAt: 'DateTime'
-    description: 'String'
-    id: 'Int'
-    name: 'String'
-    roles: 'Roles'
-    updatedAt: 'DateTime'
-  }
   PostLikes: { // field return type name
     author: 'Users'
     createdAt: 'DateTime'
@@ -445,11 +401,9 @@ export interface NexusGenFieldTypeNames {
     getCategories: 'Categories'
     getCommentLikes: 'CommentLikes'
     getComments: 'Comments'
-    getPermissions: 'Permissions'
     getPost: 'Posts'
     getPostLikes: 'PostLikes'
     getProductVariants: 'ProductVariants'
-    getRoles: 'Roles'
     getSocialAccounts: 'SocialAccounts'
     getTags: 'Tags'
     getUser: 'Users'
@@ -460,14 +414,6 @@ export interface NexusGenFieldTypeNames {
     data: 'JSON'
     message: 'String'
     type: 'EnumRestResponse'
-  }
-  Roles: { // field return type name
-    createdAt: 'DateTime'
-    description: 'String'
-    id: 'Int'
-    name: 'String'
-    permissions: 'Permissions'
-    updatedAt: 'DateTime'
   }
   SocialAccounts: { // field return type name
     createdAt: 'DateTime'
@@ -500,7 +446,7 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     phoneNumber: 'String'
     postLikes: 'PostLikes'
-    role: 'Roles'
+    role: 'EnumRole'
     socialAccounts: 'SocialAccounts'
     status: 'EnumUserStatus'
     updatedAt: 'DateTime'
@@ -544,20 +490,6 @@ export interface NexusGenArgTypes {
       take: number | null; // Int
     }
   }
-  Mutation: {
-    registerUser: { // args
-      email: string; // String!
-      name: string; // String!
-      password: string; // String!
-      password_conf: string; // String!
-    }
-  }
-  Permissions: {
-    roles: { // args
-      skip?: number | null; // Int
-      take: number | null; // Int
-    }
-  }
   Posts: {
     categories: { // args
       skip?: number | null; // Int
@@ -590,9 +522,6 @@ export interface NexusGenArgTypes {
     getComments: { // args
       id: number; // Int!
     }
-    getPermissions: { // args
-      id: number; // Int!
-    }
     getPost: { // args
       id: number; // Int!
     }
@@ -600,9 +529,6 @@ export interface NexusGenArgTypes {
       id: number; // Int!
     }
     getProductVariants: { // args
-      id: number; // Int!
-    }
-    getRoles: { // args
       id: number; // Int!
     }
     getSocialAccounts: { // args
@@ -619,12 +545,6 @@ export interface NexusGenArgTypes {
     }
     getWalletMutations: { // args
       id: number; // Int!
-    }
-  }
-  Roles: {
-    permissions: { // args
-      skip?: number | null; // Int
-      take: number | null; // Int
     }
   }
   Tags: {

@@ -2,7 +2,6 @@ import { graphqlHTTP } from "express-graphql";
 import { getSession } from "next-auth/react";
 import prisma from "@/libs/prisma";
 import schema from "@/nexus/index";
-import Gate from "@/libs/classes/Gate";
 import { ContextTypeObject } from "types/global";
 import { NextApiRequest, NextApiResponse } from "next";
 export const config = {
@@ -10,12 +9,9 @@ export const config = {
     bodyParser: false
   }
 };
-// const gate = new Gate();
-
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getSession({ req });
-  // await gate.init(session);
   let context: ContextTypeObject = {
     req,
     res,

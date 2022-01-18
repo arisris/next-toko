@@ -1,7 +1,7 @@
-import { fetchBaseQuery } from "@reduxjs/toolkit/query";
+import { FetchBaseQueryArgs } from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
+import { BaseQueryFn, FetchArgs, fetchBaseQuery } from "@reduxjs/toolkit/query";
 
-/** @param {import("@reduxjs/toolkit/dist/query").BaseQueryFn<import("@reduxjs/toolkit/dist/query/fetchBaseQuery").FetchBaseQueryArgs>} args */
-export function fetchBaseGraphQL(args = {}) {
+export function fetchBaseGraphQL(args: FetchBaseQueryArgs = {}) {
   return fetchBaseQuery({
     baseUrl: "/api/graphql",
     method: "POST",
@@ -9,12 +9,12 @@ export function fetchBaseGraphQL(args = {}) {
   });
 }
 
-/**
- * @param {{query?: string, mutation?: string, variables: object}} body
- * @param {import("@reduxjs/toolkit/dist/query").FetchArgs} options
- * @returns {import("@reduxjs/toolkit/dist/query").FetchArgs}
- */
-export function createFetchOption(body, options = {}) {
+export function createFetchOption(
+  body: { query?: string; mutation?: string; variables?: object },
+  options: FetchArgs = {
+    url: ""
+  }
+) {
   return {
     method: "POST",
     body,
