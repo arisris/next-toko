@@ -7,6 +7,7 @@ export const prismaNestedLists = () => plugin({
     if (!c.fieldConfig.extensions.nexus.config) return;
     return async (source, args, ctx, info, next) => {
       //console.log("Before...")
+      // @ts-expect-error
       const value = await next(source, args, ctx, info, next);
       //console.log("After...")
       return value;

@@ -2,8 +2,9 @@ import Image from 'next/image';
 import Slider from 'react-slick';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import clsx from 'clsx';
+import { HTMLProps } from 'react';
 
-function Arrow({ onClick, className, style, children }) {
+function Arrow({ onClick, className, style, children }: HTMLProps<HTMLButtonElement>) {
   return (
     <button type="button" onClick={onClick} className={className} style={style}>
       {children}

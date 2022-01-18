@@ -3,7 +3,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import { Fragment } from "react";
 
-export const NavbarMenuItem = ({ text, href }) => {
+export const NavbarMenuItem = ({ text, href }: { text: any; href: string }) => {
   return (
     <Menu.Item>
       <Link href={href}>
@@ -20,7 +20,11 @@ export const NavbarMenuItem = ({ text, href }) => {
   );
 };
 
-export function NavbarMenu(props) {
+export function NavbarMenu(props: {
+  button?: any;
+  children?: JSX.Element | JSX.Element[];
+  menuClass?: string;
+}) {
   const { button = "Menu", children, menuClass } = props;
   return (
     <Menu as="div" className="relative">

@@ -19,7 +19,7 @@ export default function PageLogin() {
   useEffect(() => {
     if (session.status === "authenticated") {
       const callbackUrl = router.query?.callbackUrl;
-      if (callbackUrl) {
+      if (typeof callbackUrl === "string") {
         router.push(callbackUrl);
       } else {
         router.push("/");
@@ -59,7 +59,7 @@ export default function PageLogin() {
                   </a>
                 </Link>
               </div>
-              <Button raised type="button" onClick={handleSubmit(data => signIn("credentials", data))}>
+              <Button raised onClick={handleSubmit(data => signIn("credentials", data))}>
                 Sign In
               </Button>
             </div>

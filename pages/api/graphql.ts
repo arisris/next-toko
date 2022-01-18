@@ -1,26 +1,27 @@
 import { graphqlHTTP } from "express-graphql";
 import { getSession } from "next-auth/react";
 import prisma from "@/libs/prisma";
-import { initializePermissions, can } from "@/libs/can";
 import schema from "@/nexus/index";
+import Gate from "@/libs/classes/Gate";
+import { ContextTypeObject } from "types/global";
+import { NextApiRequest, NextApiResponse } from "next";
 export const config = {
   api: {
     bodyParser: false
   }
 };
+// const gate = new Gate();
 
-/** @type {import("next").NextApiHandler} */
-export default async function handler(req, res) {
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getSession({ req });
-  /** @type {import("global").ContextTypeObject} */
-  let context = {
+  // await gate.init(session);
+  let context: ContextTypeObject = {
     req,
     res,
     session,
-    prisma,
-    can
+    prisma
   }
-  await initializePermissions(session?.user?.role)
   const middleware = graphqlHTTP({
     schema,
     graphiql: process.env.NODE_ENV !== "production",
@@ -29,5 +30,6 @@ export default async function handler(req, res) {
   if (process.env.NODE_ENV === "production" && req.method === "GET")
     return res.json({ msg: "Welcome to graphql server" });
   if (req.method === "OPTIONS") return res.end();
+  // @ts-expect-error
   return middleware(req, res);
 }

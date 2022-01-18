@@ -5,13 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 
-/**
- * @type {import('react').ReactElement}
- * @param {{isNavHidden: boolean}} props
- */
-export default function FrontPageCategories(props) {
+export default function FrontPageCategories(props: { isNavHidden?: boolean }) {
   /** @type {import('react').MutableRefObject<HTMLElement>} */
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>();
   const router = useRouter();
   const [open, setOpen] = useState(false);
 

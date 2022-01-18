@@ -1,11 +1,8 @@
 import SVGRaw from "@/components/Icon/SVGRaw";
-import { signOut } from "next-auth/react";
+import { SessionContextValue, signOut } from "next-auth/react";
 import { NavbarMenu, NavbarMenuItem } from "@/components/Menu/NavbarMenu";
 
-/**
- * @param {{session: import("next-auth/react").SessionContextValue}} param0 
- */
-export default function FrontPageUserMenu({ session }) {
+export default function FrontPageUserMenu({ session }: { session: SessionContextValue}) {
   const { data: sessionData } = session;
   return (
     <NavbarMenu

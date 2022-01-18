@@ -39,15 +39,15 @@ function schema() {
       outputs: {
         schema: path.join(
           process.cwd(),
-          "node_modules/@types/nexus-schema/schema.graphql"
+          "nexus/schema.graphql"
         ),
         typegen: path.join(
           process.cwd(),
-          "node_modules/@types/nexus-schema/index.d.ts"
+          "nexus/nexus-prisma.d.ts"
         )
       },
       contextType: {
-        module: path.resolve(path.join(process.cwd(), "global.d.ts")),
+        module: path.resolve(path.join(process.cwd(), "types/global.d.ts")),
         export: "ContextTypeObject",
         alias: "ctx"
       },
@@ -55,7 +55,7 @@ function schema() {
         modules: [
           {
             module: path.resolve(
-              path.join(process.cwd(), "node_modules/.prisma/client/index.d.ts")
+              path.join(process.cwd(), "node_modules/@prisma/client/index.d.ts")
             ),
             alias: "prisma"
           }

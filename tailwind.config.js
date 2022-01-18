@@ -26,11 +26,11 @@ module.exports = {
   variants: {},
   purge: {
     content: [
-      "./libs/**/*.(js|jsx)",
-      "./components/**/*.(js|jsx)",
-      "./pages/**/*.(js|jsx)",
-      "./layouts/**/*.(js|jsx)",
-      "./hooks/**/*.(js|jsx)",
+      "./libs/**/*.(ts|tsx)",
+      "./components/**/*.(ts|tsx)",
+      "./pages/**/*.(ts|tsx)",
+      "./layouts/**/*.(ts|tsx)",
+      "./hooks/**/*.(ts|tsx)",
       ...konsta.content
     ],
     options: {}

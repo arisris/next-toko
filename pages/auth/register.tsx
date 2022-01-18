@@ -17,7 +17,7 @@ export default function PageRegister() {
               <a className="text-primary hover:underline font-bold">Sign In</a>
             </Link>
           </div>
-          <Button raised type="button" className="bg-primary text-white text-center p-2">Sign Up</Button>
+          <Button raised className="bg-primary text-white text-center p-2">Sign Up</Button>
         </div>
       </Card>
     </AuthLayout>

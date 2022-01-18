@@ -3,9 +3,9 @@ import { Provider as ReduxProvider } from "react-redux";
 import { SessionProvider } from "next-auth/react";
 import { App as KonstaApp } from "konsta/react";
 import store from "../redux/store";
+import { AppProps } from "next/app";
 
-/** @param { import("next/app").AppProps } param0 */
-function App({ Component, pageProps: { session, ...pageProps } }) {
+function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
       <ReduxProvider store={store}>
