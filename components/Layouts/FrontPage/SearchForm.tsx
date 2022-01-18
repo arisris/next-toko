@@ -30,7 +30,7 @@ export default function FrontPageSearchForm() {
       {/* Search form */}
       <div
         className={clsx("w-full p-2", {
-          "absolute top-0 md:bg-auto md:relative z-20": focus,
+          "absolute inset-0 md:bg-auto md:relative z-20": focus,
           relative: !focus
         })}
       >

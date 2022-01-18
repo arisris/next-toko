@@ -1,21 +1,50 @@
+import { Preloader } from "konsta/react";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 import CopyrightFooter from "../CopyrightFooter";
 
-export default function AuthLayout({ title, header, children, redirectIfauthenticated = false }: {
+const Spinner = ({ text }: { text?: string }) => (
+  <div className="text-center">
+    <Preloader color="primary" />
+    <div>{text || "Loading"}</div>
+  </div>
+);
+
+export default function AuthLayout({
+  title,
+  header,
+  children,
+  redirectIfauthenticated = false
+}: {
   title?: string;
   header?: JSX.Element | JSX.Element[];
   children: JSX.Element | JSX.Element[];
-  redirectIfauthenticated?: boolean
+  redirectIfauthenticated?: boolean;
 }) {
-  const session = useSession();
+  const router = useRouter();
+  const { status } = useSession();
+  let component: JSX.Element | JSX.Element[] = <Spinner />;
+  if (status === "unauthenticated") {
+    component = children;
+  } else if (status === "authenticated") {
+    component = redirectIfauthenticated ? (
+      <Spinner text="Redirecting..." />
+    ) : (
+      children
+    );
+  }
   useEffect(() => {
-    if (redirectIfauthenticated && session?.status === "authenticated") {
-      Router.push("/");
+    if (redirectIfauthenticated && status === "authenticated") {
+      const callbackUrl =
+        (Array.isArray(router.query?.callbackUrl)
+          ? router.query?.callbackUrl[0]
+          : router.query?.callbackUrl) || "/";
+      router.push(callbackUrl);
     }
-  }, [redirectIfauthenticated, session.status])
+  }, [status, router.query?.callbackUrl]);
+
   return (
     <>
       <Head>
@@ -27,7 +56,7 @@ export default function AuthLayout({ title, header, children, redirectIfauthenti
       </Head>
       <section className="absolute flex flex-col gap-8 justify-between items-center w-full h-full py-8">
         <div>{header}</div>
-        <div>{children}</div>
+        <div>{component}</div>
         <CopyrightFooter className="text-sm" />
       </section>
     </>
