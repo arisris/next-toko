@@ -1,0 +1,64 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": "./",
+    "paths": {
+      "nexus": ["node_modules/nexus/dist"],
+      "@/components/*": [
+        "components/*"
+      ],
+      "@/libs/*": [
+        "libs/*"
+      ],
+      "@/nexus/*": [
+        "nexus/*"
+      ],
+      "@/redux/*": [
+        "redux/*"
+      ],
+      "@/styles/*": [
+        "styles/*"
+      ]
+    },
+    "typeRoots": [
+      "./node_modules/@types",
+      "./types"
+    ],
+  },
+  "exclude": [
+    "dist",
+    ".next",
+    "out",
+    "node_modules",
+    "next.config.js",
+    "postcss.config.js",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "coverage"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ]
+}

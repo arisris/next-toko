@@ -6,8 +6,8 @@ import type {
   NextComponentType,
   NextPageContext
 } from "next";
-import type { Session } from "next-auth";
-import type { Router } from "next/router";
+import { Session } from "next-auth";
+import { Router } from "next/router";
 
 declare module "next/app" {
   type AppProps<P = Record<string, unknown>> = {
@@ -26,6 +26,5 @@ export type ContextTypeObject = {
   req: NextApiRequest
   res: NextApiResponse,
   session: Session,
-  prisma: PrismaClient,
-  can: (i: string | number) => boolean
+  prisma: PrismaClient
 }

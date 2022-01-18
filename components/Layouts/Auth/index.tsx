@@ -1,7 +1,11 @@
 import Head from "next/head";
 import CopyrightFooter from "../CopyrightFooter";
 
-export default function AuthLayout({ title, header, children }) {
+export default function AuthLayout({ title, header, children }: {
+  title?: string;
+  header?: JSX.Element | JSX.Element[];
+  children: JSX.Element | JSX.Element[];
+}) {
   return (
     <>
       <Head>

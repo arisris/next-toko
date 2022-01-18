@@ -23,13 +23,13 @@ const UsersType = objectType({
     t.field(Users.phoneNumber);
     t.field(Users.createdAt);
     t.field(Users.updatedAt);
-    t.field(Users.password.name, {
-      type: Users.password.type,
-      authorize: async (_, __, ctx) => {
-        return ctx.can("manage:anything");
-        return false;
-      }
-    });
+    // t.field(Users.password.name, {
+    //   type: Users.password.type,
+    //   authorize: async (_, __, ctx) => {
+    //     return ctx.can("manage:anything");
+    //     return false;
+    //   }
+    // });
     t.field(Users.wallet);
     t.field("latestPosts", {
       type: Users.posts.type,

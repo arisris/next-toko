@@ -1,11 +1,9 @@
 import SVGRaw from "@/components/Icon/SVGRaw";
 import { NavbarMenu } from "@/components/Menu/NavbarMenu";
+import { SessionContextValue } from "next-auth/react";
 import { FaCartPlus } from "react-icons/fa";
 
-/**
- * @param {{session: import("next-auth/react").SessionContextValue}} param0
- */
-export default function FrontPageUserCartMenu({ session }) {
+export default function FrontPageUserCartMenu({ session }: { session: SessionContextValue}) {
   return (
     <NavbarMenu
       button={

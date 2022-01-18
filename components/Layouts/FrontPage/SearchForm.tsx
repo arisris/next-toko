@@ -7,10 +7,8 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 
 export default function FrontPageSearchForm() {
-  /** @type {import('react').MutableRefObject<HTMLElement>} */
-  const ref = useRef();
-  /** @type {import('react').MutableRefObject<HTMLInputElement>} */
-  const inputRef = useRef();
+  const ref = useRef<HTMLFormElement>();
+  const inputRef = useRef<HTMLInputElement>();
   const [focus, setFocus] = useState(false);
 
   useClickAway(() => setFocus(false), [ref]);

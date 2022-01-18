@@ -12,17 +12,15 @@ import { Fab } from "konsta/react";
 import { FaPlus } from "react-icons/fa";
 import FrontPageUserCartMenu from "./UserCartMenu";
 
-/**
- * @param {{ children: JSX.Element, title?: string, header?: JSX.Element | (e: { isNavHidden: boolean }) => any, headerClass?: string }} param0
- */
+type FrontPageLayoutNavbarHeaderCallback = (e: { isNavHidden: boolean }) => any
+
 export default function FrontPageLayout({
   children,
   title,
   header,
   headerClass
-}) {
-  /** @type {import('react').MutableRefObject<HTMLElement>} */
-  const navbarRef = useRef();
+}: { children: JSX.Element, title?: string, header?: JSX.Element | FrontPageLayoutNavbarHeaderCallback, headerClass?: string }) {
+  const navbarRef = useRef<HTMLElement>();
   const [isNavHidden, setIsNavHidden] = useState(false);
   const session = useSession();
 

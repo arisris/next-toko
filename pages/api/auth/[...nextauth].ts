@@ -4,9 +4,12 @@ import prisma from "@/libs/prisma";
 import isEmail from "validator/lib/isEmail";
 import { Prisma } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { NextApiRequest, NextApiResponse } from "next";
 
-/** @type {import("next").NextApiHandler} */
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   return await NextAuth(req, res, {
     // in this case we not use db adapter to persist session
     providers: [
@@ -25,8 +28,7 @@ export default async function handler(req, res) {
           }
         },
         async authorize({ email, password }, req) {
-          /** @type { Prisma.UsersWhereInput } */
-          let where = {};
+          let where: Prisma.UsersWhereInput = {};
           if (isEmail(email)) {
             where.email = email;
           } else {
@@ -45,6 +47,7 @@ export default async function handler(req, res) {
       async session({ session, token, user }) {
         if (session.user) {
           if (token?.userId) session.user.id = token.userId;
+
           const userData = await prisma.users.findUnique({
             where: { id: session.user.id },
             select: {
@@ -53,13 +56,12 @@ export default async function handler(req, res) {
           });
           if (userData?.role) session.user.role = userData.role?.id;
         }
-        //console.log(session)
         return session;
       },
       async jwt({ token, user, account, profile, isNewUser }) {
         if (user?.id) {
           // invoked the first time user signIn save it to token object
-          token.userId = user.id;
+          token.userId = parseInt(user.id);
         }
         return token;
       }

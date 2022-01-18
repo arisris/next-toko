@@ -1,12 +1,13 @@
-const {
-  PrismaClient,
-  EnumPostType,
+import {
   EnumPostStatus,
+  EnumPostType,
   EnumProductStatus,
-  EnumUserStatus
-} = require("@prisma/client");
-const bcrypt = require("bcryptjs");
-const faker = require("faker");
+  EnumUserStatus,
+  PrismaClient
+} from "@prisma/client";
+import { hash } from "bcryptjs";
+import * as faker from "faker";
+
 const prisma = new PrismaClient();
 
 const mapId = ({ id }) => ({ id });
@@ -53,7 +54,7 @@ const createProductVariants = () => ({
   name: faker.commerce.productName(),
   description: faker.commerce.productDescription(),
   image: faker.image.fashion(300, 300),
-  price: Math.abs(faker.commerce.price()),
+  price: Math.abs(Number(faker.commerce.price())),
   stock: faker.datatype.number(100)
 });
 
@@ -176,7 +177,7 @@ async function main() {
     data: {
       name: "admin",
       email: "admin@example.net",
-      password: bcrypt.hashSync("password123", 10),
+      password: await hash("password123", 10),
       status: EnumUserStatus.ACTIVE,
       phoneNumber: "081234567890",
       role: {

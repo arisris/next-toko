@@ -1,13 +1,9 @@
 // import { getToken } from "next-auth/jwt";
-import { NextResponse } from "next/server";
+import { NextMiddleware, NextResponse } from "next/server";
 
-/**
- * Note: This middleware run only on Node server or Edge Runtime like vercel
- * @type {import("next/server").NextMiddleware}
- */
-export default async function _middleware(req, event) {
+const handler: NextMiddleware = async (req, event) => {
   const response = NextResponse.next();
-  
+
   /**
    * Todo the next-auth session can be reading with this
    */
@@ -24,4 +20,6 @@ export default async function _middleware(req, event) {
   // this is example to append headers object at all request
   response.headers.set("X-Site-Name", "Arisris.con");
   return response;
-}
+};
+
+export default handler;

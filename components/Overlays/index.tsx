@@ -2,11 +2,6 @@ import { Transition } from "@headlessui/react";
 import { useUpdateEffect } from "ahooks";
 import clsx from "clsx";
 
-/**
- *
- * @param {{ show: boolean, className: string, shouldFocus: boolean }} param0
- * @returns
- */
 export default function Overlays({
   show = false,
   className,
@@ -25,7 +20,10 @@ export default function Overlays({
   return (
     <Transition
       show={show}
-      className={clsx("absolute min-w-screen min-h-screen inset-0 translucent", className)}
+      className={clsx(
+        "absolute min-w-screen min-h-screen inset-0 translucent",
+        className
+      )}
       enter={"transition duration-300"}
       enterFrom={"bg-black opacity-0"}
       enterTo={"bg-black opacity-30"}
