@@ -3,6 +3,7 @@ import {
   EnumPostType,
   EnumProductStatus,
   EnumUserStatus,
+  EnumRole,
   PrismaClient
 } from "@prisma/client";
 import { hash } from "bcryptjs";
@@ -11,18 +12,6 @@ import * as faker from "faker";
 const prisma = new PrismaClient();
 
 const mapId = ({ id }) => ({ id });
-
-// this is simple
-const userPermissions = {
-  user: ["manage:ownPosts"],
-  seller: ["manage:ownProducts", "manage:ownPosts"],
-  admin: ["manage:anything"]
-};
-const permissionsName = Object.values(userPermissions)
-  .reduce((a, b) => (a.push(...b), a), [])
-  .filter((a, i, u) => i === u.indexOf(a));
-
-//process.exit();
 
 // blog & products
 
@@ -153,25 +142,6 @@ async function main() {
     }
   });
 
-  for (let permission of permissionsName) {
-    await prisma.permissions.create({
-      data: {
-        name: permission
-      }
-    });
-  }
-
-  for (let role of Object.keys(userPermissions)) {
-    await prisma.roles.create({
-      data: {
-        name: role,
-        permissions: {
-          connect: userPermissions[role].map((name) => ({ name }))
-        }
-      }
-    });
-  }
-
   // create admin and assign it example posts
   await prisma.users.create({
     data: {
@@ -180,9 +150,7 @@ async function main() {
       password: await hash("password123", 10),
       status: EnumUserStatus.ACTIVE,
       phoneNumber: "081234567890",
-      role: {
-        connect: { name: "admin" }
-      },
+      role: EnumRole.ADMIN,
       emailVerified: true,
       posts: {
         connect: [...blogPosts.map(mapId), ...productPosts.map(mapId)]

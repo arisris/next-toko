@@ -72,6 +72,12 @@ enum EnumRestResponse {
   WARNING
 }
 
+enum EnumRole {
+  ADMIN
+  SELLER
+  USER
+}
+
 enum EnumUserStatus {
   ACTIVE
   INACTIVE
@@ -97,15 +103,6 @@ scalar JSONObject @specifiedBy(url: "http://www.ecma-international.org/publicati
 
 type Mutation {
   registerUser(email: String!, name: String!, password: String!, password_conf: String!): RestResponse
-}
-
-type Permissions {
-  createdAt: DateTime!
-  description: String
-  id: Int!
-  name: String!
-  roles(skip: Int = 0, take: Int = 5): [Roles!]!
-  updatedAt: DateTime!
 }
 
 type PostLikes {
@@ -153,11 +150,9 @@ type Query {
   getCategories(id: Int!): Categories
   getCommentLikes(id: Int!): CommentLikes
   getComments(id: Int!): Comments
-  getPermissions(id: Int!): Permissions
   getPost(id: Int!): Posts
   getPostLikes(id: Int!): PostLikes
   getProductVariants(id: Int!): ProductVariants
-  getRoles(id: Int!): Roles
   getSocialAccounts(id: Int!): SocialAccounts
   getTags(id: Int!): Tags
   getUser(id: Int!): Users
@@ -169,15 +164,6 @@ type RestResponse {
   data: JSON
   message: String
   type: EnumRestResponse
-}
-
-type Roles {
-  createdAt: DateTime!
-  description: String
-  id: Int!
-  name: String!
-  permissions(skip: Int = 0, take: Int = 5): [Permissions!]!
-  updatedAt: DateTime!
 }
 
 type SocialAccounts {
@@ -213,7 +199,7 @@ type Users {
   name: String!
   phoneNumber: String
   postLikes(skip: Int = 0, take: Int = 5): [PostLikes!]!
-  role: Roles
+  role: EnumRole
   socialAccounts(skip: Int = 0, take: Int = 5): [SocialAccounts!]!
   status: EnumUserStatus!
   updatedAt: DateTime!
