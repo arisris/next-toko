@@ -1,11 +1,21 @@
+import { useSession } from "next-auth/react";
 import Head from "next/head";
+import Router from "next/router";
+import { useEffect } from "react";
 import CopyrightFooter from "../CopyrightFooter";
 
-export default function AuthLayout({ title, header, children }: {
+export default function AuthLayout({ title, header, children, redirectIfauthenticated = false }: {
   title?: string;
   header?: JSX.Element | JSX.Element[];
   children: JSX.Element | JSX.Element[];
+  redirectIfauthenticated?: boolean
 }) {
+  const session = useSession();
+  useEffect(() => {
+    if (redirectIfauthenticated && session?.status === "authenticated") {
+      Router.push("/");
+    }
+  }, [redirectIfauthenticated, session.status])
   return (
     <>
       <Head>

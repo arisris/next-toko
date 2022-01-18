@@ -1,12 +1,6 @@
 import { EnumPostType } from "@prisma/client";
 import { hash } from "bcryptjs";
-import {
-  extendType,
-  intArg,
-  nonNull,
-  objectType,
-  stringArg
-} from "nexus";
+import { extendType, intArg, nonNull, objectType, stringArg } from "nexus";
 import { Users } from "nexus-prisma";
 
 const UsersType = objectType({
@@ -23,13 +17,6 @@ const UsersType = objectType({
     t.field(Users.phoneNumber);
     t.field(Users.createdAt);
     t.field(Users.updatedAt);
-    // t.field(Users.password.name, {
-    //   type: Users.password.type,
-    //   authorize: async (_, __, ctx) => {
-    //     return ctx.can("manage:anything");
-    //     return false;
-    //   }
-    // });
     t.field(Users.wallet);
     t.field("latestPosts", {
       type: Users.posts.type,
@@ -141,32 +128,32 @@ const UsersType = objectType({
 const MutationType = extendType({
   type: "Mutation",
   definition(t) {
-    t.field("registerUser", {
-      type: "RestResponse",
-      args: {
-        name: nonNull(stringArg()),
-        email: nonNull(stringArg()),
-        password: nonNull(stringArg()),
-        password_conf: nonNull(stringArg())
-      },
-      async resolve(_, { name, email, password, password_conf }, ctx) {
-        if (password !== password_conf)
-          throw new Error("Password confirmation does't not match");
-        password = await hash(password, 10);
-        const user = await ctx.prisma.users.create({
-          data: {
-            name,
-            password,
-            email
-          }
-        });
-        if (!user) throw new Error("Registratio failed");
-        return {
-          type: "SUCCESS",
-          message: "New User Created!"
-        };
-      }
-    });
+    // t.field("registerUser", {
+    //   type: "RestResponse",
+    //   args: {
+    //     name: nonNull(stringArg()),
+    //     email: nonNull(stringArg()),
+    //     password: nonNull(stringArg()),
+    //     password_conf: nonNull(stringArg())
+    //   },
+    //   async resolve(_, { name, email, password, password_conf }, ctx) {
+    //     if (password !== password_conf)
+    //       throw new Error("Password confirmation does't not match");
+    //     password = await hash(password, 10);
+    //     const user = await ctx.prisma.users.create({
+    //       data: {
+    //         name,
+    //         password,
+    //         email
+    //       }
+    //     });
+    //     if (!user) throw new Error("Registratio failed");
+    //     return {
+    //       type: "SUCCESS",
+    //       message: "New User Created!"
+    //     };
+    //   }
+    // });
   }
 });
 
