@@ -5,7 +5,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { Button } from "konsta/react";
 
-export default function FrontPageAuthMenu() {
+export default function FrontPageNavbarMenuAuth() {
   const [open, setOpen] = useState(false);
   return (
     <div className="relative">

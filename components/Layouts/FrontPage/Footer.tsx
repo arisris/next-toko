@@ -163,7 +163,7 @@ export default function FrontPageFooter() {
       </Menu>
       <div className="col-span-12 grid grid-cols-12 lg:my-6 text-sm">
         <hr className="col-span-12 py-4" />
-        <CopyrightFooter className="text-sm" />
+        <CopyrightFooter className="text-sm pb-4 lg:pb-0" />
         <div className="hidden lg:flex col-span-12 lg:col-span-6 justify-end">
           <Image
             src="/assets/payment-methods.png"
