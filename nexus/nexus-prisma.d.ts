@@ -4,7 +4,7 @@
  */
 
 
-import type { ContextTypeObject as ctx } from "./../types/global"
+import type { Context } from "./../types/contextType"
 import type { FieldAuthorizeResolver } from "nexus/dist/plugins/fieldAuthorizePlugin"
 import type { core } from "nexus"
 declare global {
@@ -215,6 +215,9 @@ export interface NexusGenFieldTypes {
     status: NexusGenEnums['EnumCommentStatus'] | null; // EnumCommentStatus
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  Mutation: { // field return type
+    registerUser: NexusGenRootTypes['RestResponse'] | null; // RestResponse
+  }
   PostLikes: { // field return type
     author: NexusGenRootTypes['Users'] | null; // Users
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -359,6 +362,9 @@ export interface NexusGenFieldTypeNames {
     status: 'EnumCommentStatus'
     updatedAt: 'DateTime'
   }
+  Mutation: { // field return type name
+    registerUser: 'RestResponse'
+  }
   PostLikes: { // field return type name
     author: 'Users'
     createdAt: 'DateTime'
@@ -490,6 +496,14 @@ export interface NexusGenArgTypes {
       take: number | null; // Int
     }
   }
+  Mutation: {
+    registerUser: { // args
+      email: string; // String!
+      name: string; // String!
+      password: string; // String!
+      password_conf: string; // String!
+    }
+  }
   Posts: {
     categories: { // args
       skip?: number | null; // Int
@@ -618,7 +632,7 @@ export type NexusGenFeaturesConfig = {
 }
 
 export interface NexusGenTypes {
-  context: ctx;
+  context: Context;
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars;

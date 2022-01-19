@@ -22,9 +22,14 @@ declare module "next/app" {
   };
 }
 
-export type ContextTypeObject = {
-  req: NextApiRequest
-  res: NextApiResponse,
-  session: Session,
-  prisma: PrismaClient
+declare global {
+  type ServerControllerProps = {
+    req: NextApiRequest;
+    res: NextApiResponse;
+    session: Session;
+    prisma: PrismaClient;
+  };
+  type ServerControllerHandler<Res = any> = (
+    context: ServerControllerProps
+  ) => Promise<Res> | Promise<any>;
 }

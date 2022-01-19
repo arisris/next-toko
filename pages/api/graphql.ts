@@ -2,8 +2,8 @@ import { graphqlHTTP } from "express-graphql";
 import { getSession } from "next-auth/react";
 import prisma from "@/libs/prisma";
 import schema from "@/nexus/index";
-import { ContextTypeObject } from "types/global";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getServerContext } from "@/libs/controller";
 export const config = {
   api: {
     bodyParser: false
@@ -11,13 +11,7 @@ export const config = {
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getSession({ req });
-  let context: ContextTypeObject = {
-    req,
-    res,
-    session,
-    prisma
-  }
+  const context = await getServerContext(req, res);
   const middleware = graphqlHTTP({
     schema,
     graphiql: process.env.NODE_ENV !== "production",
