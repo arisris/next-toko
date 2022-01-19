@@ -128,32 +128,32 @@ const UsersType = objectType({
 const MutationType = extendType({
   type: "Mutation",
   definition(t) {
-    // t.field("registerUser", {
-    //   type: "RestResponse",
-    //   args: {
-    //     name: nonNull(stringArg()),
-    //     email: nonNull(stringArg()),
-    //     password: nonNull(stringArg()),
-    //     password_conf: nonNull(stringArg())
-    //   },
-    //   async resolve(_, { name, email, password, password_conf }, ctx) {
-    //     if (password !== password_conf)
-    //       throw new Error("Password confirmation does't not match");
-    //     password = await hash(password, 10);
-    //     const user = await ctx.prisma.users.create({
-    //       data: {
-    //         name,
-    //         password,
-    //         email
-    //       }
-    //     });
-    //     if (!user) throw new Error("Registratio failed");
-    //     return {
-    //       type: "SUCCESS",
-    //       message: "New User Created!"
-    //     };
-    //   }
-    // });
+    t.field("registerUser", {
+      type: "RestResponse",
+      args: {
+        name: nonNull(stringArg()),
+        email: nonNull(stringArg()),
+        password: nonNull(stringArg()),
+        password_conf: nonNull(stringArg())
+      },
+      async resolve(_, { name, email, password, password_conf }, ctx) {
+        if (password !== password_conf)
+          throw new Error("Password confirmation does't not match");
+        password = await hash(password, 10);
+        const user = await ctx.prisma.users.create({
+          data: {
+            name,
+            password,
+            email
+          }
+        });
+        if (!user) throw new Error("Registratio failed");
+        return {
+          type: "SUCCESS",
+          message: "New User Created!"
+        };
+      }
+    });
   }
 });
 

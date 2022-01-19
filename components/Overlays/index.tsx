@@ -21,7 +21,7 @@ export default function Overlays({
     <Transition
       show={show}
       className={clsx(
-        "absolute min-w-screen min-h-screen inset-0 translucent",
+        "absolute min-w-screen min-h-screen inset-0",
         className
       )}
       enter={"transition duration-300"}

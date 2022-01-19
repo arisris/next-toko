@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 
-export default function FrontPageCategories(props: { isNavHidden?: boolean }) {
+export default function FrontPageCategoriesMenu(props: { isNavHidden?: boolean }) {
   /** @type {import('react').MutableRefObject<HTMLElement>} */
   const ref = useRef<HTMLDivElement>();
   const router = useRouter();
@@ -38,14 +38,14 @@ export default function FrontPageCategories(props: { isNavHidden?: boolean }) {
       className={clsx(
         "flex lg:items-center lg:bg-none lg:p-0 lg:relative lg:h-auto",
         {
-          "absolute inset-0 z-20 bg-gradient-to-b from-gray-300 to-white h-screen flex-col p-10 transition-all duration-300":
+          "absolute inset-0 z-20 bg-gradient-to-b from-gray-300 to-white h-screen flex-col py-20 px-10 transition-all duration-300":
             open
         }
       )}
     >
       <button
         type="button"
-        className={clsx("flex lg:hidden p-1", {
+        className={clsx("flex lg:hidden p-1 transition-all", {
           "self-end": open
         })}
         onClick={handleToggle}

@@ -26,12 +26,12 @@ export default function FrontPageSearchForm() {
   return (
     <>
       {/* Overlays */}
-      <Overlays show={focus} shouldFocus className="z-10" />
+      <Overlays show={focus} shouldFocus className="z-10 pb-48" />
       {/* Search form */}
       <div
-        className={clsx("w-full p-2", {
-          "absolute top-0 md:bg-auto md:relative z-20": focus,
-          relative: !focus
+        className={clsx("w-full py-2", {
+          "absolute inset-0 md:bg-auto md:relative z-20 px-2": focus,
+          "relative": !focus
         })}
       >
         <form ref={ref} method="GET" action="/search">

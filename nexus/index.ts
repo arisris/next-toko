@@ -33,19 +33,12 @@ function schema() {
       ],
       plugins: [fieldAuthorizePlugin(), prismaNestedLists()],
       outputs: {
-        schema: path.join(
-          process.cwd(),
-          "nexus/schema.graphql"
-        ),
-        typegen: path.join(
-          process.cwd(),
-          "nexus/nexus-prisma.d.ts"
-        )
+        schema: path.join(process.cwd(), "nexus/schema.graphql"),
+        typegen: path.join(process.cwd(), "nexus/nexus-prisma.d.ts")
       },
       contextType: {
-        module: path.resolve(path.join(process.cwd(), "types/global.d.ts")),
-        export: "ContextTypeObject",
-        alias: "ctx"
+        module: path.resolve(path.join(process.cwd(), "types/contextType.d.ts")),
+        export: "Context"
       },
       sourceTypes: {
         modules: [

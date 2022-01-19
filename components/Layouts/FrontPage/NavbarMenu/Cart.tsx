@@ -3,7 +3,7 @@ import { NavbarMenu } from "@/components/Menu/NavbarMenu";
 import { SessionContextValue } from "next-auth/react";
 import { FaCartPlus } from "react-icons/fa";
 
-export default function FrontPageUserCartMenu({ session }: { session: SessionContextValue}) {
+export default function FrontPageNavbarMenuCart({ session }: { session: SessionContextValue}) {
   return (
     <NavbarMenu
       button={

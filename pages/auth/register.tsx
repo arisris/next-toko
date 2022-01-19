@@ -2,18 +2,17 @@ import TextInput from "@/components/Form/Input";
 import AuthLayout from "@/components/Layouts/Auth";
 import { Button, Card } from "konsta/react";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
+import { FieldValue, FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
+type formInputValues = {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string
+}
 export default function PageRegister() {
-  const { register, handleSubmit } = useForm({
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      password_confirmation: ""
-    }
-  });
-  const onSubmit = (data) => {
+  const { register, handleSubmit } = useForm<formInputValues>();
+  const onSubmit : SubmitHandler<formInputValues> = (data) => {
     console.log(data);
   };
   return (
