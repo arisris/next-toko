@@ -1,5 +1,7 @@
 import clsx from "clsx";
 import { Tabbar, TabbarLink } from "konsta/react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { forwardRef, HTMLProps, useState } from "react";
 import {
   HiOutlineChatAlt2,
@@ -12,6 +14,8 @@ const FrontPageFooterMenu = forwardRef<
   HTMLDivElement,
   HTMLProps<HTMLDivElement>
 >((props, ref) => {
+  const session = useSession();
+  const router = useRouter();
   const { className } = props;
   const [activeTab, setActiveTab] = useState(11);
   return (
@@ -34,7 +38,12 @@ const FrontPageFooterMenu = forwardRef<
         />
         <TabbarLink
           active={activeTab === 44}
-          onClick={() => setActiveTab(44)}
+          onClick={() => {
+            setActiveTab(44);
+            if (session.status !== "authenticated") {
+              router.push(`/auth/login?callbackUrl=${router.asPath}`);
+            }
+          }}
           label={<HiOutlineUserCircle size={24} />}
         />
       </Tabbar>
