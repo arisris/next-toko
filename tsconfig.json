@@ -21,18 +21,17 @@
     "incremental": true,
     "baseUrl": "./",
     "paths": {
-      "nexus": ["node_modules/nexus/dist"],
       "@/components/*": [
         "components/*"
       ],
-      "@/libs/*": [
-        "libs/*"
+      "@/lib/*": [
+        "lib/*"
       ],
-      "@/nexus/*": [
-        "nexus/*"
+      "@/store/*": [
+        "store/*"
       ],
-      "@/redux/*": [
-        "redux/*"
+      "@/server/*": [
+        "server/*"
       ],
       "@/controllers/*": [
         "controllers/*"
@@ -42,7 +41,6 @@
       ]
     },
     "typeRoots": [
-      "./node_modules/@types",
       "./types"
     ],
   },

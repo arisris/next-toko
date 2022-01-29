@@ -1,208 +1,116 @@
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-  //shadowDatabaseUrl = env("SHADOW_DATABASE_URL") // Only needed when using a cloud provider that doesn't support the creation of new databases, like Heroku. Learn more: https://pris.ly/migrate-shadow
-}
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
-  //previewFeatures = ["referentialActions"] // You won't need this in Prisma 3.X or higher.
 }
 
-generator nexusPrisma {
-  provider = "nexus-prisma"
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
-enum EnumUserStatus {
-  ACTIVE
-  INACTIVE
-  SUSPENDED
+// Nextauth
+
+model Account {
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.Text
+  refresh_token_expires_in Int?
+  access_token             String? @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? @db.Text
+  session_state            String?
+  oauth_token_secret       String?
+  oauth_token              String?
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("account")
 }
 
-enum EnumPostStatus {
-  PUBLISH
-  DRAFT
-  PRIVATE
-  DELETED
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
 }
 
-enum EnumPostType {
-  BLOGPOST
-  PRODUCT
-  PAGES
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationToken")
 }
 
-enum EnumProductStatus {
-  OUTOFSTOCK
-  DELETED
-  AVAILABLE
-  DRAFT
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  roleId        Int?
+  accounts      Account[]
+  sessions      Session[]
+  sites         Site[]
+  role          Role?     @relation(fields: [roleId], references: [id])
+
+  @@map("user")
 }
 
-enum EnumCommentStatus {
-  PUBLISH
-  PENDING
-  REJECTED
-  DELETED
-}
+// Start custom
 
-enum EnumWalletMutationType {
-  TOPUP
-  TRANSFER
-  PURCHASE
-  DEFAULT
-}
-
-enum EnumRole {
-  USER
-  SELLER
-  ADMIN
-}
-
-model Users {
-  id             Int              @id @default(autoincrement())
-  name           String           @unique
-  password       String
-  email          String           @unique
-  status         EnumUserStatus   @default(INACTIVE)
-  emailVerified  Boolean?         @default(false)
-  phoneNumber    String?
-  image          String?          @default("https://0.gravatar.com/avatar/me?s=96") @db.Text
-  createdAt      DateTime?        @default(now())
-  updatedAt      DateTime         @updatedAt
-  role           EnumRole?        @default(USER)
-  socialAccounts SocialAccounts[]
-  posts          Posts[]
-  comments       Comments[]
-  commentLikes   CommentLikes[]
-  postLikes      PostLikes[]
-  wallet         Wallet?          @relation(fields: [walletId], references: [id])
-  walletId       Int?
-}
-
-model SocialAccounts {
-  id           Int      @id @default(autoincrement())
-  provider     String
-  token        String   @db.Text
-  refreshToken String   @db.Text
-  userId       Int?
-  user         Users?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-}
-
-model Posts {
-  id              Int               @id @default(autoincrement())
-  type            EnumPostType      @default(BLOGPOST)
-  name            String            @db.VarChar(255)
-  image           String?           @db.Text
-  body            String?           @db.LongText
-  tags            Tags[]
-  categories      Categories[]
-  productVariants ProductVariants[]
-  comments        Comments[]
-  status          EnumPostStatus?   @default(DRAFT)
-  authorId        Int?
-  author          Users?            @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  createdAt       DateTime?         @default(now())
-  updatedAt       DateTime          @updatedAt
-  postLikes       PostLikes[]
-}
-
-model PostLikes {
-  id        Int      @id @default(autoincrement())
-  authorId  Int?
-  author    Users?   @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  like      Boolean
-  postId    Int?
-  post      Posts?   @relation(fields: [postId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Categories {
+model Role {
   id          Int          @id @default(autoincrement())
-  type        EnumPostType @default(BLOGPOST)
+  name        String       @unique
+  displayName String?
+  permissions Permission[]
+  users       User[]
+
+  @@map("role")
+}
+
+model Permission {
+  id          Int     @id @default(autoincrement())
+  roleId      Int?
   name        String
-  description String?      @db.Text
-  posts       Posts[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  displayName String?
+  role        Role?   @relation(fields: [roleId], references: [id])
+
+  @@map("permission")
 }
 
-model Tags {
-  id          Int          @id @default(autoincrement())
-  type        EnumPostType @default(BLOGPOST)
-  name        String
-  description String?      @db.Text
-  posts       Posts[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+model Site {
+  id        String    @id @default(cuid())
+  userId    String
+  name      String
+  desc      String?   @db.Text
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products  Product[]
+
+  @@map("site")
 }
 
-model ProductVariants {
-  id          Int               @id @default(autoincrement())
-  type        String?           @default("default")
-  status      EnumProductStatus @default(DRAFT)
-  isMain      Boolean?          @default(false)
-  name        String            @db.VarChar(255)
-  description String            @db.Text
-  price       Int?              @default(0)
-  stock       Int?              @default(0)
-  image       String?           @db.Text
-  products    Posts?            @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId   Int?
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-}
+model Product {
+  id        String    @id @default(cuid())
+  siteId    String?
+  name      String
+  desc      String?
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  site      Site?     @relation(fields: [siteId], references: [id], onDelete: Cascade)
 
-model Comments {
-  id        Int                @id @default(autoincrement())
-  status    EnumCommentStatus? @default(PENDING)
-  body      String?            @db.Text
-  authorId  Int?
-  author    Users?             @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  postId    Int?
-  post      Posts?             @relation(fields: [postId], references: [id], onDelete: Cascade)
-  comments  Comments[]         @relation("CommentReplies")
-  comment   Comments?          @relation("CommentReplies", fields: [commentId], references: [id])
-  commentId Int?
-  likes     CommentLikes[]
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
-}
-
-model CommentLikes {
-  id        Int       @id @default(autoincrement())
-  authorId  Int?
-  author    Users?    @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  like      Boolean
-  commentId Int?
-  comment   Comments? @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-}
-
-// todo wallet system
-model Wallet {
-  id         Int               @id @default(autoincrement())
-  users      Users[]
-  mutations  WalletMutations[]
-  amount     Int?              @default(0)
-  isVerified Boolean?          @default(false)
-  verifiedAt DateTime?
-  createdAt  DateTime?         @default(now())
-  updatedAt  DateTime?         @updatedAt
-}
-
-model WalletMutations {
-  id         Int                    @id @default(autoincrement())
-  type       EnumWalletMutationType @default(DEFAULT)
-  walletId   Int?
-  wallet     Wallet?                @relation(fields: [walletId], references: [id], onDelete: Cascade)
-  amount     Int?                   @default(0)
-  isVerified Boolean?               @default(false)
-  verifiedAt DateTime?
-  createdAt  DateTime?              @default(now())
-  updatedAt  DateTime?              @updatedAt
+  @@map("product")
 }

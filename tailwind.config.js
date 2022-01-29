@@ -1,4 +1,4 @@
-const screenSize = require("./libs/screen-size");
+const screenSize = require("./lib/screen-size");
 const konsta = require("konsta/config")({});
 
 /** @type { import('tailwindcss/tailwind-config').TailwindConfig} */

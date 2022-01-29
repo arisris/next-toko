@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { Tabbar, TabbarLink } from "konsta/react";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { forwardRef, HTMLProps, useState } from "react";
 import {
@@ -40,9 +40,7 @@ const FrontPageFooterMenu = forwardRef<
           active={activeTab === 44}
           onClick={() => {
             setActiveTab(44);
-            if (session.status !== "authenticated") {
-              router.push(`/auth/login?callbackUrl=${router.asPath}`);
-            }
+            if (session.status !== "authenticated") signIn();
           }}
           label={<HiOutlineUserCircle size={24} />}
         />
