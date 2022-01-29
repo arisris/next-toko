@@ -46,7 +46,7 @@ export function NavbarMenu(props: {
       >
         <Menu.Items
           className={clsx(
-            "absolute right-0 min-w-[14rem] min-h-[10rem] mt-2 py-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
+            "absolute right-0 min-w-[18rem] min-h-[10rem] mt-2 py-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
             menuClass
           )}
         >
