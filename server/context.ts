@@ -1,74 +1,83 @@
 import prisma from "./prisma";
 import * as trpcNext from "@trpc/server/adapters/next";
-//import { Users } from "@prisma/client";
 import { getSession } from "next-auth/react";
+import { Role, User, Permission } from "@prisma/client";
+import { Session } from "next-auth";
+import { inferAsyncReturnType } from "@trpc/server";
 
-// export class UserContext {
-//   #user:
-//     | (Users & {
-//         permissions: Permissions[];
-//         roles: Roles[];
-//       })
-//     | null = null;
-//   constructor(private userSession: SessionUser | null = null) {}
-//   hasRole(name: string): boolean {
-//     return (
-//       !!this.#user && !!this.#user.roles.some((role) => role.slug === name)
-//     );
-//   }
-//   // assignRoleTo(name: string) {}
+export class UserContext {
+  #user:
+    | (User & {
+        role: Role & {
+          permissions: Permission[];
+        };
+      })
+    | null = null;
+  #session: Session;
+  constructor(userSession: Session | null = null) {
+    this.#session = userSession;
+  }
+  hasRole(name: string): boolean {
+    return !!this.#user && this.#user.role.name === name;
+  }
+  // assignRoleTo(name: string) {}
 
-//   // hasPermission(...values: string[]) {}
-//   // givePermissionTo(...values: string[]) {}
+  // hasPermission(...values: string[]) {}
+  // givePermissionTo(...values: string[]) {}
 
-//   // can(...values: string[]) {}
-//   // cant(...values: string[]) {}
+  // can(...values: string[]) {}
+  // cant(...values: string[]) {}
 
-//   getUser() {
-//     return this.#user;
-//   }
-//   isAdmin() {
-//     return this.hasRole("admin");
-//   }
-//   isModerator() {
-//     return this.hasRole("moderator");
-//   }
-//   isUser() {
-//     return this.hasRole("user");
-//   }
-//   isGuest() {
-//     return !this.#user;
-//   }
-//   // initialize first
-//   async init() {
-//     if (!this.#user) {
-//       if (this.userSession) {
-//         try {
-//           this.#user = await prisma.users.findUnique({
-//             where: { id: this.userSession.id },
-//             include: {
-//               permissions: true,
-//               roles: true
-//             }
-//           });
-//           delete this.#user.password;
-//         } catch (e) {
-//           this.#user = null;
-//         }
-//       }
-//     }
-//   }
-// }
+  getUser() {
+    return this.#user;
+  }
+  isAdmin() {
+    return this.hasRole("admin");
+  }
+  isModerator() {
+    return this.hasRole("moderator");
+  }
+  isUser() {
+    return this.hasRole("user");
+  }
+  isGuest() {
+    return !this.#user;
+  }
+  // initialize first
+  async init() {
+    if (!this.#user) {
+      if (this.#session) {
+        try {
+          this.#user = await prisma.user.findUnique({
+            where: { email: this.#session?.user?.email },
+            include: {
+              role: {
+                include: {
+                  permissions: true
+                }
+              }
+            }
+          });
+        } catch (e) {
+          this.#user = null;
+        }
+      }
+    }
+  }
+}
 
 export const createContext = async ({
   req,
   res
 }: trpcNext.CreateNextContextOptions) => {
-  let session = await getSession({ req });
+  let user = new UserContext(await getSession({ req }));
+  await user.init();
   return {
     req,
     res,
     prisma,
-    session
+    user
   };
 };
+
+export type Context = inferAsyncReturnType<typeof createContext>;

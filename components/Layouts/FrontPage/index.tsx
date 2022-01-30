@@ -11,20 +11,24 @@ import FrontPageFooterMenu from "./FooterMenu";
 import { FaWhatsapp } from "react-icons/fa";
 import { Fab } from "konsta/react";
 import { useClickAway } from "ahooks";
+import { router } from "@trpc/server";
 
 type FrontPageLayoutNavbarHeaderCallback = (e: { isNavHidden: boolean }) => any;
+type FrontPageLayoutProps = {
+  children: JSX.Element;
+  title?: string;
+  header?: JSX.Element | FrontPageLayoutNavbarHeaderCallback;
+  headerClass?: string;
+  requireAuth?: boolean;
+};
 
 export default function FrontPageLayout({
   children,
   title,
   header,
-  headerClass
-}: {
-  children: JSX.Element;
-  title?: string;
-  header?: JSX.Element | FrontPageLayoutNavbarHeaderCallback;
-  headerClass?: string;
-}) {
+  headerClass,
+  requireAuth = false
+}: FrontPageLayoutProps) {
   const navbarRef = useRef<HTMLDivElement>();
   const navbarBottomRef = useRef<HTMLDivElement>();
   const wrapperRef = useRef<HTMLDivElement>();
@@ -32,6 +36,11 @@ export default function FrontPageLayout({
   const footerRef = useRef<HTMLDivElement>();
   const [isNavHidden, setIsNavHidden] = useState(false);
   const session = useSession();
+
+  // if (requireAuth && session.status === "unauthenticated") {
+  //   console.log("Unauthenticated")
+  //   return <div>Loading...</div>
+  // }
 
   useClickAway(() => {
     isNavHidden && setIsNavHidden(false);
@@ -78,10 +87,13 @@ export default function FrontPageLayout({
             <div className="flex gap-2 flex-grow">
               <Link href="/">
                 <a className="ml-2 md:ml-0 flex items-center font-bold whitespace-nowrap p-2 hover:bg-gray-100 text-primary">
-                  <img
+                  {/* <img
                     className="hidden sm:block fill-current"
                     src="/assets/logo.svg"
-                  />
+                  /> */}
+                  <span className="hidden sm:block fill-current text-[20px] tracking-wide bg-gradient-to-r from-blue-900 via-primary to-blue-900 bg-clip-text text-transparent px-4 py-1">
+                    NextToko
+                  </span>
                   <span className="block sm:hidden">NT</span>
                 </a>
               </Link>
@@ -100,10 +112,11 @@ export default function FrontPageLayout({
           </div>
         )}
       </header>
-      <main className="flex-auto" ref={contentRef}>
+      <main className="flex-auto lg:mt-4" ref={contentRef}>
         <section className="container mx-auto">{children}</section>
       </main>
       <footer className="container mx-auto" ref={footerRef}>
+        {/* Mobile only */}
         <FrontPageFooterMenu
           ref={navbarBottomRef}
           className={clsx(
@@ -118,10 +131,10 @@ export default function FrontPageLayout({
             }
           )}
           draggable={true}
-          colors={{
-            bg: "bg-green-600",
-            activeBg: "bg-green-700"
-          }}
+          // colors={{
+          //   bg: "bg-green-600",
+          //   activeBg: "bg-green-700"
+          // }}
           icon={<FaWhatsapp />}
           //text="Join Us"
         />

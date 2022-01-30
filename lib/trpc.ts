@@ -5,7 +5,7 @@ import { httpLink } from "@trpc/client/links/httpLink";
 import { splitLink } from "@trpc/client/links/splitLink";
 import { QueryClient } from "react-query";
 import { site_url } from "./utils";
-import type { AppRouter } from "@/server/types";
+import type { AppRouter } from "@/server/appRouter"
 import type { inferProcedureOutput } from "@trpc/server";
 import type { Procedure } from "@trpc/server/dist/declarations/src/internals/procedure";
 

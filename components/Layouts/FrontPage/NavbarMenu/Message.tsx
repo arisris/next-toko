@@ -7,7 +7,7 @@ export default function FrontPageNavbarMenuMessage({ session }: { session: Sessi
   return (
     <NavbarMenu
       button={
-        <button type="button" className="hover:bg-gray-100 p-1">
+        <button type="button" className="hover:bg-gray-100 text-primary p-1">
           <FaComments size={24} />
         </button>
       }

@@ -1,5 +1,7 @@
 import superjson from "superjson";
-import { createRouter, errorFormater } from "./utils";
+import { createRouter } from "./createRouter";
+import { userRouter } from "./routers/users/router";
+import { errorFormater } from "./utils";
 
 export const appRouter = createRouter()
   .formatError(errorFormater)
@@ -7,5 +9,7 @@ export const appRouter = createRouter()
   // .middleware(async ({ ctx, next }) => {
   //   return next();
   // })
-  // .merge("users.", userRouter)
+  .merge("user.", userRouter)
   // .merge("auth.", authRouter);
+
+  export type AppRouter = typeof appRouter;

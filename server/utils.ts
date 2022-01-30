@@ -1,22 +1,9 @@
 import { NextApiResponse, NextApiRequest, NextApiHandler } from "next";
 import { ValidationError } from "yup";
 import { getSession } from "next-auth/react";
-import * as trpc from "@trpc/server";
-import { Context } from "./types";
 import { ucWords } from "@/lib/utils";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 
-export function site_url(path: string) {
-  if (process.browser) {
-    return path;
-  }
-  // reference for vercel.com
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}${path}`;
-  }
-  // assume localhost
-  return `http://localhost:${process.env.PORT ?? 3000}${path}`;
-}
 export const restAsyncHandler =
   (handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>) =>
   (req: NextApiRequest, res: NextApiResponse) =>
@@ -40,8 +27,6 @@ export const withSession = (handler: NextApiHandler) =>
     req.user = session?.user;
     return handler(req, res);
   });
-
-export const createRouter = () => trpc.router<Context>();
 
 export const errorFormater = ({ shape, error }) => {
   let yupError: {} | any;

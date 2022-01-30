@@ -39,7 +39,7 @@ export default function FrontPageNavbarMenuUser({
           <hr />
         </>
       )}
-      <NavbarMenuItem text="My account" href="#" />
+      <NavbarMenuItem text="My account" href="/accounts" />
       <NavbarMenuItem text="Settings" href="#" />
       <hr className="my-2" />
       <a

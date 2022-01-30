@@ -166,3 +166,5 @@ export function site_url(path: string) {
   // assume localhost
   return `http://localhost:${process.env.PORT ?? 3000}${path}`;
 }
+
+export const fakeArray = (size = 1) => Array(size).fill(null).map((_, k) => k);
