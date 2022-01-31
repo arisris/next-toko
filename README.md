@@ -29,17 +29,15 @@ $ pnpm dev
 
 After this you already have some seed data in DATABASE
 
-Test login at http://localhost:3000/api/auth/signin
+Test login with github account at http://localhost:3000/api/auth/signin
 
-user: admin
-password: password123
-
-GraphGL server located at http://localhost:3000/api/graphql
+TRPC server located at http://localhost:3000/api/trpc
 
 Thats it. Thankyou
 
 ### TODO
-Curently i'm working at graphql server api located at folder /nexus/
+
+Prepare move from graphql to trpc
 
 ### Links
 
