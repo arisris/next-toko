@@ -1,10 +1,10 @@
-const screenSize = require("./libs/screen-size");
+const screenSize = require("./lib/screen-size");
 const konsta = require("konsta/config")({});
 
 /** @type { import('tailwindcss/tailwind-config').TailwindConfig} */
 module.exports = {
   mode: "jit",
-  darkMode: false,
+  darkMode: "class",
   theme: {
     fontFamily: {
       rubik: ["Rubik", "Arial", "Helvetica", "sans-serif"]

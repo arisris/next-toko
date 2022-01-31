@@ -19,27 +19,25 @@ $_ npm -g i pnpm
 Follow instruction
 
 ```bash
-$_ git clone https://github.com/arisris/next-toko.git
-$_ cd next-toko
-$_ pnpm install
-$_ pnpm exec prisma migrate dev
-$_ pnpm exec prisma migrate reset
-$_ pnpm dev
+$ git clone https://github.com/arisris/next-toko.git
+$ cd next-toko
+$ pnpm install
+$ pnpm exec prisma migrate dev
+$ pnpm exec prisma migrate reset
+$ pnpm dev
 ```
 
 After this you already have some seed data in DATABASE
 
-Test login at http://localhost:3000/api/auth/signin
+Test login with github account at http://localhost:3000/api/auth/signin
 
-user: admin
-password: password123
-
-GraphGL server located at http://localhost:3000/api/graphql
+TRPC server located at http://localhost:3000/api/trpc
 
 Thats it. Thankyou
 
 ### TODO
-Curently i'm working at graphql server api located at folder /nexus/
+
+Prepare move from graphql to trpc
 
 ### Links
 

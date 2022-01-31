@@ -8,46 +8,69 @@ import { useSession } from "next-auth/react";
 import FrontPageCategoriesMenu from "./CategoriesMenu";
 import FrontPageNavbarMenu from "./NavbarMenu";
 import FrontPageFooterMenu from "./FooterMenu";
+import { FaWhatsapp } from "react-icons/fa";
+import { Fab } from "konsta/react";
+import { useClickAway } from "ahooks";
+import { router } from "@trpc/server";
 
 type FrontPageLayoutNavbarHeaderCallback = (e: { isNavHidden: boolean }) => any;
+type FrontPageLayoutProps = {
+  children: JSX.Element;
+  title?: string;
+  header?: JSX.Element | FrontPageLayoutNavbarHeaderCallback;
+  headerClass?: string;
+  requireAuth?: boolean;
+};
 
 export default function FrontPageLayout({
   children,
   title,
   header,
-  headerClass
-}: {
-  children: JSX.Element;
-  title?: string;
-  header?: JSX.Element | FrontPageLayoutNavbarHeaderCallback;
-  headerClass?: string;
-}) {
-  const navbarRef = useRef<HTMLElement>();
+  headerClass,
+  requireAuth = false
+}: FrontPageLayoutProps) {
+  const navbarRef = useRef<HTMLDivElement>();
   const navbarBottomRef = useRef<HTMLDivElement>();
+  const wrapperRef = useRef<HTMLDivElement>();
+  const contentRef = useRef<HTMLDivElement>();
+  const footerRef = useRef<HTMLDivElement>();
   const [isNavHidden, setIsNavHidden] = useState(false);
   const session = useSession();
 
+  // if (requireAuth && session.status === "unauthenticated") {
+  //   console.log("Unauthenticated")
+  //   return <div>Loading...</div>
+  // }
+
+  useClickAway(() => {
+    isNavHidden && setIsNavHidden(false);
+  }, [footerRef]);
+
   useEffect(() => {
-    if (navbarRef?.current?.style) {
-      let prevScroll = window.scrollY;
-      window.onscroll = () => {
-        let currentScroll = window.scrollY;
-        if (prevScroll > currentScroll) {
-          navbarRef.current.style.transform = "translateY(0)";
-          navbarBottomRef.current.style.transform = "translateY(0)";
-          setIsNavHidden(false);
-        } else {
-          navbarRef.current.style.transform = "translateY(-100%)";
-          navbarBottomRef.current.style.transform = "translateY(10vh)";
-          setIsNavHidden(true);
-        }
+    const showScrollable = () => {
+      navbarRef.current.style.transform = "translateY(0)";
+      navbarBottomRef.current.style.transform = "translateY(0)";
+    };
+    const hideScrollable = () => {
+      navbarRef.current.style.transform = "translateY(-100%)";
+      navbarBottomRef.current.style.transform = "translateY(10vh)";
+    };
+    if (wrapperRef?.current) {
+      isNavHidden ? hideScrollable() : showScrollable();
+      let prevScroll = wrapperRef.current.scrollTop;
+      wrapperRef.current.onscroll = () => {
+        let currentScroll = wrapperRef.current.scrollTop;
+        setIsNavHidden(prevScroll < currentScroll);
         prevScroll = currentScroll;
       };
     }
-  }, [navbarRef.current, navbarBottomRef.current]);
+  }, [isNavHidden]);
 
   return (
-    <section className="absolute flex flex-col w-full min-h-full text-md">
+    <section
+      ref={wrapperRef}
+      className="fixed overflow-auto flex flex-col w-full h-screen"
+    >
       <Head>
         <title>{title || "App"}</title>
         <meta
@@ -58,16 +81,19 @@ export default function FrontPageLayout({
       <header className={clsx("min-h-[4rem]", headerClass)}>
         <nav
           ref={navbarRef}
-          className="fixed top-0 flex flex-col z-10 w-full bg-white shadow-md transition-all duration-300 ease-in-out"
+          className="fixed flex flex-col z-10 w-full bg-bars-material-light dark:bg-bars-material-dark shadow-md transition-all duration-300 ease-in-out"
         >
           <div className="container mx-auto flex gap-2 items-center">
             <div className="flex gap-2 flex-grow">
               <Link href="/">
-                <a className="ml-2 md:ml-0 flex items-center font-bold whitespace-nowrap p-2 hover:bg-gray-100 text-primary">
-                  <img
+                <a className="ml-2 md:ml-0 flex items-center font-bold whitespace-nowrap p-2 hover:bg-gray-100 dark:hover:bg-bars-ios-dark text-primary">
+                  {/* <img
                     className="hidden sm:block fill-current"
                     src="/assets/logo.svg"
-                  />
+                  /> */}
+                  <span className="hidden sm:block fill-current text-[20px] tracking-wide bg-gradient-to-r from-blue-900 via-primary to-blue-900 bg-clip-text text-transparent px-4 py-1">
+                    NextToko
+                  </span>
                   <span className="block sm:hidden">NT</span>
                 </a>
               </Link>
@@ -86,23 +112,32 @@ export default function FrontPageLayout({
           </div>
         )}
       </header>
-      <main className="flex-auto">
+      <main className="flex-auto lg:mt-4" ref={contentRef}>
         <section className="container mx-auto">{children}</section>
       </main>
-      <footer className="container mx-auto">
+      <footer className="container mx-auto" ref={footerRef}>
+        {/* Mobile only */}
         <FrontPageFooterMenu
           ref={navbarBottomRef}
           className={clsx(
-            "fixed inset-x-0 bottom-0 lg:hidden z-0 transition-all duration-300 ease-in-out"
+            "fixed bottom-0 inset-x-0 lg:hidden z-0 transition-all duration-300 ease-in-out"
           )}
         />
-        {/* <Fab
-          className={clsx("fixed right-4-safe bottom-4-safe z-20", {
-            "transition-all duration-300 opacity-0 scale-0": isNavHidden
-          })}
-          icon={<FaPlus />}
-          text="Join Us"
-        /> */}
+        <Fab
+          className={clsx(
+            "fixed right-4-safe bottom-16-safe lg:bottom-4-safe",
+            {
+              "transition-all duration-300 opacity-0 scale-0": isNavHidden
+            }
+          )}
+          draggable={true}
+          // colors={{
+          //   bg: "bg-green-600",
+          //   activeBg: "bg-green-700"
+          // }}
+          icon={<FaWhatsapp />}
+          //text="Join Us"
+        />
         <FrontPageFooter />
       </footer>
     </section>

@@ -1,4 +1,4 @@
-import { noop } from "@/libs/utils";
+import { noop } from "@/lib/utils";
 import clsx from "clsx";
 import { HTMLProps } from "react";
 import { forwardRef, useState } from "react";

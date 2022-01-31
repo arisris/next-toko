@@ -67,7 +67,7 @@
   @apply hidden;
 }
 .slick-arrow {
-  @apply hidden md:block absolute top-[25%] lg:top-[40%] z-10 cursor-pointer bg-gray-100 rounded-full p-3 transition-all duration-500 hover:bg-gray-50 hover:shadow-lg touch-ripple-black;
+  @apply hidden md:block w-10 h-10 absolute top-[40%] z-10 cursor-pointer bg-gray-100 dark:bg-gray-700 rounded-full p-3 transition-all duration-500 hover:bg-gray-50 dark:hover:bg-gray-900 hover:shadow-lg touch-ripple-black;
   &.slick-next {
     @apply right-0 md:-translate-x-8 opacity-0;
   }
