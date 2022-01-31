@@ -40,7 +40,7 @@ export default function FrontPageSearchForm() {
               ref={inputRef}
               type="search"
               name="q"
-              className="form-input pl-2 pr-7 py-2 w-full text-xs bg-transparent border-gray-200 focus:ring-0 focus:border-gray-300"
+              className="form-input pl-2 pr-7 py-2 w-full text-xs bg-transparent border-list-divider-light dark:border-list-divider-dark focus:ring-0"
               placeholder="Type a product keywords"
               onFocus={() => setFocus(true)}
               onChange={(e) => {
@@ -60,7 +60,7 @@ export default function FrontPageSearchForm() {
           </div>
           <Transition
             className={clsx(
-              "absolute w-full inset-x-0 top-0 p-2 pt-14 shadow-xl bg-white text-xs rounded-md"
+              "absolute w-full inset-x-0 top-0 p-2 pt-14 shadow-xl bg-popover-light dark:bg-popover-dark text-xs rounded-md"
             )}
             enter={"transition duration-150 ease-in"}
             enterFrom={"opacity-0 scale-95 -translate-y-5"}
@@ -87,7 +87,7 @@ export default function FrontPageSearchForm() {
             </div>
             {[0].map((i) => (
               <Link key={i} href={`/search?q=${i}`}>
-                <a className="block min-w-full p-2 border-b font-semibold hover:bg-gray-50 hover:underline">
+                <a className="block min-w-full p-2 font-semibold hover:bg-gray-50 dark:hover:bg-bars-ios-dark hover:underline">
                   Search product {i}
                 </a>
               </Link>

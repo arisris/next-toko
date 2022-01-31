@@ -81,12 +81,12 @@ export default function FrontPageLayout({
       <header className={clsx("min-h-[4rem]", headerClass)}>
         <nav
           ref={navbarRef}
-          className="fixed flex flex-col z-10 w-full bg-white shadow-md transition-all duration-300 ease-in-out"
+          className="fixed flex flex-col z-10 w-full bg-bars-material-light dark:bg-bars-material-dark shadow-md transition-all duration-300 ease-in-out"
         >
           <div className="container mx-auto flex gap-2 items-center">
             <div className="flex gap-2 flex-grow">
               <Link href="/">
-                <a className="ml-2 md:ml-0 flex items-center font-bold whitespace-nowrap p-2 hover:bg-gray-100 text-primary">
+                <a className="ml-2 md:ml-0 flex items-center font-bold whitespace-nowrap p-2 hover:bg-gray-100 dark:hover:bg-bars-ios-dark text-primary">
                   {/* <img
                     className="hidden sm:block fill-current"
                     src="/assets/logo.svg"

@@ -9,7 +9,7 @@ export const NavbarMenuItem = ({ text, href }: { text: any; href: string }) => {
       <Link href={href}>
         <a
           className={clsx(
-            "block px-3 py-2 hover:transition-all hover:pl-5 hover:bg-gray-100",
+            "block px-3 py-2 hover:transition-all hover:pl-5 hover:bg-gray-100 dark:hover:bg-bars-ios-dark",
             {}
           )}
         >
@@ -31,7 +31,7 @@ export function NavbarMenu(props: {
       <Menu.Button
         as="div"
         role="button"
-        className="inline-flex gap-1 items-center hover:bg-gray-100 p-1 cursor-pointer select-none"
+        className="inline-flex gap-1 items-center hover:bg-gray-100 dark:hover:bg-bars-ios-dark p-1 cursor-pointer select-none"
       >
         {button}
       </Menu.Button>
@@ -46,7 +46,7 @@ export function NavbarMenu(props: {
       >
         <Menu.Items
           className={clsx(
-            "absolute right-0 min-w-[18rem] min-h-[10rem] mt-2 py-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
+            "absolute right-0 min-w-[18rem] min-h-[10rem] mt-2 py-2 origin-top-right bg-popover-light dark:bg-popover-dark divide-y divide-popover-light dark:divide-popover-dark rounded-md shadow-lg ring-1 ring-popover-light dark:ring-popover-dark ring-opacity-5 focus:outline-none",
             menuClass
           )}
         >

@@ -38,7 +38,7 @@ export default function FrontPageCategoriesMenu(props: { isNavHidden?: boolean }
       className={clsx(
         "flex lg:items-center lg:bg-none lg:p-0 lg:relative lg:h-auto",
         {
-          "absolute inset-0 z-20 bg-gradient-to-b from-gray-300 to-white h-screen flex-col py-20 px-10 transition-all duration-300":
+          "absolute inset-0 z-20 bg-gradient-to-b from-gray-300 to-white dark:from-block-strong-dark dark:to-black h-screen flex-col py-20 px-10 transition-all duration-300":
             open
         }
       )}

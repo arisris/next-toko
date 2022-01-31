@@ -21,7 +21,7 @@ export default function Skeleton({
   return show ? (
     <div
       className={clsx(
-        "p-2 rounded-md bg-gray-300 cursor-wait",
+        "p-2 rounded-md bg-gray-300 dark:bg-bars-material-dark cursor-wait",
         {
           "animate-ping": animate === "ping",
           "animate-pulse": animate === "pulse"

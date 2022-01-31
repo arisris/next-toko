@@ -21,6 +21,9 @@
     "incremental": true,
     "baseUrl": "./",
     "paths": {
+      "konsta/shared/*": [
+        "node_modules/konsta/react/esm/shared/*"
+      ],
       "@/components/*": [
         "components/*"
       ],

@@ -1,8 +1,8 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document';
+import Document, { Html, Head, Main, NextScript } from "next/document";
 export default class MyDocument extends Document {
   render() {
     return (
-      <Html lang="en">
+      <Html lang="en" className="light">
         <Head>
           <link href="/favicon.ico" rel="shortcut icon" />
           {/* <link
@@ -93,7 +93,7 @@ export default class MyDocument extends Document {
           )} */}
           {/* <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500&amp;display=swap" rel="stylesheet" /> */}
         </Head>
-        <body className="bg-gray-100 text-gray-700">
+        <body className="bg-page-material-light text-page-material-dark dark:bg-page-material-dark dark:text-page-material-light">
           <Main />
           <NextScript />
         </body>

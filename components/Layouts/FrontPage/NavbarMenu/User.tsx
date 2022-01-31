@@ -45,7 +45,7 @@ export default function FrontPageNavbarMenuUser({
       <a
         href="#signOut"
         onClick={(e) => (e.preventDefault(), signOut())}
-        className="block px-3 py-2 hover:transition-all hover:pl-5 hover:bg-gray-100"
+        className="block px-3 py-2 hover:transition-all hover:pl-5 hover:bg-gray-100 dark:hover:bg-bars-ios-dark"
       >
         SignOut
       </a>

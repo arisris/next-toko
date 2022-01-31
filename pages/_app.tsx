@@ -27,7 +27,7 @@ function App({
       <StoreContext.Provider value={store}>
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
           <QueryClientProvider client={queryClient}>
-            <KonstaApp theme="material" safeAreas={true}>
+            <KonstaApp theme="material" safeAreas={true} dark={true}>
               {Component.protected ? (
                 <AuthorizePage Component={Component} {...pageProps}>
                   <Component {...pageProps} />
