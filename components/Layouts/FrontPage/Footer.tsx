@@ -1,7 +1,10 @@
+import { useDarkMode } from "@/lib/hooks/useDarkMode";
 import clsx from "clsx";
+import { Block, Button, Chip } from "konsta/react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaEnvelope, FaMap, FaPhone } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaEnvelope, FaMap, FaMoon, FaPhone, FaSun } from "react-icons/fa";
 import CopyrightFooter from "../CopyrightFooter";
 
 function Menu({ title, className, children }) {
@@ -14,6 +17,9 @@ function Menu({ title, className, children }) {
 }
 
 export default function FrontPageFooter() {
+  const [mounted, setMounted] = useState(false);
+  const { toggle, dark } = useDarkMode();
+  useEffect(() => setMounted(true), []);
   return (
     <div className="grid grid-cols-12 lg:grid-cols-6 gap-8 lg:gap-2 mt-8 px-4 md:px-0">
       <Menu className="col-span-12 lg:col-span-2" title={"Contact US"}>
@@ -123,43 +129,51 @@ export default function FrontPageFooter() {
         </ul>
       </Menu>
       <Menu className="col-span-6 lg:col-span-1" title={"Tags"}>
-        <ul className="mt-4 text-sm flex gap-4 tracking-wide flex-wrap">
-          <li>
-            <Link href="#">
-              <a className="hover:text-gray-600 hover:underline border p-1.5">
-                Accesories
-              </a>
-            </Link>
-          </li>
-          <li>
-            <Link href="#">
-              <a className="hover:text-gray-600 hover:underline border p-1.5">
-                Electronics
-              </a>
-            </Link>
-          </li>
-          <li>
-            <Link href="#">
-              <a className="hover:text-gray-600 hover:underline border p-1.5">
-                Entertainment
-              </a>
-            </Link>
-          </li>
-          <li>
-            <Link href="#">
-              <a className="hover:text-gray-600 hover:underline border p-1.5">
-                Fashion
-              </a>
-            </Link>
-          </li>
-          <li>
-            <Link href="#">
-              <a className="hover:text-gray-600 hover:underline border p-1.5">
-                Gatgets
-              </a>
-            </Link>
-          </li>
-        </ul>
+        <div className="mt-4">
+          <Link href="#">
+            <Chip component="a" className="m-0.5 cursor-pointer">
+              Handphone
+            </Chip>
+          </Link>
+          <Link href="#">
+            <Chip component="a" className="m-0.5 cursor-pointer">
+              Kroto
+            </Chip>
+          </Link>
+          <Link href="#">
+            <Chip component="a" className="m-0.5 cursor-pointer">
+              Speaker
+            </Chip>
+          </Link>
+          <Link href="#">
+            <Chip component="a" className="m-0.5 cursor-pointer">
+              Jacket
+            </Chip>
+          </Link>
+          <Link href="#">
+            <Chip component="a" className="m-0.5 cursor-pointer">
+              Snack
+            </Chip>
+          </Link>
+          <Link href="#">
+            <Chip component="a" className="m-0.5 cursor-pointer">
+              Jam Tangan
+            </Chip>
+          </Link>
+        </div>
+        {mounted && (
+          <div className="mt-4">
+            <Button
+              onClick={() => toggle()}
+              inline
+              clear
+              rounded
+              className="gap-2 items-center"
+            >
+              {dark ? <FaSun size={24} /> : <FaMoon size={24} />}
+            </Button>
+          </div>
+        )}
       </Menu>
       <div className="col-span-12 grid grid-cols-12 lg:my-6 text-sm">
         <hr className="col-span-12 py-4" />

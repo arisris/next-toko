@@ -2,6 +2,7 @@ import { Menu, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import Link from "next/link";
 import { Fragment } from "react";
+import Inlined from "../Utils/Inlined";
 
 export const NavbarMenuItem = ({ text, href }: { text: any; href: string }) => {
   return (
@@ -28,11 +29,7 @@ export function NavbarMenu(props: {
   const { button = "Menu", children, menuClass } = props;
   return (
     <Menu as="div" className="relative">
-      <Menu.Button
-        as="div"
-        role="button"
-        className="inline-flex gap-1 items-center hover:bg-gray-100 dark:hover:bg-bars-ios-dark p-1 cursor-pointer select-none"
-      >
+      <Menu.Button as={"div"} role="button">
         {button}
       </Menu.Button>
       <Transition

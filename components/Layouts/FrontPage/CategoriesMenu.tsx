@@ -1,11 +1,14 @@
 import SVGRaw from "@/components/Icon/SVGRaw";
 import { useUpdateEffect, useKeyPress } from "ahooks";
 import clsx from "clsx";
+import { Button } from "konsta/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef, useState } from "react";
 
-export default function FrontPageCategoriesMenu(props: { isNavHidden?: boolean }) {
+export default function FrontPageCategoriesMenu(props: {
+  isNavHidden?: boolean;
+}) {
   /** @type {import('react').MutableRefObject<HTMLElement>} */
   const ref = useRef<HTMLDivElement>();
   const router = useRouter();
@@ -43,15 +46,16 @@ export default function FrontPageCategoriesMenu(props: { isNavHidden?: boolean }
         }
       )}
     >
-      <button
-        type="button"
-        className={clsx("flex lg:hidden p-1 transition-all", {
+      <Button
+        className={clsx("lg:hidden", {
           "self-end": open
         })}
         onClick={handleToggle}
+        clear
+        inline
       >
         <SVGRaw d={open ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-      </button>
+      </Button>
       <div
         className={clsx("lg:flex flex-col lg:flex-row lg:gap-4 text-sm", {
           flex: open,
@@ -62,9 +66,9 @@ export default function FrontPageCategoriesMenu(props: { isNavHidden?: boolean }
           .fill(null)
           .map((_, i) => (
             <Link key={i} href={`/cat/${i}`}>
-              <a className="block w-full p-2 border-b lg:border-none whitespace-nowrap">
+              <Button component="a" inline clear className="capitalize">
                 Menu {i}
-              </a>
+              </Button>
             </Link>
           ))}
       </div>

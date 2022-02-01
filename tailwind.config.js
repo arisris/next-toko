@@ -21,7 +21,18 @@ module.exports = {
         "2xl": "5rem"
       }
     },
-    extend: konsta.theme.extend
+    extend: {
+      ...konsta.theme.extend,
+      colors: {
+        ...konsta.theme.extend.colors,
+        primary: {
+          ...konsta.theme.extend.colors.primary,
+          DEFAULT: "#377702",
+          light: "#4a9f03",
+          dark: "#244f01"
+        }
+      }
+    }
   },
   variants: {},
   purge: {

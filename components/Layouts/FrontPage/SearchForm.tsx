@@ -31,7 +31,7 @@ export default function FrontPageSearchForm() {
       <div
         className={clsx("w-full py-2", {
           "absolute inset-0 md:bg-auto md:relative z-20 px-2": focus,
-          "relative": !focus
+          relative: !focus
         })}
       >
         <form ref={ref} method="GET" action="/search">
@@ -40,7 +40,7 @@ export default function FrontPageSearchForm() {
               ref={inputRef}
               type="search"
               name="q"
-              className="form-input pl-2 pr-7 py-2 w-full text-xs bg-transparent border-list-divider-light dark:border-list-divider-dark focus:ring-0"
+              className="form-input pl-2 pr-7 py-2 w-full text-xs bg-gray-100 dark:bg-block-strong-dark focus:bg-transparent dark:focus:bg-transparent border-list-divider-light dark:border-list-divider-dark focus:ring-0"
               placeholder="Type a product keywords"
               onFocus={() => setFocus(true)}
               onChange={(e) => {
