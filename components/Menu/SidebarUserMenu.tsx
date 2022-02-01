@@ -29,7 +29,7 @@ export default function SidebarUserMenu() {
                 <span className="text-xs text-gray-500 dark:text-gray-100">
                   Verified Accounts
                 </span>
-                <FaCheck />
+                <FaCheck className="text-green-500" />
               </div>
             }
           />

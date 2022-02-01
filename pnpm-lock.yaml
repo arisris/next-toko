@@ -11,6 +11,7 @@ specifiers:
   '@trpc/server': ^9.18.0
   '@types/bcryptjs': ^2.4.2
   '@types/faker': ^5.5.9
+  '@types/react': ^17.0.38
   ahooks: ^2.10.14
   autoprefixer: ^10.2.5
   bcryptjs: ^2.4.3
@@ -67,6 +68,7 @@ devDependencies:
   '@tailwindcss/typography': 0.4.1_tailwindcss@2.2.19
   '@types/bcryptjs': 2.4.2
   '@types/faker': 5.5.9
+  '@types/react': 17.0.38
   autoprefixer: 10.4.0_postcss@8.4.5
   faker: 5.5.3
   postcss: 8.4.5
@@ -486,6 +488,22 @@ packages:
 
   /@types/parse-json/4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
+    dev: true
+
+  /@types/prop-types/15.7.4:
+    resolution: {integrity: sha512-rZ5drC/jWjrArrS8BR6SIr4cWpW09RNTYt9AMZo3Jwwif+iacXAqgVjm0B0Bv/S1jhDXKHqRVNCbACkJ89RAnQ==}
+    dev: true
+
+  /@types/react/17.0.38:
+    resolution: {integrity: sha512-SI92X1IA+FMnP3qM5m4QReluXzhcmovhZnLNm3pyeQlooi02qI7sLiepEYqT678uNiyc25XfCqxREFpy3W7YhQ==}
+    dependencies:
+      '@types/prop-types': 15.7.4
+      '@types/scheduler': 0.16.2
+      csstype: 3.0.10
+    dev: true
+
+  /@types/scheduler/0.16.2:
+    resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
     dev: true
 
   /acorn-node/1.8.2:
@@ -1023,6 +1041,10 @@ packages:
       cssnano-preset-simple: 3.0.0_postcss@8.2.15
       postcss: 8.2.15
     dev: false
+
+  /csstype/3.0.10:
+    resolution: {integrity: sha512-2u44ZG2OcNUO9HDp/Jl8C07x6pU/eTR3ncV91SiK3dhG9TWvRVsCoJw14Ckx5DgWkzGA3waZWO3d7pgqpUI/XA==}
+    dev: true
 
   /data-uri-to-buffer/3.0.1:
     resolution: {integrity: sha512-WboRycPNsVw3B3TL559F7kuBUM4d8CgMEvk6xEJlOp7OBPjt6G7z8WMWlD2rOFZLk6OYfFIUGsCOWzcQH9K2og==}
