@@ -30,7 +30,6 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.4.2",
-    "@next-auth/prisma-adapter": "^1.0.1",
     "@prisma/client": "^3.7.0",
     "@trpc/client": "^9.18.0",
     "@trpc/react": "^9.18.0",
@@ -48,6 +47,7 @@
     "react-icons": "^4.3.1",
     "react-query": "^3.34.12",
     "react-slick": "^0.28.1",
+    "slugify": "^1.6.5",
     "storeon": "^3.1.4",
     "superjson": "^1.8.0",
     "validator": "^13.7.0",

@@ -10,14 +10,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Nextauth
+model User {
+  id            Int          @id @default(autoincrement())
+  name          String?
+  password      String?
+  username      String       @unique
+  email         String       @unique
+  emailVerified DateTime?
+  image         String?
+  roleId        Int?
+  profile       Profile?
+  accounts      Accounts[]
+  store         Store?
+  ownedProducts Product[]
+  role          Role?        @relation(fields: [roleId], references: [id])
+  permissions   Permission[]
+  storeTeams    StoreTeam[]
 
-model Account {
-  id                       String  @id @default(cuid())
-  userId                   String
+  @@map("user")
+}
+
+model Accounts {
+  id                       Int     @id @default(autoincrement())
+  userId                   Int
   type                     String
   provider                 String
-  providerAccountId        String  @unique
+  providerAccountId        String
   refresh_token            String? @db.Text
   refresh_token_expires_in Int?
   access_token             String? @db.Text
@@ -32,17 +50,7 @@ model Account {
 
   @@unique([provider, providerAccountId])
   @@index([userId])
-  @@map("account")
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("session")
+  @@map("accounts")
 }
 
 model VerificationToken {
@@ -54,32 +62,14 @@ model VerificationToken {
   @@map("verificationToken")
 }
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  roleId        Int?
-  profile       Profile?
-  accounts      Account[]
-  sessions      Session[]
-  stores        Store[]
-  ownedProducts Product[]
-  role          Role?     @relation(fields: [roleId], references: [id])
-
-  @@map("user")
-}
-
 // Start custom
 
 /// User Profile Here
 model Profile {
-  id     String @id @default(cuid())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @unique
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique
 
-  @@unique([id, userId])
   @@map("profile")
 }
 
@@ -87,39 +77,49 @@ model Role {
   id          Int          @id @default(autoincrement())
   name        String       @unique
   displayName String?
-  permissions Permission[]
   users       User[]
+  permissions Permission[]
 
   @@map("role")
 }
 
 model Permission {
-  id          Int     @id @default(autoincrement())
-  roleId      Int?
+  id          Int    @id @default(autoincrement())
   name        String
-  displayName String?
-  role        Role?   @relation(fields: [roleId], references: [id])
+  displayName String
+  users       User[]
+  roles       Role[]
 
   @@map("permission")
 }
 
 model Store {
-  id        String    @id @default(cuid())
-  ownerId   String
+  id        Int         @id @default(autoincrement())
+  ownerId   Int         @unique
   name      String
-  desc      String?   @db.Text
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-  owner     User      @relation(fields: [ownerId], references: [id])
+  desc      String?     @db.Text
+  createdAt DateTime?   @default(now())
+  updatedAt DateTime?   @updatedAt
+  owner     User        @relation(fields: [ownerId], references: [id])
   products  Product[]
+  teams     StoreTeam[]
 
   @@map("store")
 }
 
+model StoreTeam {
+  id      Int    @id @default(autoincrement())
+  storeId Int
+  store   Store  @relation(fields: [storeId], references: [id])
+  users   User[]
+
+  @@map("store_team")
+}
+
 model Product {
-  id        String    @id @default(cuid())
-  storeId   String
-  creatorId String
+  id        Int       @id @default(autoincrement())
+  storeId   Int
+  creatorId Int
   name      String
   desc      String?   @db.Text
   createdAt DateTime? @default(now())
@@ -127,7 +127,6 @@ model Product {
   store     Store     @relation(fields: [storeId], references: [id])
   creator   User      @relation(fields: [creatorId], references: [id])
 
-  @@unique([id, storeId])
   @@map("product")
 }
 
