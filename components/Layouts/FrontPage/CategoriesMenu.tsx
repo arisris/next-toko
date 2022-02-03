@@ -66,7 +66,15 @@ export default function FrontPageCategoriesMenu(props: {
           .fill(null)
           .map((_, i) => (
             <Link key={i} href={`/cat/${i}`}>
-              <Button component="a" inline clear className="capitalize">
+              <Button
+                component="a"
+                inline
+                clear
+                className="capitalize"
+                colors={{
+                  text: "text-bars-material-dark dark:text-bars-material-light"
+                }}
+              >
                 Menu {i}
               </Button>
             </Link>

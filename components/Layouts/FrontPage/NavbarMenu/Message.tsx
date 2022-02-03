@@ -11,7 +11,9 @@ export default function FrontPageNavbarMenuMessage({
   return (
     <NavbarMenu
       button={
-        <Button inline clear>
+        <Button inline clear colors={{
+          text: "text-bars-material-dark dark:text-bars-material-light"
+        }}>
           <FaBell size={24} />
         </Button>
       }

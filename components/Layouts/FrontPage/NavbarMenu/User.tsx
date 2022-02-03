@@ -21,7 +21,7 @@ export default function FrontPageNavbarMenuUser({
               src={sessionData.user.image}
               className="w-6 h-6 rounded-full"
             />
-            <strong className="hidden lg:inline-flex truncate text-primary capitalize">
+            <strong className="hidden lg:inline-flex truncate text-bars-material-dark dark:text-bars-material-light capitalize">
               {sessionData.user.name}
             </strong>
           </Link>

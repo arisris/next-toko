@@ -8,13 +8,15 @@ export default function FrontPageNavbarMenuCart({ session }: { session: SessionC
   return (
     <NavbarMenu
       button={
-        <Button clear inline>
+        <Button clear inline colors={{
+          text: "text-bars-material-dark dark:text-bars-material-light"
+        }}>
           <FaShoppingCart size={24} />
         </Button>
       }
     >
       <div className="absolute inset-0 flex flex-col gap-2 justify-center items-center">
-        <div className="text-primary dark:text-bars-material-light">
+        <div className="text-bars-material-dark dark:text-bars-material-light">
           <FaCartPlus size={48} />
         </div>
         <div className="font-bold bg-gradient-to-r from-red-800 to-red-500 bg-clip-text text-transparent">Your Cart Is Empty</div>

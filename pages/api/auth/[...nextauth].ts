@@ -7,20 +7,6 @@ import { compare } from "bcryptjs";
 import slugify from "slugify";
 import { GUID } from "@/lib/utils";
 
-function idpAccount(arg: Account) {
-  return {
-    provider: arg.provider,
-    providerAccountId: arg.providerAccountId,
-    type: arg.type,
-    token_type: arg?.token_type,
-    access_token: arg?.access_token || null,
-    refresh_token: arg?.refresh_token || null,
-    refresh_token_expires_in: arg?.refresh_token_expires_in as number,
-    expires_at: arg?.expires_at as number,
-    scope: arg?.scope
-  };
-}
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -95,6 +81,12 @@ export default async function handler(
               )
             ) {
               //console.log("Updating token")
+              let {
+                access_token,
+                expires_at,
+                refresh_token,
+                refresh_token_expires_in
+              } = args.account;
               await prisma.user.update({
                 where: {
                   id: existingUser.id
@@ -106,7 +98,12 @@ export default async function handler(
                         userId: existingUser.id,
                         providerAccountId: args.account.providerAccountId
                       },
-                      data: idpAccount(args.account)
+                      data: {
+                        access_token,
+                        expires_at,
+                        refresh_token,
+                        refresh_token_expires_in
+                      }
                     }
                   }
                 }
@@ -116,7 +113,7 @@ export default async function handler(
           }
 
           // create new user if not exists
-          //console.log("create new user")
+          let { userId, ...payload } = args.account;
           const newUser = await prisma.user.create({
             data: {
               name: args.user.name,
@@ -127,7 +124,7 @@ export default async function handler(
                 replacement: "."
               }),
               accounts: {
-                create: idpAccount(args.account)
+                create: payload
               },
               role: {
                 connect: {
