@@ -10,130 +10,336 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Nextauth
-
-model Account {
-  id                       String  @id @default(cuid())
-  userId                   String
-  type                     String
-  provider                 String
-  providerAccountId        String  @unique
-  refresh_token            String? @db.Text
-  refresh_token_expires_in Int?
-  access_token             String? @db.Text
-  expires_at               Int?
-  token_type               String?
-  scope                    String?
-  id_token                 String? @db.Text
-  session_state            String?
-  oauth_token_secret       String?
-  oauth_token              String?
-  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@index([userId])
-  @@map("account")
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("session")
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-  @@map("verificationToken")
-}
-
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  roleId        Int?
-  profile       Profile?
-  accounts      Account[]
-  sessions      Session[]
-  stores        Store[]
-  ownedProducts Product[]
-  role          Role?     @relation(fields: [roleId], references: [id])
+  id              Int               @id @default(autoincrement())
+  name            String?
+  password        String?
+  username        String            @unique
+  email           String            @unique
+  emailVerified   DateTime?
+  image           String?
+  gender          String?
+  brithDate       DateTime?
+  phone           String?
+  phoneVerified   DateTime?
+  aboutMe         String?
+  createdAt       DateTime?         @default(now())
+  updatedAt       DateTime?         @updatedAt
+  roleId          Int?
+  membershipId    Int?
+  role            Role?             @relation(fields: [roleId], references: [id])
+  membership      Membership?       @relation(fields: [membershipId], references: [id])
+  accounts        Accounts[]
+  store           Store?
+  ownedProducts   Product[]
+  permissions     Permission[]
+  storeTeams      StoreTeam[]
+  productComments ProductComments[]
 
+  UserLocation UserLocation[]
   @@map("user")
 }
 
-// Start custom
+model Accounts {
+  id                       Int       @id @default(autoincrement())
+  userId                   Int
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String?   @db.Text
+  refresh_token_expires_in Int?
+  access_token             String?   @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String?   @db.Text
+  session_state            String?
+  oauth_token_secret       String?
+  oauth_token              String?
+  createdAt                DateTime? @default(now())
+  updatedAt                DateTime? @updatedAt
+  user                     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-/// User Profile Here
-model Profile {
-  id     String @id @default(cuid())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @unique
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
 
-  @@unique([id, userId])
-  @@map("profile")
+model Membership {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?   @db.Text
+  pricing     String?
+  isActive    Boolean?  @default(false)
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+  users       User[]
 }
 
 model Role {
   id          Int          @id @default(autoincrement())
   name        String       @unique
   displayName String?
-  permissions Permission[]
+  createdAt   DateTime?    @default(now())
+  updatedAt   DateTime?    @updatedAt
   users       User[]
+  permissions Permission[]
 
   @@map("role")
 }
 
 model Permission {
-  id          Int     @id @default(autoincrement())
-  roleId      Int?
+  id          Int       @id @default(autoincrement())
   name        String
-  displayName String?
-  role        Role?   @relation(fields: [roleId], references: [id])
+  displayName String
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+  users       User[]
+  roles       Role[]
 
   @@map("permission")
 }
 
 model Store {
-  id        String    @id @default(cuid())
-  ownerId   String
-  name      String
-  desc      String?   @db.Text
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-  owner     User      @relation(fields: [ownerId], references: [id])
-  products  Product[]
+  id            Int             @id @default(autoincrement())
+  ownerId       Int             @unique
+  name          String
+  desc          String?         @db.Text
+  createdAt     DateTime?       @default(now())
+  updatedAt     DateTime?       @updatedAt
+  owner         User            @relation(fields: [ownerId], references: [id])
+  products      Product[]
+  storeFront    StoreFront[]
+  teams         StoreTeam[]
+  storeLocation StoreLocation[]
 
   @@map("store")
 }
 
-model Product {
-  id        String    @id @default(cuid())
-  storeId   String
-  creatorId String
-  name      String
-  desc      String?   @db.Text
+model StoreTeam {
+  id        Int       @id @default(autoincrement())
+  storeId   Int
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
   store     Store     @relation(fields: [storeId], references: [id])
-  creator   User      @relation(fields: [creatorId], references: [id])
+  users     User[]
 
-  @@unique([id, storeId])
+  @@index([storeId])
+  @@map("store_team")
+}
+
+model Product {
+  id                Int                 @id @default(autoincrement())
+  storeId           Int
+  authorId          Int
+  storeFrontId      Int
+  name              String
+  description       String?             @db.Text
+  createdAt         DateTime?           @default(now())
+  updatedAt         DateTime?           @updatedAt
+  storeFront        StoreFront          @relation(fields: [storeFrontId], references: [id])
+  store             Store               @relation(fields: [storeId], references: [id])
+  author            User                @relation(fields: [authorId], references: [id])
+  productCategories ProductCategories[]
+  productTags       ProductTags[]
+  productComments   ProductComments[]
+
+  @@index([storeId, authorId])
   @@map("product")
 }
 
-// model ProductCategories {
-//   id      String @id @default(cuid())
-//   storeId String
-//   name    String
-//   desc    String @db.Text
-// }
+model StoreFront {
+  id          Int       @id @default(autoincrement())
+  storeId     Int
+  name        String
+  description String    @db.Text
+  image       String?
+  icon        String?
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+  store       Store     @relation(fields: [storeId], references: [id])
+  products    Product[]
+}
+
+model ProductCategories {
+  id                   Int                 @id @default(autoincrement())
+  productCategoriesId  Int?
+  name                 String
+  description          String              @db.Text
+  image                String?
+  icon                 String?
+  createdAt            DateTime?           @default(now())
+  updatedAt            DateTime?           @updatedAt
+  subProductCategories ProductCategories[] @relation("ProductCategoriesToProductCategories")
+  productCategories    ProductCategories?  @relation("ProductCategoriesToProductCategories", fields: [productCategoriesId], references: [id])
+  products             Product[]
+
+  @@map("product_categories")
+}
+
+model ProductTags {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String    @db.Text
+  image       String?
+  icon        String?
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
+  products    Product[]
+
+  @@map("product_tags")
+}
+
+enum ProductCommentsType {
+  REVIEW
+  DISCUSSION
+}
+
+enum ProductCommentsStatus {
+  APPROVED
+  PENDING
+}
+
+model ProductComments {
+  id                Int                    @id @default(autoincrement())
+  productId         Int
+  authorId          Int
+  productCommentsId Int?
+  type              ProductCommentsType?   @default(REVIEW)
+  status            ProductCommentsStatus? @default(PENDING)
+  rating            Int?                   @default(0)
+  description       String?                @db.Text
+  createdAt         DateTime?              @default(now())
+  updatedAt         DateTime?              @updatedAt
+  product           Product                @relation(fields: [productId], references: [id])
+  author            User                   @relation(fields: [authorId], references: [id])
+  comments          ProductComments[]      @relation("ProductCommentsToProductComments")
+  productComments   ProductComments?       @relation("ProductCommentsToProductComments", fields: [productCommentsId], references: [id])
+
+  @@map("product_comments")
+}
+
+/// Geolocation Database
+/// Todo future to scrap data from some sources
+
+model DataCountry {
+  id            Int             @id @default(autoincrement())
+  name          String
+  lng           String?
+  lat           String?
+  icon          String?
+  createdAt     DateTime?       @default(now())
+  updatedAt     DateTime?       @updatedAt
+  province      DataProvince[]
+  storeLocation StoreLocation[]
+  userLocation  UserLocation[]
+
+  @@map("data_contry")
+}
+
+model DataProvince {
+  id            Int             @id @default(autoincrement())
+  countryId     Int?
+  name          String
+  lng           String?
+  lat           String?
+  icon          String?
+  createdAt     DateTime?       @default(now())
+  updatedAt     DateTime?       @updatedAt
+  country       DataCountry?    @relation(fields: [countryId], references: [id])
+  city          DataCity[]
+  storeLocation StoreLocation[]
+  userLocation  UserLocation[]
+
+  @@map("data_province")
+}
+
+model DataCity {
+  id            Int             @id @default(autoincrement())
+  provinceId    Int?
+  name          String
+  lng           String?
+  lat           String?
+  icon          String?
+  createdAt     DateTime?       @default(now())
+  updatedAt     DateTime?       @updatedAt
+  province      DataProvince?   @relation(fields: [provinceId], references: [id])
+  district      DataDistrict[]
+  storeLocation StoreLocation[]
+  userLocation  UserLocation[]
+
+  @@map("data_city")
+}
+
+model DataDistrict {
+  id            Int             @id @default(autoincrement())
+  cityId        Int?
+  name          String
+  lng           String?
+  lat           String?
+  icon          String?
+  createdAt     DateTime?       @default(now())
+  updatedAt     DateTime?       @updatedAt
+  city          DataCity?       @relation(fields: [cityId], references: [id])
+  village       DataVillage[]
+  storeLocation StoreLocation[]
+  userLocation  UserLocation[]
+
+  @@map("data_district")
+}
+
+model DataVillage {
+  id            Int             @id @default(autoincrement())
+  districtId    Int?
+  name          String
+  lng           String?
+  lat           String?
+  icon          String?
+  createdAt     DateTime?       @default(now())
+  updatedAt     DateTime?       @updatedAt
+  district      DataDistrict?   @relation(fields: [districtId], references: [id])
+  storeLocation StoreLocation[]
+  userLocation  UserLocation[]
+
+  @@map("data_village")
+}
+
+model StoreLocation {
+  id         Int           @id @default(autoincrement())
+  storeId    Int
+  countryId  Int?
+  provinceId Int?
+  cityId     Int?
+  districtId Int?
+  villageId  Int?
+  createdAt  DateTime?     @default(now())
+  updatedAt  DateTime?     @updatedAt
+  store      Store         @relation(fields: [storeId], references: [id])
+  country    DataCountry?  @relation(fields: [countryId], references: [id])
+  province   DataProvince? @relation(fields: [provinceId], references: [id])
+  city       DataCity?     @relation(fields: [cityId], references: [id])
+  district   DataDistrict? @relation(fields: [districtId], references: [id])
+  village    DataVillage?  @relation(fields: [villageId], references: [id])
+
+  @@map("store_location")
+}
+
+model UserLocation {
+  id         Int           @id @default(autoincrement())
+  userId     Int
+  countryId  Int?
+  provinceId Int?
+  cityId     Int?
+  districtId Int?
+  villageId  Int?
+  createdAt  DateTime?     @default(now())
+  updatedAt  DateTime?     @updatedAt
+  user       User          @relation(fields: [userId], references: [id])
+  country    DataCountry?  @relation(fields: [countryId], references: [id])
+  province   DataProvince? @relation(fields: [provinceId], references: [id])
+  city       DataCity?     @relation(fields: [cityId], references: [id])
+  district   DataDistrict? @relation(fields: [districtId], references: [id])
+  village    DataVillage?  @relation(fields: [villageId], references: [id])
+
+  @@map("user_location")
+}

@@ -1,18 +1,18 @@
+import ListSkeleton from "@/components/Skeleton/ListSkeleton";
+import Skeleton from "@/components/Skeleton/Skeleton";
 import { trpc } from "@/lib/trpc";
 import { Disclosure } from "@headlessui/react";
 import clsx from "clsx";
 import { Badge, Card, List, ListItem } from "konsta/react";
 import Image from "next/image";
 import { FaCheck, FaChevronDown, FaMoneyBill } from "react-icons/fa";
-import ListSkeleton from "../Skeleton/ListSkeleton";
-import Skeleton from "../Skeleton/Skeleton";
 
-export default function SidebarUserMenu() {
+export default function SidebarUserMenu(props: { className?: string }) {
   const { data: user } = trpc.useQuery(["user.me"]);
   return (
-    <Card className="relative z-0 w-full h-full m-0">
+    <Card className={clsx("relative z-0 w-full h-full m-0", props.className)}>
       {user ? (
-        <List className="!my-0 -mx-4" hairlines={false}>
+        <List className="!my-0" hairlines={false}>
           <ListItem
             media={
               <Image
@@ -29,13 +29,13 @@ export default function SidebarUserMenu() {
                 <span className="text-xs text-gray-500 dark:text-gray-100">
                   Verified Accounts
                 </span>
-                <FaCheck className="text-green-500" />
+                <FaCheck className="text-primary" />
               </div>
             }
           />
           <ListItem
             media={<FaMoneyBill size={28} />}
-            mediaClassName="text-green-500 -mr-1"
+            mediaClassName="text-primary -mr-1"
             strongTitle
             title="Saldo"
             hairlines={false}
@@ -50,7 +50,7 @@ export default function SidebarUserMenu() {
         </div>
       )}
       {user ? (
-        <List className="!my-0 !z-0 -mx-4 hairline-transparent border-t pt-4">
+        <List className="!my-0 !z-0 hairline-transparent pt-4">
           <Disclosure defaultOpen>
             {({ open }) => (
               <>
