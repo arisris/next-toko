@@ -22,7 +22,7 @@ model User {
   brithDate       DateTime?
   phone           String?
   phoneVerified   DateTime?
-  aboutMe         String?
+  aboutMe         String?           @db.Text
   createdAt       DateTime?         @default(now())
   updatedAt       DateTime?         @updatedAt
   roleId          Int?
@@ -35,8 +35,9 @@ model User {
   permissions     Permission[]
   storeTeams      StoreTeam[]
   productComments ProductComments[]
+  userLocation    UserLocation[]
+  cart            Cart[]
 
-  UserLocation UserLocation[]
   @@map("user")
 }
 
@@ -74,6 +75,8 @@ model Membership {
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
   users       User[]
+
+  @@map("membership")
 }
 
 model Role {
@@ -104,7 +107,7 @@ model Store {
   id            Int             @id @default(autoincrement())
   ownerId       Int             @unique
   name          String
-  desc          String?         @db.Text
+  description   String?         @db.Text
   createdAt     DateTime?       @default(now())
   updatedAt     DateTime?       @updatedAt
   owner         User            @relation(fields: [ownerId], references: [id])
@@ -159,6 +162,8 @@ model StoreFront {
   updatedAt   DateTime? @updatedAt
   store       Store     @relation(fields: [storeId], references: [id])
   products    Product[]
+
+  @@map("store_front")
 }
 
 model ProductCategories {
@@ -342,4 +347,23 @@ model UserLocation {
   village    DataVillage?  @relation(fields: [villageId], references: [id])
 
   @@map("user_location")
+}
+
+/// Data Payment Method
+
+model DataBank {
+  id      Int     @id @default(autoincrement())
+  name    String
+  type    String
+  code    String  @db.VarChar(3)
+  address String?
+  phone   String? @db.VarChar(41)
+  fax     String? @db.VarChar(51)
+  website String?
+}
+
+model Cart {
+  id     Int  @id @default(autoincrement())
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 }

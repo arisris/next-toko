@@ -6,7 +6,6 @@ import { hashSync } from "bcryptjs";
 import { Role } from "../store/enums";
 import { Prisma } from "@prisma/client";
 
-
 async function createUser() {
   const admin = await prisma.user.create({
     data: {

@@ -26,7 +26,8 @@
     "export": "next export"
   },
   "prisma": {
-    "seed": "ts-node -T ./prisma/seed.ts"
+    "seed": "ts-node -T ./prisma/seed.ts",
+    "seed:region": "ts-node -T ./prisma/seed-region.ts"
   },
   "dependencies": {
     "@headlessui/react": "^1.4.2",
