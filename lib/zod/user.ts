@@ -1,17 +1,16 @@
 import * as z from "zod"
-import { CompleteMembership, RelatedMembershipModel, CompleteRole, RelatedRoleModel, CompleteCart, RelatedCartModel, CompleteAccounts, RelatedAccountsModel, CompleteProduct, RelatedProductModel, CompleteProductComments, RelatedProductCommentsModel, CompleteStore, RelatedStoreModel, CompleteUserLocation, RelatedUserLocationModel, CompletePermission, RelatedPermissionModel, CompleteStoreTeam, RelatedStoreTeamModel } from "./index"
 
 export const UserModel = z.object({
   id: z.number().int(),
   name: z.string().nullish(),
-  password: z.string().nullish(),
-  username: z.string(),
+  password: z.string().min(6, { message: "Password must be at least 6 characters" }).max(32, { message: "Password must be sohortan 32 characters" }).nullish(),
+  username: z.string().min(3, { message: "Username must be at least 3 characters" }),
   email: z.string(),
   emailVerified: z.date().nullish(),
   image: z.string().nullish(),
   gender: z.string().nullish(),
   brithDate: z.date().nullish(),
-  phone: z.string().nullish(),
+  phone: z.string().min(10, { message: "Phone number must be at least 10 characters" }).nullish(),
   phoneVerified: z.date().nullish(),
   aboutMe: z.string().nullish(),
   createdAt: z.date().nullish(),
@@ -19,34 +18,3 @@ export const UserModel = z.object({
   roleId: z.number().int().nullish(),
   membershipId: z.number().int().nullish(),
 })
-
-export interface CompleteUser extends z.infer<typeof UserModel> {
-  membership?: CompleteMembership | null
-  role?: CompleteRole | null
-  cart: CompleteCart[]
-  accounts: CompleteAccounts[]
-  ownedProducts: CompleteProduct[]
-  productComments: CompleteProductComments[]
-  store?: CompleteStore | null
-  userLocation: CompleteUserLocation[]
-  permissions: CompletePermission[]
-  storeTeams: CompleteStoreTeam[]
-}
-
-/**
- * RelatedUserModel contains all relations on your model in addition to the scalars
- *
- * NOTE: Lazy required in case of potential circular dependencies within schema
- */
-export const RelatedUserModel: z.ZodSchema<CompleteUser> = z.lazy(() => UserModel.extend({
-  membership: RelatedMembershipModel.nullish(),
-  role: RelatedRoleModel.nullish(),
-  cart: RelatedCartModel.array(),
-  accounts: RelatedAccountsModel.array(),
-  ownedProducts: RelatedProductModel.array(),
-  productComments: RelatedProductCommentsModel.array(),
-  store: RelatedStoreModel.nullish(),
-  userLocation: RelatedUserLocationModel.array(),
-  permissions: RelatedPermissionModel.array(),
-  storeTeams: RelatedStoreTeamModel.array(),
-}))

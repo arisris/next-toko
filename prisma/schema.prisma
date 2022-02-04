@@ -4,8 +4,9 @@ generator client {
 }
 
 generator zod {
-  provider = "zod-prisma"
-  output = "../lib/zod"
+  provider      = "zod-prisma"
+  output        = "../lib/zod"
+  relationModel = false
 }
 
 datasource db {
@@ -16,13 +17,16 @@ datasource db {
 model User {
   id              Int               @id @default(autoincrement())
   name            String?
+  /// @zod.min(6, {message: "Password must be at least 6 characters"}).max(32, {message: "Password must be sohortan 32 characters"})
   password        String?
+  /// @zod.min(3, {message: "Username must be at least 3 characters"})
   username        String            @unique
   email           String            @unique
   emailVerified   DateTime?
   image           String?
   gender          String?
   brithDate       DateTime?
+  /// @zod.min(10, {message: "Phone number must be at least 10 characters"})
   phone           String?
   phoneVerified   DateTime?
   aboutMe         String?           @db.Text
