@@ -4,13 +4,14 @@ import { DataBankModel } from "@/lib/zod";
 import { createRouter } from "@/server/createRouter";
 import { z } from "zod";
 export const dataBankRouter = createRouter()
-  .mutation("dataBank.store", {
+  .mutation("store", {
     input: z
       .object({
         data: DataBankModel.omit({ id: true })
       })
       .required(),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.dataBank.create({
         // @ts-expect-error
         data: {
@@ -20,12 +21,13 @@ export const dataBankRouter = createRouter()
       return items;
     }
   })
-  .mutation("dataBank.update", {
+  .mutation("update", {
     input: z.object({
       id: z.number(),
       data: DataBankModel
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.dataBank.update({
         where: { id: input.id },
         data: {
@@ -35,18 +37,19 @@ export const dataBankRouter = createRouter()
       return items;
     }
   })
-  .mutation("dataBank.destroy", {
+  .mutation("destroy", {
     input: z.object({
       id: z.number()
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.dataBank.delete({
         where: { id: input.id }
       });
       return items;
     }
   })
-  .query("dataBank.all", {
+  .query("all", {
     input: z.object({
       search: z.string().nullish(),
       limit: z.number(),
@@ -79,7 +82,7 @@ export const dataBankRouter = createRouter()
       return { items, next };
     }
   })
-  .query("dataBank.one", {
+  .query("byId", {
     input: z.object({
       id: z.number()
     }),

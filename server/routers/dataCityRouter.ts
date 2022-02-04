@@ -4,13 +4,14 @@ import { DataCityModel } from "@/lib/zod";
 import { createRouter } from "@/server/createRouter";
 import { z } from "zod";
 export const dataCityRouter = createRouter()
-  .mutation("dataCity.store", {
+  .mutation("store", {
     input: z
       .object({
         data: DataCityModel.omit({ id: true })
       })
       .required(),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.dataCity.create({
         // @ts-expect-error
         data: {
@@ -20,12 +21,13 @@ export const dataCityRouter = createRouter()
       return items;
     }
   })
-  .mutation("dataCity.update", {
+  .mutation("update", {
     input: z.object({
       id: z.number(),
       data: DataCityModel
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.dataCity.update({
         where: { id: input.id },
         data: {
@@ -35,18 +37,19 @@ export const dataCityRouter = createRouter()
       return items;
     }
   })
-  .mutation("dataCity.destroy", {
+  .mutation("destroy", {
     input: z.object({
       id: z.number()
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.dataCity.delete({
         where: { id: input.id }
       });
       return items;
     }
   })
-  .query("dataCity.all", {
+  .query("all", {
     input: z.object({
       search: z.string().nullish(),
       limit: z.number(),
@@ -79,7 +82,7 @@ export const dataCityRouter = createRouter()
       return { items, next };
     }
   })
-  .query("dataCity.one", {
+  .query("byId", {
     input: z.object({
       id: z.number()
     }),

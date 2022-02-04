@@ -4,13 +4,14 @@ import { PermissionModel } from "@/lib/zod";
 import { createRouter } from "@/server/createRouter";
 import { z } from "zod";
 export const permissionRouter = createRouter()
-  .mutation("permission.store", {
+  .mutation("store", {
     input: z
       .object({
         data: PermissionModel.omit({ id: true })
       })
       .required(),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.permission.create({
         // @ts-expect-error
         data: {
@@ -20,12 +21,13 @@ export const permissionRouter = createRouter()
       return items;
     }
   })
-  .mutation("permission.update", {
+  .mutation("update", {
     input: z.object({
       id: z.number(),
       data: PermissionModel
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.permission.update({
         where: { id: input.id },
         data: {
@@ -35,18 +37,19 @@ export const permissionRouter = createRouter()
       return items;
     }
   })
-  .mutation("permission.destroy", {
+  .mutation("destroy", {
     input: z.object({
       id: z.number()
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.permission.delete({
         where: { id: input.id }
       });
       return items;
     }
   })
-  .query("permission.all", {
+  .query("all", {
     input: z.object({
       search: z.string().nullish(),
       limit: z.number(),
@@ -79,7 +82,7 @@ export const permissionRouter = createRouter()
       return { items, next };
     }
   })
-  .query("permission.one", {
+  .query("byId", {
     input: z.object({
       id: z.number()
     }),

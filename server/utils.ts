@@ -1,18 +1,20 @@
 import { NextApiResponse, NextApiRequest, NextApiHandler } from "next";
-import { ValidationError } from "yup";
 import { getSession } from "next-auth/react";
-import { ucWords } from "@/lib/utils";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { ZodError } from "zod";
+import { ErrorFormatter } from "@trpc/server";
+import { Context } from "./context";
+import { TRPCErrorShape } from "@trpc/server/rpc";
 
 export const restAsyncHandler =
   (handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>) =>
   (req: NextApiRequest, res: NextApiResponse) =>
     handler(req, res).catch((e: Error | string) => {
-      if (e instanceof ValidationError) {
+      if (e instanceof ZodError) {
         return res.status(409).json({
           success: false,
           type: "validationError",
-          path: e.path,
+          path: e.name,
           errors: e.errors
         });
       }
@@ -28,27 +30,26 @@ export const withSession = (handler: NextApiHandler) =>
     return handler(req, res);
   });
 
-export const errorFormater = ({ shape, error }) => {
-  let yupError: {} | any;
-  if (error.cause instanceof ValidationError) {
-    yupError = {
-      type: error.cause.type,
-      path: error.cause.path,
-      errors: error.cause.errors.map((i) => ucWords(i))
+export const errorFormater: ErrorFormatter<Context, TRPCErrorShape<number>> = ({
+  shape,
+  error
+}) => {
+  let other: {} | any;
+  if (error.cause instanceof ZodError) {
+    other = {
+      type: "validationError",
+      name: error.cause.name,
+      errors: error.cause.errors
     };
   }
   if (error.cause instanceof PrismaClientKnownRequestError) {
     if (
       error.cause.message.includes("Unique constraint failed on the fields")
     ) {
-      let path =
-        error.cause.meta?.target && error.cause.meta?.target.length > 0
-          ? error.cause.meta?.target[0]
-          : undefined;
-      yupError = {
-        type: "",
-        path: path,
-        errors: [path ? ucWords(`${path} already exists`) : ""]
+      other = {
+        type: "prismaError",
+        name: error.cause.message,
+        errors: [error.cause.message]
       };
     }
     shape.message = "Prisma Error";
@@ -57,7 +58,7 @@ export const errorFormater = ({ shape, error }) => {
     ...shape,
     data: {
       ...shape.data,
-      yupError
+      other
     }
   };
 };

@@ -4,13 +4,14 @@ import { DataProvinceModel } from "@/lib/zod";
 import { createRouter } from "@/server/createRouter";
 import { z } from "zod";
 export const dataProvinceRouter = createRouter()
-  .mutation("dataProvince.store", {
+  .mutation("store", {
     input: z
       .object({
         data: DataProvinceModel.omit({ id: true })
       })
       .required(),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.dataProvince.create({
         // @ts-expect-error
         data: {
@@ -20,12 +21,13 @@ export const dataProvinceRouter = createRouter()
       return items;
     }
   })
-  .mutation("dataProvince.update", {
+  .mutation("update", {
     input: z.object({
       id: z.number(),
       data: DataProvinceModel
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.dataProvince.update({
         where: { id: input.id },
         data: {
@@ -35,18 +37,19 @@ export const dataProvinceRouter = createRouter()
       return items;
     }
   })
-  .mutation("dataProvince.destroy", {
+  .mutation("destroy", {
     input: z.object({
       id: z.number()
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.dataProvince.delete({
         where: { id: input.id }
       });
       return items;
     }
   })
-  .query("dataProvince.all", {
+  .query("all", {
     input: z.object({
       search: z.string().nullish(),
       limit: z.number(),
@@ -79,7 +82,7 @@ export const dataProvinceRouter = createRouter()
       return { items, next };
     }
   })
-  .query("dataProvince.one", {
+  .query("byId", {
     input: z.object({
       id: z.number()
     }),

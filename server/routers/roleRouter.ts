@@ -4,13 +4,14 @@ import { RoleModel } from "@/lib/zod";
 import { createRouter } from "@/server/createRouter";
 import { z } from "zod";
 export const roleRouter = createRouter()
-  .mutation("role.store", {
+  .mutation("store", {
     input: z
       .object({
         data: RoleModel.omit({ id: true })
       })
       .required(),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.role.create({
         // @ts-expect-error
         data: {
@@ -20,12 +21,13 @@ export const roleRouter = createRouter()
       return items;
     }
   })
-  .mutation("role.update", {
+  .mutation("update", {
     input: z.object({
       id: z.number(),
       data: RoleModel
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.role.update({
         where: { id: input.id },
         data: {
@@ -35,18 +37,19 @@ export const roleRouter = createRouter()
       return items;
     }
   })
-  .mutation("role.destroy", {
+  .mutation("destroy", {
     input: z.object({
       id: z.number()
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.role.delete({
         where: { id: input.id }
       });
       return items;
     }
   })
-  .query("role.all", {
+  .query("all", {
     input: z.object({
       search: z.string().nullish(),
       limit: z.number(),
@@ -79,7 +82,7 @@ export const roleRouter = createRouter()
       return { items, next };
     }
   })
-  .query("role.one", {
+  .query("byId", {
     input: z.object({
       id: z.number()
     }),

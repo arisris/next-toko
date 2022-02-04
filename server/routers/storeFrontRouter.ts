@@ -4,13 +4,14 @@ import { StoreFrontModel } from "@/lib/zod";
 import { createRouter } from "@/server/createRouter";
 import { z } from "zod";
 export const storeFrontRouter = createRouter()
-  .mutation("storeFront.store", {
+  .mutation("store", {
     input: z
       .object({
         data: StoreFrontModel.omit({ id: true })
       })
       .required(),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.storeFront.create({
         // @ts-expect-error
         data: {
@@ -20,12 +21,13 @@ export const storeFrontRouter = createRouter()
       return items;
     }
   })
-  .mutation("storeFront.update", {
+  .mutation("update", {
     input: z.object({
       id: z.number(),
       data: StoreFrontModel
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.storeFront.update({
         where: { id: input.id },
         data: {
@@ -35,18 +37,19 @@ export const storeFrontRouter = createRouter()
       return items;
     }
   })
-  .mutation("storeFront.destroy", {
+  .mutation("destroy", {
     input: z.object({
       id: z.number()
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.storeFront.delete({
         where: { id: input.id }
       });
       return items;
     }
   })
-  .query("storeFront.all", {
+  .query("all", {
     input: z.object({
       search: z.string().nullish(),
       limit: z.number(),
@@ -79,7 +82,7 @@ export const storeFrontRouter = createRouter()
       return { items, next };
     }
   })
-  .query("storeFront.one", {
+  .query("byId", {
     input: z.object({
       id: z.number()
     }),
