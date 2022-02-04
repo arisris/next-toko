@@ -1,6 +1,9 @@
 ## Nextjs based simple eCommerce
 Work in progress
 
+[![Demo](https://img.youtube.com/vi/Eqtq1SDo5ZI/0.jpg)](https://www.youtube.com/watch?v=Eqtq1SDo5ZI)
+
+
 ### Simple Usage
 
 Create mysql database in your local computer
