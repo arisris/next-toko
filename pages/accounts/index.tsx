@@ -4,6 +4,7 @@ import { Tab } from "@headlessui/react";
 import { Button } from "konsta/react";
 import UserLayout from "@/components/User/Layouts";
 import { FaCogs } from "react-icons/fa";
+import { trpc } from "@/lib/trpc";
 
 const TabBtn = ({ label = "" }) => {
   return (
@@ -33,6 +34,9 @@ const TabBtn = ({ label = "" }) => {
 };
 
 export default function AccountsPageIndex() {
+  //const { data: userData } = trpc.useQuery(["user.me"])
+  // const region = trpc.useQuery(["region.findMany"]);
+  // console.log(region.data)
   return (
     <UserLayout title="Account Settings" icon={<FaCogs size={32} />}>
       <Tab.Group as="div" className={"bg-transparent shadow-md pt-0 pb-4"}>

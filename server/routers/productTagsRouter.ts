@@ -1,0 +1,92 @@
+import { Prisma, PrismaClient } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
+import { ProductTagsModel } from "@/lib/zod";
+import { createRouter } from "@/server/createRouter";
+import { z } from "zod";
+export const productTagsRouter = createRouter()
+  .mutation("productTags.store", {
+    input: z
+      .object({
+        data: ProductTagsModel.omit({ id: true })
+      })
+      .required(),
+    async resolve({ ctx, input }) {
+      let items = await ctx.prisma.productTags.create({
+        // @ts-expect-error
+        data: {
+          // todo
+        }
+      });
+      return items;
+    }
+  })
+  .mutation("productTags.update", {
+    input: z.object({
+      id: z.number(),
+      data: ProductTagsModel
+    }),
+    async resolve({ ctx, input }) {
+      let items = await ctx.prisma.productTags.update({
+        where: { id: input.id },
+        data: {
+          // todo
+        }
+      });
+      return items;
+    }
+  })
+  .mutation("productTags.destroy", {
+    input: z.object({
+      id: z.number()
+    }),
+    async resolve({ ctx, input }) {
+      let items = await ctx.prisma.productTags.delete({
+        where: { id: input.id }
+      });
+      return items;
+    }
+  })
+  .query("productTags.all", {
+    input: z.object({
+      search: z.string().nullish(),
+      limit: z.number(),
+      cursor: z.number()
+    }),
+    async resolve({ ctx, input }) {
+      let limit = input.limit ?? 10;
+      let cursor = input.cursor;
+      let where: Prisma.ProductTagsWhereInput;
+      if (input.search) {
+        // where.name = {
+        //   contains: input.search
+        // };
+        // where.OR = {
+        //   name: {
+        //     startsWith: input.search
+        //   }
+        // };
+      }
+      let items = await ctx.prisma.productTags.findMany({
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        where
+      });
+      let next: typeof cursor | null = null;
+      if (items.length > limit) {
+        let nextItem = items.pop();
+        next = nextItem!.id;
+      }
+      return { items, next };
+    }
+  })
+  .query("productTags.one", {
+    input: z.object({
+      id: z.number()
+    }),
+    async resolve({ ctx, input }) {
+      let items = await ctx.prisma.productTags.findUnique({
+        where: { id: input.id }
+      });
+      return items;
+    }
+  });

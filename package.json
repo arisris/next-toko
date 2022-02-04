@@ -53,13 +53,14 @@
     "storeon": "^3.1.4",
     "superjson": "^1.8.0",
     "validator": "^13.7.0",
-    "yup": "^0.32.11"
+    "zod": "^3.11.6"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.3.4",
     "@tailwindcss/typography": "^0.4.1",
     "@types/bcryptjs": "^2.4.2",
     "@types/faker": "^5.5.9",
+    "@types/lodash": "^4.14.178",
     "@types/react": "^17.0.38",
     "autoprefixer": "^10.2.5",
     "faker": "^5.5.3",
@@ -68,7 +69,8 @@
     "prisma": "^3.7.0",
     "tailwindcss": "^2.1.1",
     "ts-node": "^10.4.0",
-    "typescript": "^4.5.4"
+    "typescript": "^4.5.4",
+    "zod-prisma": "^0.5.4"
   },
   "prettier": {
     "arrowParens": "always",

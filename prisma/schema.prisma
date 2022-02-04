@@ -1,8 +1,11 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+generator zod {
+  provider = "zod-prisma"
+  output = "../lib/zod"
 }
 
 datasource db {
@@ -27,17 +30,19 @@ model User {
   updatedAt       DateTime?         @updatedAt
   roleId          Int?
   membershipId    Int?
-  role            Role?             @relation(fields: [roleId], references: [id])
   membership      Membership?       @relation(fields: [membershipId], references: [id])
+  role            Role?             @relation(fields: [roleId], references: [id])
+  cart            Cart[]
   accounts        Accounts[]
-  store           Store?
   ownedProducts   Product[]
+  productComments ProductComments[]
+  store           Store?
+  userLocation    UserLocation[]
   permissions     Permission[]
   storeTeams      StoreTeam[]
-  productComments ProductComments[]
-  userLocation    UserLocation[]
-  cart            Cart[]
 
+  @@index([membershipId], map: "user_membershipId_fkey")
+  @@index([roleId], map: "user_roleId_fkey")
   @@map("user")
 }
 
@@ -97,8 +102,8 @@ model Permission {
   displayName String
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @updatedAt
-  users       User[]
   roles       Role[]
+  users       User[]
 
   @@map("permission")
 }
@@ -107,14 +112,14 @@ model Store {
   id            Int             @id @default(autoincrement())
   ownerId       Int             @unique
   name          String
-  description   String?         @db.Text
   createdAt     DateTime?       @default(now())
   updatedAt     DateTime?       @updatedAt
+  description   String?         @db.Text
   owner         User            @relation(fields: [ownerId], references: [id])
   products      Product[]
   storeFront    StoreFront[]
-  teams         StoreTeam[]
   storeLocation StoreLocation[]
+  teams         StoreTeam[]
 
   @@map("store")
 }
@@ -140,13 +145,15 @@ model Product {
   description       String?             @db.Text
   createdAt         DateTime?           @default(now())
   updatedAt         DateTime?           @updatedAt
+  author            User                @relation(fields: [authorId], references: [id])
   storeFront        StoreFront          @relation(fields: [storeFrontId], references: [id])
   store             Store               @relation(fields: [storeId], references: [id])
-  author            User                @relation(fields: [authorId], references: [id])
+  productComments   ProductComments[]
   productCategories ProductCategories[]
   productTags       ProductTags[]
-  productComments   ProductComments[]
 
+  @@index([authorId], map: "product_authorId_fkey")
+  @@index([storeFrontId], map: "product_storeFrontId_fkey")
   @@index([storeId, authorId])
   @@map("product")
 }
@@ -163,6 +170,7 @@ model StoreFront {
   store       Store     @relation(fields: [storeId], references: [id])
   products    Product[]
 
+  @@index([storeId], map: "store_front_storeId_fkey")
   @@map("store_front")
 }
 
@@ -175,10 +183,11 @@ model ProductCategories {
   icon                 String?
   createdAt            DateTime?           @default(now())
   updatedAt            DateTime?           @updatedAt
-  subProductCategories ProductCategories[] @relation("ProductCategoriesToProductCategories")
   productCategories    ProductCategories?  @relation("ProductCategoriesToProductCategories", fields: [productCategoriesId], references: [id])
+  subProductCategories ProductCategories[] @relation("ProductCategoriesToProductCategories")
   products             Product[]
 
+  @@index([productCategoriesId], map: "product_categories_productCategoriesId_fkey")
   @@map("product_categories")
 }
 
@@ -195,16 +204,6 @@ model ProductTags {
   @@map("product_tags")
 }
 
-enum ProductCommentsType {
-  REVIEW
-  DISCUSSION
-}
-
-enum ProductCommentsStatus {
-  APPROVED
-  PENDING
-}
-
 model ProductComments {
   id                Int                    @id @default(autoincrement())
   productId         Int
@@ -216,16 +215,16 @@ model ProductComments {
   description       String?                @db.Text
   createdAt         DateTime?              @default(now())
   updatedAt         DateTime?              @updatedAt
-  product           Product                @relation(fields: [productId], references: [id])
   author            User                   @relation(fields: [authorId], references: [id])
-  comments          ProductComments[]      @relation("ProductCommentsToProductComments")
   productComments   ProductComments?       @relation("ProductCommentsToProductComments", fields: [productCommentsId], references: [id])
+  product           Product                @relation(fields: [productId], references: [id])
+  comments          ProductComments[]      @relation("ProductCommentsToProductComments")
 
+  @@index([authorId], map: "product_comments_authorId_fkey")
+  @@index([productCommentsId], map: "product_comments_productCommentsId_fkey")
+  @@index([productId], map: "product_comments_productId_fkey")
   @@map("product_comments")
 }
-
-/// Geolocation Database
-/// Todo future to scrap data from some sources
 
 model DataCountry {
   id            Int             @id @default(autoincrement())
@@ -256,6 +255,7 @@ model DataProvince {
   storeLocation StoreLocation[]
   userLocation  UserLocation[]
 
+  @@index([countryId], map: "data_province_countryId_fkey")
   @@map("data_province")
 }
 
@@ -273,6 +273,7 @@ model DataCity {
   storeLocation StoreLocation[]
   userLocation  UserLocation[]
 
+  @@index([provinceId], map: "data_city_provinceId_fkey")
   @@map("data_city")
 }
 
@@ -290,6 +291,7 @@ model DataDistrict {
   storeLocation StoreLocation[]
   userLocation  UserLocation[]
 
+  @@index([cityId], map: "data_district_cityId_fkey")
   @@map("data_district")
 }
 
@@ -306,6 +308,7 @@ model DataVillage {
   storeLocation StoreLocation[]
   userLocation  UserLocation[]
 
+  @@index([districtId], map: "data_village_districtId_fkey")
   @@map("data_village")
 }
 
@@ -319,13 +322,19 @@ model StoreLocation {
   villageId  Int?
   createdAt  DateTime?     @default(now())
   updatedAt  DateTime?     @updatedAt
-  store      Store         @relation(fields: [storeId], references: [id])
-  country    DataCountry?  @relation(fields: [countryId], references: [id])
-  province   DataProvince? @relation(fields: [provinceId], references: [id])
   city       DataCity?     @relation(fields: [cityId], references: [id])
+  country    DataCountry?  @relation(fields: [countryId], references: [id])
   district   DataDistrict? @relation(fields: [districtId], references: [id])
+  province   DataProvince? @relation(fields: [provinceId], references: [id])
+  store      Store         @relation(fields: [storeId], references: [id])
   village    DataVillage?  @relation(fields: [villageId], references: [id])
 
+  @@index([cityId], map: "store_location_cityId_fkey")
+  @@index([countryId], map: "store_location_countryId_fkey")
+  @@index([districtId], map: "store_location_districtId_fkey")
+  @@index([provinceId], map: "store_location_provinceId_fkey")
+  @@index([storeId], map: "store_location_storeId_fkey")
+  @@index([villageId], map: "store_location_villageId_fkey")
   @@map("store_location")
 }
 
@@ -339,17 +348,21 @@ model UserLocation {
   villageId  Int?
   createdAt  DateTime?     @default(now())
   updatedAt  DateTime?     @updatedAt
-  user       User          @relation(fields: [userId], references: [id])
-  country    DataCountry?  @relation(fields: [countryId], references: [id])
-  province   DataProvince? @relation(fields: [provinceId], references: [id])
   city       DataCity?     @relation(fields: [cityId], references: [id])
+  country    DataCountry?  @relation(fields: [countryId], references: [id])
   district   DataDistrict? @relation(fields: [districtId], references: [id])
+  province   DataProvince? @relation(fields: [provinceId], references: [id])
+  user       User          @relation(fields: [userId], references: [id])
   village    DataVillage?  @relation(fields: [villageId], references: [id])
 
+  @@index([cityId], map: "user_location_cityId_fkey")
+  @@index([countryId], map: "user_location_countryId_fkey")
+  @@index([districtId], map: "user_location_districtId_fkey")
+  @@index([provinceId], map: "user_location_provinceId_fkey")
+  @@index([userId], map: "user_location_userId_fkey")
+  @@index([villageId], map: "user_location_villageId_fkey")
   @@map("user_location")
 }
-
-/// Data Payment Method
 
 model DataBank {
   id      Int     @id @default(autoincrement())
@@ -366,4 +379,16 @@ model Cart {
   id     Int  @id @default(autoincrement())
   userId Int
   user   User @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "Cart_userId_fkey")
+}
+
+enum ProductCommentsType {
+  REVIEW
+  DISCUSSION
+}
+
+enum ProductCommentsStatus {
+  APPROVED
+  PENDING
 }
