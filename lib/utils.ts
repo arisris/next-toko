@@ -98,7 +98,11 @@ export const ucFirst = (str: string) =>
     .split("")
     .map((v, i) => (i === 0 ? v.toUpperCase() : v))
     .join("");
-
+export const lcFirst = (str: string) =>
+  str
+    .split("")
+    .map((v, i) => (i === 0 ? v.toLowerCase() : v))
+    .join("");
 export const ucWords = (str: string) =>
   str
     .split(" ")
@@ -152,7 +156,6 @@ export function timeAgo(
   }${plural} ago`;
 }
 
-
 export const noop = () => {};
 
 export function site_url(path: string) {
@@ -167,4 +170,7 @@ export function site_url(path: string) {
   return `http://localhost:${process.env.PORT ?? 3000}${path}`;
 }
 
-export const fakeArray = (size = 1) => Array(size).fill(null).map((_, k) => k);
+export const fakeArray = (size = 1) =>
+  Array(size)
+    .fill(null)
+    .map((_, k) => k);
