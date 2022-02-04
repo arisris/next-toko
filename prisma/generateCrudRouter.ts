@@ -28,11 +28,12 @@ modelName.forEach((m) => {
     import { createRouter } from "@/server/createRouter";
     import { z } from "zod";
     export const ${m}Router = createRouter()
-    .mutation("${m}.store", {
+    .mutation("store", {
       input: z.object({
         data: ${_.upperFirst(m)}Model.omit({id: true})
       }).required(),
       async resolve({ ctx, input }) {
+        ctx.auth.mustBeReallyUser();
         let items = await ctx.prisma.${m}.create({
           // @ts-expect-error
           data: {
@@ -42,12 +43,13 @@ modelName.forEach((m) => {
         return items;
       }
     })
-    .mutation("${m}.update", {
+    .mutation("update", {
       input: z.object({
         id: z.number(),
         data:  ${_.upperFirst(m)}Model
       }),
       async resolve({ ctx, input }) {
+        ctx.auth.mustBeReallyUser();
         let items = await ctx.prisma.${m}.update({
           where: { id: input.id },
           data: {
@@ -57,18 +59,19 @@ modelName.forEach((m) => {
         return items;
       }
     })
-    .mutation("${m}.destroy", {
+    .mutation("destroy", {
       input: z.object({
         id: z.number()
       }),
       async resolve({ ctx, input }) {
+        ctx.auth.mustBeReallyUser();
         let items = await ctx.prisma.${m}.delete({
           where: { id: input.id }
         });
         return items;
       }
     })
-    .query("${m}.all", {
+    .query("all", {
       input: z.object({
         search: z.string().nullish(),
         limit: z.number(),
@@ -101,7 +104,7 @@ modelName.forEach((m) => {
         return { items, next };
       }
     })
-    .query("${m}.one", {
+    .query("byId", {
       input: z.object({
         id: z.number()
       }),

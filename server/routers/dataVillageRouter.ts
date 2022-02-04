@@ -4,13 +4,14 @@ import { DataVillageModel } from "@/lib/zod";
 import { createRouter } from "@/server/createRouter";
 import { z } from "zod";
 export const dataVillageRouter = createRouter()
-  .mutation("dataVillage.store", {
+  .mutation("store", {
     input: z
       .object({
         data: DataVillageModel.omit({ id: true })
       })
       .required(),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.dataVillage.create({
         // @ts-expect-error
         data: {
@@ -20,12 +21,13 @@ export const dataVillageRouter = createRouter()
       return items;
     }
   })
-  .mutation("dataVillage.update", {
+  .mutation("update", {
     input: z.object({
       id: z.number(),
       data: DataVillageModel
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.dataVillage.update({
         where: { id: input.id },
         data: {
@@ -35,18 +37,19 @@ export const dataVillageRouter = createRouter()
       return items;
     }
   })
-  .mutation("dataVillage.destroy", {
+  .mutation("destroy", {
     input: z.object({
       id: z.number()
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.dataVillage.delete({
         where: { id: input.id }
       });
       return items;
     }
   })
-  .query("dataVillage.all", {
+  .query("all", {
     input: z.object({
       search: z.string().nullish(),
       limit: z.number(),
@@ -79,7 +82,7 @@ export const dataVillageRouter = createRouter()
       return { items, next };
     }
   })
-  .query("dataVillage.one", {
+  .query("byId", {
     input: z.object({
       id: z.number()
     }),

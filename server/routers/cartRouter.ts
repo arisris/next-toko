@@ -4,13 +4,14 @@ import { CartModel } from "@/lib/zod";
 import { createRouter } from "@/server/createRouter";
 import { z } from "zod";
 export const cartRouter = createRouter()
-  .mutation("cart.store", {
+  .mutation("store", {
     input: z
       .object({
         data: CartModel.omit({ id: true })
       })
       .required(),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.cart.create({
         // @ts-expect-error
         data: {
@@ -20,12 +21,13 @@ export const cartRouter = createRouter()
       return items;
     }
   })
-  .mutation("cart.update", {
+  .mutation("update", {
     input: z.object({
       id: z.number(),
       data: CartModel
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.cart.update({
         where: { id: input.id },
         data: {
@@ -35,18 +37,19 @@ export const cartRouter = createRouter()
       return items;
     }
   })
-  .mutation("cart.destroy", {
+  .mutation("destroy", {
     input: z.object({
       id: z.number()
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.cart.delete({
         where: { id: input.id }
       });
       return items;
     }
   })
-  .query("cart.all", {
+  .query("all", {
     input: z.object({
       search: z.string().nullish(),
       limit: z.number(),
@@ -79,7 +82,7 @@ export const cartRouter = createRouter()
       return { items, next };
     }
   })
-  .query("cart.one", {
+  .query("byId", {
     input: z.object({
       id: z.number()
     }),

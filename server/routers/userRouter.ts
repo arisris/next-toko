@@ -3,14 +3,16 @@ import { TRPCError } from "@trpc/server";
 import { UserModel } from "@/lib/zod";
 import { createRouter } from "@/server/createRouter";
 import { z } from "zod";
+import { omit } from "lodash";
 export const userRouter = createRouter()
-  .mutation("user.store", {
+  .mutation("store", {
     input: z
       .object({
         data: UserModel.omit({ id: true })
       })
       .required(),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.user.create({
         // @ts-expect-error
         data: {
@@ -20,12 +22,13 @@ export const userRouter = createRouter()
       return items;
     }
   })
-  .mutation("user.update", {
+  .mutation("update", {
     input: z.object({
       id: z.number(),
       data: UserModel
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.user.update({
         where: { id: input.id },
         data: {
@@ -35,18 +38,19 @@ export const userRouter = createRouter()
       return items;
     }
   })
-  .mutation("user.destroy", {
+  .mutation("destroy", {
     input: z.object({
       id: z.number()
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.user.delete({
         where: { id: input.id }
       });
       return items;
     }
   })
-  .query("user.all", {
+  .query("all", {
     input: z.object({
       search: z.string().nullish(),
       limit: z.number(),
@@ -79,7 +83,7 @@ export const userRouter = createRouter()
       return { items, next };
     }
   })
-  .query("user.one", {
+  .query("byId", {
     input: z.object({
       id: z.number()
     }),
@@ -88,5 +92,13 @@ export const userRouter = createRouter()
         where: { id: input.id }
       });
       return items;
+    }
+  })
+  .query("me", {
+    input: z.string().array().optional(),
+    async resolve({ ctx, input }) {
+      // always hidden password
+      let user = omit(ctx.auth.user, ["password", ...input]);
+      return user;
     }
   });

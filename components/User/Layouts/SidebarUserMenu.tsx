@@ -8,7 +8,7 @@ import Image from "next/image";
 import { FaCheck, FaChevronDown, FaMoneyBill } from "react-icons/fa";
 
 export default function SidebarUserMenu(props: { className?: string }) {
-  const { data: user } = trpc.useQuery(["user.me"]);
+  const { data: user } = trpc.useQuery(["user.me", ["email"]]);
   return (
     <Card className={clsx("relative z-0 w-full h-full m-0", props.className)}>
       {user ? (

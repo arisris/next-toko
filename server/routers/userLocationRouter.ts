@@ -4,13 +4,14 @@ import { UserLocationModel } from "@/lib/zod";
 import { createRouter } from "@/server/createRouter";
 import { z } from "zod";
 export const userLocationRouter = createRouter()
-  .mutation("userLocation.store", {
+  .mutation("store", {
     input: z
       .object({
         data: UserLocationModel.omit({ id: true })
       })
       .required(),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.userLocation.create({
         // @ts-expect-error
         data: {
@@ -20,12 +21,13 @@ export const userLocationRouter = createRouter()
       return items;
     }
   })
-  .mutation("userLocation.update", {
+  .mutation("update", {
     input: z.object({
       id: z.number(),
       data: UserLocationModel
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.userLocation.update({
         where: { id: input.id },
         data: {
@@ -35,18 +37,19 @@ export const userLocationRouter = createRouter()
       return items;
     }
   })
-  .mutation("userLocation.destroy", {
+  .mutation("destroy", {
     input: z.object({
       id: z.number()
     }),
     async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.userLocation.delete({
         where: { id: input.id }
       });
       return items;
     }
   })
-  .query("userLocation.all", {
+  .query("all", {
     input: z.object({
       search: z.string().nullish(),
       limit: z.number(),
@@ -79,7 +82,7 @@ export const userLocationRouter = createRouter()
       return { items, next };
     }
   })
-  .query("userLocation.one", {
+  .query("byId", {
     input: z.object({
       id: z.number()
     }),
