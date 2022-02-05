@@ -1,25 +1,26 @@
-// import { getToken } from "next-auth/jwt";
 import { NextMiddleware, NextResponse } from "next/server";
 
+// const isLiveSite =
+//   process.env.NODE_ENV === "production" && process.env.VERCEL === "1";
 const handler: NextMiddleware = async (req, event) => {
-  const response = NextResponse.next();
+  // let { pathname } = req.nextUrl;
+  // let hostname = req.headers.get("host");
+  // let currentHost = isLiveSite
+  //   ? hostname.replace(".next-toko.arisris.com", "")
+  //   : hostname.replace(".localhost:3000", "");
 
-  /**
-   * Todo the next-auth session can be reading with this
-   */
+  // // ensure no anyone can access this /_admin path instead redirectTo homepage
+  // if (pathname.startsWith("/_admin")) return NextResponse.redirect("/");
+  // if (!pathname.includes(".") && !pathname.startsWith("/api")) {
+  //   if (
+  //     hostname === "admin.next-toko.arisris.com" ||
+  //     hostname === "admin.localhost:3000"
+  //   ) {
+  //     return NextResponse.rewrite(`/_admin${pathname}`);
+  //   }
+  // }
 
-  // const user = await getToken({
-  //   req,
-  //   secret: process.env.APP_SECRET_KEY,
-  //   secureCookie:
-  //     process.env.NEXTAUTH_URL?.startsWith("https://") ??
-  //     !!process.env.VERCEL_URL
-  // });
-  // console.log(user);
-
-  // this is example to append headers object at all request
-  response.headers.set("X-Site-Name", "Arisris.con");
-  return response;
+  return NextResponse.next();
 };
 
 export default handler;
