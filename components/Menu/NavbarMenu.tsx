@@ -25,10 +25,11 @@ export function NavbarMenu(props: {
   button?: any;
   children?: JSX.Element | JSX.Element[];
   menuClass?: string;
+  className?: string;
 }) {
-  const { button = "Menu", children, menuClass } = props;
+  const { button = "Menu", children, menuClass, className } = props;
   return (
-    <Menu as="div" className="relative">
+    <Menu as="div" className={clsx("relative", className)}>
       <Menu.Button as={"div"} role="button">
         {button}
       </Menu.Button>

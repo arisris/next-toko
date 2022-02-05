@@ -1,71 +1,57 @@
-import NestedListMenu, {
-  NestedListMenuItemsType
-} from "@/components/Menu/NestedListMenu";
+import NestedListMenu, { NestedListMenuItemsType } from "@/components/Menu/NestedListMenu";
 import Skeleton from "@/components/Skeleton/Skeleton";
 import { trpc } from "@/lib/trpc";
-import clsx from "clsx";
 import { Card, List, ListItem } from "konsta/react";
 import Image from "next/image";
 import { FaCheck, FaMoneyBill } from "react-icons/fa";
+import { MdFolder } from "react-icons/md";
 
-const menuData: NestedListMenuItemsType[] = [
+const menuItemsData: NestedListMenuItemsType[] = [
   {
-    title: "Inbox",
+    title: "Product",
+    icon: MdFolder,
     defaultOpen: true,
     subMenu: [
       {
-        title: "Chat"
+        title: "Manage Product",
+        icon: MdFolder
       },
       {
-        title: "Product Discussion"
+        title: "Add Product",
+        icon: MdFolder
       },
       {
-        title: "Review"
-      },
-      {
-        title: "Help Support"
-      },
-      {
-        title: "Complain"
-      },
-      {
-        title: "Update"
+        title: "Edit Product",
+        icon: MdFolder
       }
     ]
   },
   {
-    title: "Purchase",
+    title: "Categories",
+    icon: MdFolder,
     subMenu: [
       {
-        title: "Waiting Payment"
+        title: "Manage Categories",
+        icon: MdFolder
       },
       {
-        title: "Transaction List"
-      }
-    ]
-  },
-  {
-    title: "My Profile",
-    subMenu: [
-      {
-        title: "Wishlist"
+        title: "Add Categories",
+        icon: MdFolder
       },
       {
-        title: "Store Favorite"
-      },
-      {
-        title: "Settings"
+        title: "Edit Categories",
+        icon: MdFolder
       }
     ]
   }
 ];
 
-export default function SidebarUserMenu(props: { className?: string }) {
-  const { data: user } = trpc.useQuery(["user.me", ["email"]]);
+export default function SidebarAdminMenu() {
+  const { data: user } = trpc.useQuery(["user.me"]);
   return (
-    <Card className={clsx("relative z-0 w-full h-full m-0", props.className)}>
+    <Card className="relative z-0 !m-0 !p-0 !shadow-none">
       {user ? (
-        <List className="!my-0" hairlines={false}>
+        <List className="!my-0 !-mx-4" hairlines={false}>
           <ListItem
             media={
               <Image
@@ -82,13 +68,13 @@ export default function SidebarUserMenu(props: { className?: string }) {
                 <span className="text-xs text-gray-500 dark:text-gray-100">
                   Verified Accounts
                 </span>
-                <FaCheck className="text-primary" />
+                <FaCheck className="text-green-500" />
               </div>
             }
           />
           <ListItem
             media={<FaMoneyBill size={28} />}
-            mediaClassName="text-primary -mr-1"
+            mediaClassName="text-green-500 -mr-1"
             strongTitle
             title="Saldo"
             hairlines={false}
@@ -102,7 +88,7 @@ export default function SidebarUserMenu(props: { className?: string }) {
           <Skeleton className="w-[60%] h-14 rounded m-2" />
         </div>
       )}
-      <NestedListMenu isLoading={!user} data={menuData} skeletonSize={10} />
+      <NestedListMenu isLoading={!user} data={menuItemsData} skeletonSize={5} />
     </Card>
   );
 }

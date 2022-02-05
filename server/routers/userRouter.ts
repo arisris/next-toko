@@ -95,7 +95,7 @@ export const userRouter = createRouter()
     }
   })
   .query("me", {
-    input: z.string().array().optional(),
+    input: z.array(z.string()).default([]),
     async resolve({ ctx, input }) {
       // always hidden password
       let user = omit(ctx.auth.user, ["password", ...input]);
