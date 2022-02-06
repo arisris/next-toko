@@ -1,4 +1,6 @@
-import NestedListMenu, { NestedListMenuItemsType } from "@/components/Menu/NestedListMenu";
+import NestedListMenu, {
+  NestedListMenuItemProps
+} from "@/components/Menu/NestedListMenu";
 import Skeleton from "@/components/Skeleton/Skeleton";
 import { trpc } from "@/lib/trpc";
 import { Card, List, ListItem } from "konsta/react";
@@ -6,41 +8,47 @@ import Image from "next/image";
 import { FaCheck, FaMoneyBill } from "react-icons/fa";
 import { MdFolder } from "react-icons/md";
 
-const menuItemsData: NestedListMenuItemsType[] = [
+const menuItemsData: NestedListMenuItemProps[] = [
   {
     title: "Product",
-    icon: MdFolder,
+    media: <MdFolder size={24} />,
     defaultOpen: true,
     subMenu: [
       {
         title: "Manage Product",
-        icon: MdFolder
+        media: <MdFolder size={24} />,
+        link: true
       },
       {
         title: "Add Product",
-        icon: MdFolder
+        media: <MdFolder size={24} />,
+        link: true
       },
       {
         title: "Edit Product",
-        icon: MdFolder
+        media: <MdFolder size={24} />,
+        link: true
       }
     ]
   },
   {
     title: "Categories",
-    icon: MdFolder,
+    media: <MdFolder size={24} />,
     subMenu: [
       {
         title: "Manage Categories",
-        icon: MdFolder
+        media: <MdFolder size={24} />,
+        link: true
       },
       {
         title: "Add Categories",
-        icon: MdFolder
+        media: <MdFolder size={24} />,
+        link: true
       },
       {
         title: "Edit Categories",
-        icon: MdFolder
+        media: <MdFolder size={24} />,
+        link: true
       }
     ]
   }
