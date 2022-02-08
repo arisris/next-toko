@@ -1,5 +1,5 @@
 import NestedListMenu, {
-  NestedListMenuItemsType
+  NestedListMenuItemProps
 } from "@/components/Menu/NestedListMenu";
 import Skeleton from "@/components/Skeleton/Skeleton";
 import { trpc } from "@/lib/trpc";
@@ -8,13 +8,37 @@ import { Card, List, ListItem } from "konsta/react";
 import Image from "next/image";
 import { FaCheck, FaMoneyBill } from "react-icons/fa";
 
-const menuData: NestedListMenuItemsType[] = [
+const menuData: NestedListMenuItemProps[] = [
   {
     title: "Inbox",
     defaultOpen: true,
     subMenu: [
       {
-        title: "Chat"
+        title: "Chat 1",
+        subMenu: [
+          {
+            title: "Chat 2",
+            subMenu: [
+              {
+                title: "Chat 3",
+                subMenu: [
+                  {
+                    title: "Chat 4"
+                  },
+                  {
+                    title: "Item No Sub"
+                  }
+                ]
+              },
+              {
+                title: "Item No Sub"
+              }
+            ]
+          },
+          {
+            title: "Item No Sub"
+          }
+        ]
       },
       {
         title: "Product Discussion"

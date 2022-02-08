@@ -1,7 +1,17 @@
+// @ts-nocheck
 const screenSize = require("./lib/screen-size");
 const konsta = require("konsta/config")({});
-
-/** @type { import('tailwindcss/tailwind-config').TailwindConfig} */
+const colors = require("./styles/colors");
+const getColors = (prefix) => {
+  const out = {};
+  Object.keys(colors).forEach((i) => {
+    if (i.startsWith(prefix)) {
+      let name = i.split(prefix)[1];
+      out[name] = colors[i];
+    }
+  });
+  return out;
+};
 module.exports = {
   mode: "jit",
   darkMode: "class",
@@ -10,7 +20,6 @@ module.exports = {
       rubik: ["Rubik", "Arial", "Helvetica", "sans-serif"]
     },
     screens: Object.entries(screenSize).reduce(
-      // add "px" in values,
       (a, [k, v]) => ((a[k] = v + "px"), a),
       {}
     ),
@@ -25,16 +34,22 @@ module.exports = {
       ...konsta.theme.extend,
       colors: {
         ...konsta.theme.extend.colors,
+        green: getColors("green-"),
+        gray: getColors("grey-"),
+        purple: getColors("purple-"),
+        blue: getColors("blue-"),
         primary: {
           ...konsta.theme.extend.colors.primary,
-          DEFAULT: "#377702",
-          light: "#4a9f03",
-          dark: "#244f01"
+          DEFAULT: colors["green-500"],
+          light: colors["green-400"],
+          dark: colors["green-700"]
         }
       }
     }
   },
-  variants: {},
+  variants: {
+    typography: ["dark"]
+  },
   purge: {
     content: [
       "./libs/**/*.(ts|tsx)",
