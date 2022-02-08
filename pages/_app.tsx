@@ -10,6 +10,8 @@ import { QueryClientProvider } from "react-query";
 import { configResponsive } from "ahooks";
 import screenSize from "@/lib/screen-size";
 import Overlays from "@/components/Overlays";
+import { UseHeadlessuiDialogContextProvider } from "@/lib/hooks/useHeadlessuiDialog";
+import { ToastContextProvider } from "@/lib/hooks/useToast";
 
 configResponsive(screenSize);
 function App({ Component, ...props }: AppProps) {
@@ -22,13 +24,17 @@ function App({ Component, ...props }: AppProps) {
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
           <QueryClientProvider client={queryClient}>
             <KonstaApp theme="material" safeAreas={true} dark={true}>
-              {Component.protected ? (
-                <AuthorizePage c={Component} {...pageProps}>
-                  <Component {...pageProps} />
-                </AuthorizePage>
-              ) : (
-                <Component {...pageProps} />
-              )}
+              <UseHeadlessuiDialogContextProvider config={{ useRoot: true }}>
+                <ToastContextProvider>
+                  {Component.protected ? (
+                    <AuthorizePage c={Component} {...pageProps}>
+                      <Component {...pageProps} />
+                    </AuthorizePage>
+                  ) : (
+                    <Component {...pageProps} />
+                  )}
+                </ToastContextProvider>
+              </UseHeadlessuiDialogContextProvider>
             </KonstaApp>
           </QueryClientProvider>
         </trpc.Provider>

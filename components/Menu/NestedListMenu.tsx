@@ -20,24 +20,21 @@ export function NestedListMenuItem(props: NestedListMenuItemProps) {
         <>
           <Disclosure.Button
             as={ListItem}
+            hairlines={false}
             {...otherProps}
             link
             chevronIcon={
               <i
                 className={clsx(
-                  "transition-transform duration-300",
-                  open && "rotate-180"
+                  "transition-transform duration-300 text-primary",
+                  !open && "-rotate-90"
                 )}
               >
                 <FaChevronDown />
               </i>
             }
           />
-          <Disclosure.Panel
-            as={List}
-            className="pl-4 hairline-transparent"
-            nested
-          >
+          <Disclosure.Panel as={List} hairlines={false} className="pl-2" nested>
             {subMenu.map((item, key) => (
               <NestedListMenuItem key={key} {...item} />
             ))}
@@ -46,7 +43,7 @@ export function NestedListMenuItem(props: NestedListMenuItemProps) {
       )}
     </Disclosure>
   ) : (
-    <ListItem {...otherProps} />
+    <ListItem menuListItem={true} link={!!otherProps.href} {...otherProps} />
   );
 }
 
@@ -58,7 +55,7 @@ export function NestedListMenu(
   }> = { isLoading: false, data: [] }
 ) {
   return !props.isLoading ? (
-    <List className="!my-0 !-mx-4 hairline-transparent border-t pt-4">
+    <List className="!my-0 !-mx-4 border-t pt-4" hairlines={false}>
       {props.data.map((item, key) => (
         <NestedListMenuItem key={key} {...item} />
       ))}

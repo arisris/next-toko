@@ -6,49 +6,58 @@ import { trpc } from "@/lib/trpc";
 import { Card, List, ListItem } from "konsta/react";
 import Image from "next/image";
 import { FaCheck, FaMoneyBill } from "react-icons/fa";
-import { MdFolder } from "react-icons/md";
+import {
+  MdAdd,
+  MdCategory,
+  MdDashboard,
+  MdEdit,
+  MdInventory,
+  MdList
+} from "react-icons/md";
 
 const menuItemsData: NestedListMenuItemProps[] = [
   {
+    title: "Dashboard",
+    media: <MdDashboard size={24} />,
+    menuListItemActive: true
+  },
+  {
     title: "Product",
-    media: <MdFolder size={24} />,
+    colors: {
+      text: "text-blue-500"
+    },
+    media: <MdInventory size={24} />,
     defaultOpen: true,
     subMenu: [
       {
         title: "Manage Product",
-        media: <MdFolder size={24} />,
-        link: true
+        media: <MdList size={24} />
       },
       {
         title: "Add Product",
-        media: <MdFolder size={24} />,
-        link: true
+        media: <MdAdd size={24} />
       },
       {
         title: "Edit Product",
-        media: <MdFolder size={24} />,
-        link: true
+        media: <MdEdit size={24} />
       }
     ]
   },
   {
     title: "Categories",
-    media: <MdFolder size={24} />,
+    media: <MdCategory size={24} />,
     subMenu: [
       {
         title: "Manage Categories",
-        media: <MdFolder size={24} />,
-        link: true
+        media: <MdList size={24} />
       },
       {
         title: "Add Categories",
-        media: <MdFolder size={24} />,
-        link: true
+        media: <MdAdd size={24} />
       },
       {
         title: "Edit Categories",
-        media: <MdFolder size={24} />,
-        link: true
+        media: <MdEdit size={24} />
       }
     ]
   }
