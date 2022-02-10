@@ -4,7 +4,7 @@ import { SessionProvider, useSession } from "next-auth/react";
 import { App as KonstaApp, Card, Page, Preloader } from "konsta/react";
 import store from "@/store/index";
 import { AppProps, NextComponentTypeWithProps } from "next/app";
-import { ReactElement, useMemo } from "react";
+import { ReactElement, useEffect, useMemo, useState } from "react";
 import { createQueryClient, createTrpcClient, trpc } from "@/lib/trpc";
 import { QueryClientProvider } from "react-query";
 import { configResponsive } from "ahooks";
