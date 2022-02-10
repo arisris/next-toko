@@ -66,7 +66,7 @@ const menuItemsData: NestedListMenuItemProps[] = [
 export default function SidebarAdminMenu() {
   const { data: user } = trpc.useQuery(["user.me"]);
   return (
-    <Card className="relative z-0 !m-0 !p-0 !shadow-none">
+    <Card className="relative mb-[1000px] z-0 !m-0 !p-0 !shadow-none">
       {user ? (
         <List className="!my-0 !-mx-4" hairlines={false}>
           <ListItem

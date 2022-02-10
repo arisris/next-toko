@@ -8,10 +8,18 @@ import { Fragment } from "react";
 
 export default function AdminPageIndex() {
   const toast = useToast();
-  
+
   return (
     <AdminPageLayout>
-      <h3>This is Admin Page</h3>
+      <div className="flex justify-between items-center w-full border mb-20">
+        <h3>This is Admin Page</h3>
+        <h3>This is Admin Page</h3>
+      </div>
+      <Button inline onClick={() => {
+        toast.message({
+          title: "Hello World"
+        })
+      }}>Toast</Button>
     </AdminPageLayout>
   );
 }

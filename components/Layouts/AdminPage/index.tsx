@@ -18,6 +18,7 @@ import SidebarAdminMenu from "./NavbarMenu";
 import AdminPageNotificationsMenu from "./NavbarMenu/Notifications";
 import AdminPageHelpMenu from "./NavbarMenu/HelpMenu";
 import { useDarkMode } from "@/lib/hooks/useDarkMode";
+import { fakeArray } from "@/lib/utils";
 
 export default function AdminPageLayout(props: PropsWithChildren<{}>) {
   const session = useSession();
@@ -39,7 +40,7 @@ export default function AdminPageLayout(props: PropsWithChildren<{}>) {
   const screen = useResponsive();
   const darkMode = useDarkMode();
   return (
-    <Page>
+    <Page className="max-w-full">
       <Navbar
         // @ts-expect-error
         title={
@@ -62,7 +63,7 @@ export default function AdminPageLayout(props: PropsWithChildren<{}>) {
           </Link>
         }
         right={
-          <div className="xl:mr-4">
+          <div className="lg:mr-4">
             <Link
               navbar
               iconOnly
@@ -103,15 +104,18 @@ export default function AdminPageLayout(props: PropsWithChildren<{}>) {
       >
         <AdminPageHelpMenu />
       </Popover>
-      <div className="flex flex-col-reverse lg:flex-row gap-6">
-        <div className="relative">
+      <div className="flex flex-col lg:flex-row gap-6">
+        <div className="relative w-full lg:w-[30%] 2xl:w-[27%]">
           {screen.lg ? (
             <div
               className={clsx(
-                "hidden lg:block lg:w-[300px] h-full border-r-2 bg-block-strong-light dark:bg-block-strong-dark"
+                "fixed hidden lg:block xl:w-[300px] h-full overflow-y-auto scrollbar dark:scrollbar-gray-900 bg-block-strong-light dark:bg-block-strong-dark"
               )}
             >
+              {/* {fakeArray(100).map(i => <p>Hello {i}</p>)} */}
               <SidebarAdminMenu />
+              {/* This is trick */}
+              <p className="mb-16" />
             </div>
           ) : (
             <Panel
@@ -127,7 +131,9 @@ export default function AdminPageLayout(props: PropsWithChildren<{}>) {
             </Panel>
           )}
         </div>
-        <div className="relative lg:min-h-[98vh] mt-4">{props.children}</div>
+        <div className="relative w-full px-4 lg:py-4 lg:pl-0 lg:pr-8">
+          {props.children}
+        </div>
       </div>
     </Page>
   );

@@ -52,7 +52,7 @@ module.exports = {
   },
   purge: {
     content: [
-      "./libs/**/*.(ts|tsx)",
+      "./lib/**/*.(ts|tsx)",
       "./components/**/*.(ts|tsx)",
       "./pages/**/*.(ts|tsx)",
       "./layouts/**/*.(ts|tsx)",
