@@ -60,13 +60,13 @@ Thats it. Thankyou
 
 ### TODO
 
-[ ] Prepare move from graphql to trpc
-[ ] Admin Page
-[ ] Customer Page
-[ ] Seller Page
-[ ] Cart Page
-[ ] Homepage
-[ ] ....??
+- [ ] Prepare move from graphql to trpc
+- [ ] Admin Page
+- [ ] Customer Page
+- [ ] Seller Page
+- [ ] Cart Page
+- [ ] Homepage
+- [ ] ....??
 
 ### Contribute
 
