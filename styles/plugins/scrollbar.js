@@ -1,4 +1,5 @@
 /** @type { import('tailwindcss/plugin').default } */
+// @ts-ignore
 const plugin = require("tailwindcss/plugin");
 const Color = require("color");
 
