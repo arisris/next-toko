@@ -1,10 +1,10 @@
 import SVGRaw from "@/components/Icon/SVGRaw";
-import Overlays from "@/components/Overlays";
 import { Transition } from "@headlessui/react";
 import { useKeyPress, useClickAway } from "ahooks";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRef, useState } from "react";
+import Overlays from "../Overlays";
 
 export default function FrontPageSearchForm() {
   const ref = useRef<HTMLFormElement>();

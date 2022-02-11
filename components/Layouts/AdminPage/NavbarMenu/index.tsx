@@ -1,9 +1,12 @@
+import DialogConfirm from "@/components/Dialog/DialogConfirm";
 import NestedListMenu, {
   NestedListMenuItemProps
 } from "@/components/Menu/NestedListMenu";
 import Skeleton from "@/components/Skeleton/Skeleton";
+import { useHeadlessuiDialog } from "@/lib/hooks/useHeadlessuiDialog";
 import { trpc } from "@/lib/trpc";
-import { Card, List, ListItem } from "konsta/react";
+import { Card, Link, List, ListItem } from "konsta/react";
+import NextLink from "next/link";
 import Image from "next/image";
 import { FaCheck, FaMoneyBill } from "react-icons/fa";
 import {
@@ -12,8 +15,10 @@ import {
   MdDashboard,
   MdEdit,
   MdInventory,
-  MdList
+  MdList,
+  MdLogout
 } from "react-icons/md";
+import { signOut } from "next-auth/react";
 
 const menuItemsData: NestedListMenuItemProps[] = [
   {
@@ -65,6 +70,7 @@ const menuItemsData: NestedListMenuItemProps[] = [
 
 export default function SidebarAdminMenu() {
   const { data: user } = trpc.useQuery(["user.me"]);
+  const dialog = useHeadlessuiDialog();
   return (
     <Card className="relative mb-[1000px] z-0 !m-0 !p-0 !shadow-none">
       {user ? (
@@ -79,7 +85,12 @@ export default function SidebarAdminMenu() {
                 priority
               />
             }
-            title={user.name}
+            // @ts-ignore
+            title={
+              <NextLink href="/admin/profile">
+                <Link component="a">{user.name}</Link>
+              </NextLink>
+            }
             subtitle={
               <div className="flex gap-2 items-center">
                 <span className="text-xs text-gray-500 dark:text-gray-100">
@@ -87,6 +98,26 @@ export default function SidebarAdminMenu() {
                 </span>
                 <FaCheck className="text-green-500" />
               </div>
+            }
+            after={
+              <Link
+                iconOnly
+                navbar
+                title="Logout?"
+                onClick={() =>
+                  dialog.create(
+                    <DialogConfirm
+                      title="Are you sure to logout?"
+                      onConfirm={(ok) => {
+                        if (ok) signOut();
+                        dialog.destroy();
+                      }}
+                    />
+                  )
+                }
+              >
+                <MdLogout size={24} />
+              </Link>
             }
           />
           <ListItem

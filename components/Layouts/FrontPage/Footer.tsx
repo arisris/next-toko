@@ -1,6 +1,6 @@
 import { useDarkMode } from "@/lib/hooks/useDarkMode";
 import clsx from "clsx";
-import { Block, Button, Chip } from "konsta/react";
+import { Button, Chip } from "konsta/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";

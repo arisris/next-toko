@@ -3,7 +3,6 @@ import { PropsOf } from "@headlessui/react/dist/types";
 import clsx from "clsx";
 import { List, ListItem } from "konsta/react";
 import { PropsWithChildren } from "react";
-import { IconType } from "react-icons";
 import { FaChevronDown } from "react-icons/fa";
 import ListSkeleton from "../Skeleton/ListSkeleton";
 

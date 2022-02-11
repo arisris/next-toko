@@ -11,7 +11,6 @@ import FrontPageFooterMenu from "./FooterMenu";
 import { FaWhatsapp } from "react-icons/fa";
 import { Fab } from "konsta/react";
 import { useClickAway } from "ahooks";
-import { router } from "@trpc/server";
 
 type FrontPageLayoutNavbarHeaderCallback = (e: { isNavHidden: boolean }) => any;
 type FrontPageLayoutProps = {

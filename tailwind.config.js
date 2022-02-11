@@ -1,7 +1,7 @@
 // @ts-nocheck
 const screenSize = require("./lib/screen-size");
 const konsta = require("konsta/config")({});
-const colors = require("./styles/colors");
+const colors = require("./lib/colors");
 const getColors = (prefix) => {
   const out = {};
   Object.keys(colors).forEach((i) => {

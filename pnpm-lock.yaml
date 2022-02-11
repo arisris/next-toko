@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@headlessui/react': ^1.4.2
+  '@hookform/resolvers': ^2.8.8
   '@prisma/client': ^3.7.0
   '@tailwindcss/forms': ^0.3.4
   '@tailwindcss/typography': ^0.4.1
@@ -15,8 +16,9 @@ specifiers:
   ahooks: ^2.10.14
   autoprefixer: ^10.2.5
   bcryptjs: ^2.4.3
+  chart.js: ^3.7.0
   clsx: ^1.1.1
-  color: ^4.1.0
+  color: ^4.2.0
   faker: ^5.5.3
   konsta: ^0.7.0
   lodash: ^4.17.21
@@ -43,14 +45,16 @@ specifiers:
 
 dependencies:
   '@headlessui/react': 1.4.2_react-dom@17.0.2+react@17.0.2
+  '@hookform/resolvers': 2.8.8_react-hook-form@7.22.5
   '@prisma/client': 3.7.0_prisma@3.7.0
   '@trpc/client': 9.18.0_@trpc+server@9.18.0
   '@trpc/react': 9.18.0_7bf0ccee0cdde7e236b30b395e07d0e3
   '@trpc/server': 9.18.0
   ahooks: 2.10.14_react@17.0.2
   bcryptjs: 2.4.3
+  chart.js: 3.7.0
   clsx: 1.1.1
-  color: 4.1.0
+  color: 4.2.0
   konsta: 0.7.0
   lodash: 4.17.21
   next: 12.0.7_react-dom@17.0.2+react@17.0.2
@@ -195,6 +199,14 @@ packages:
     dependencies:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
+    dev: false
+
+  /@hookform/resolvers/2.8.8_react-hook-form@7.22.5:
+    resolution: {integrity: sha512-meAEDur1IJBfKyTo9yPYAuzjIfrxA7m9Ov+1nxaW/YupsqMeseWifoUjWK03+hz/RJizsVQAaUjVxFEkyu0GWg==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
+    dependencies:
+      react-hook-form: 7.22.5_react@17.0.2
     dev: false
 
   /@napi-rs/triples/1.0.3:
@@ -874,6 +886,10 @@ packages:
       supports-color: 7.2.0
     dev: true
 
+  /chart.js/3.7.0:
+    resolution: {integrity: sha512-31gVuqqKp3lDIFmzpKIrBeum4OpZsQjSIAqlOpgjosHDJZlULtvwLEZKtEhIAZc7JMPaHlYMys40Qy9Mf+1AAg==}
+    dev: false
+
   /chokidar/3.5.1:
     resolution: {integrity: sha512-9+s+Od+W0VJJzawDma/gvBNQqkTiqYTWLuZoyAsivsI4AaWTCzHG06/TMjsf1cYe9Cb97UCEhjz7HvnPk2p/tw==}
     engines: {node: '>= 8.10.0'}
@@ -949,8 +965,8 @@ packages:
       color-name: 1.1.4
       simple-swizzle: 0.2.2
 
-  /color/4.1.0:
-    resolution: {integrity: sha512-o2rkkxyLGgYoeUy1OodXpbPAQNmlNBrirQ8ODO8QutzDiDMNdezSOZLNnusQ6pUpCQJUsaJIo9DZJKqa2HgH7A==}
+  /color/4.2.0:
+    resolution: {integrity: sha512-hHTcrbvEnGjC7WBMk6ibQWFVDgEFTVmjrz2Q5HlU6ltwxv0JJN2Z8I7uRbWeQLF04dikxs8zgyZkazRJvSMtyQ==}
     dependencies:
       color-convert: 2.0.1
       color-string: 1.9.0
@@ -2912,7 +2928,7 @@ packages:
       bytes: 3.1.1
       chalk: 4.1.2
       chokidar: 3.5.2
-      color: 4.1.0
+      color: 4.2.0
       cosmiconfig: 7.0.1
       detective: 5.2.0
       didyoumean: 1.2.2

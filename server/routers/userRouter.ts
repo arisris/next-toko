@@ -29,11 +29,32 @@ export const userRouter = createRouter()
     }),
     async resolve({ ctx, input }) {
       ctx.auth.mustBeReallyUser();
+      console.log(input);
       let items = await ctx.prisma.user.update({
         where: { id: input.id },
         data: {
           // todo
         }
+      });
+      return items;
+    }
+  })
+  .mutation("profile.update", {
+    input: UserModel.pick({
+      name: true,
+      username: true,
+      email: true,
+      brithDate: true,
+      gender: true,
+      phone: true,
+      image: true
+    }),
+    async resolve({ ctx, input }) {
+      ctx.auth.mustBeReallyUser();
+      console.log(input);
+      let items = await ctx.prisma.user.update({
+        where: { id: ctx.auth.user.id },
+        data: input
       });
       return items;
     }

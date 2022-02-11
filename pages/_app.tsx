@@ -9,12 +9,18 @@ import { createQueryClient, createTrpcClient, trpc } from "@/lib/trpc";
 import { QueryClientProvider } from "react-query";
 import { configResponsive } from "ahooks";
 import screenSize from "@/lib/screen-size";
-import Overlays from "@/components/Overlays";
 import { UseHeadlessuiDialogContextProvider } from "@/lib/hooks/useHeadlessuiDialog";
 import { ToastContextProvider } from "@/lib/hooks/useToast";
+import Overlays from "@/components/Layouts/Overlays";
 
 configResponsive(screenSize);
 function App({ Component, ...props }: AppProps) {
+  // force required authentication for /admin path
+  if (props.router.asPath.startsWith("/admin")) {
+    if (!Component.protected) {
+      Component.protected = true;
+    }
+  }
   const pageProps = props?.pageProps ?? {};
   const queryClient = useMemo(() => createQueryClient(), [pageProps?.session]);
   const trpcClient = useMemo(() => createTrpcClient(), [pageProps?.session]);
@@ -27,7 +33,7 @@ function App({ Component, ...props }: AppProps) {
               <UseHeadlessuiDialogContextProvider config={{ useRoot: true }}>
                 <ToastContextProvider>
                   {Component.protected ? (
-                    <AuthorizePage c={Component} {...pageProps}>
+                    <AuthorizePage Component={Component} {...pageProps}>
                       <Component {...pageProps} />
                     </AuthorizePage>
                   ) : (
@@ -45,13 +51,13 @@ function App({ Component, ...props }: AppProps) {
 
 function AuthorizePage({
   children,
-  c,
+  Component,
   ...props
-}: {
+}: AppProps & {
   children: ReactElement;
-  c: NextComponentTypeWithProps;
+  Component: NextComponentTypeWithProps;
 }) {
-  const isFn = typeof c.protected === "function";
+  const isFn = typeof Component.protected === "function";
   const session = useSession({
     required: !isFn
   });
@@ -59,7 +65,7 @@ function AuthorizePage({
   if (!!session?.data?.user) return children;
 
   return isFn ? (
-    c.protected(children, props)
+    Component.protected(children, props)
   ) : (
     <Page className="flex justify-center items-center">
       <Overlays show={true} className={"absolute z-10"} />

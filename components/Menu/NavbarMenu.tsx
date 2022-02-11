@@ -2,7 +2,6 @@ import { Menu, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import Link from "next/link";
 import { Fragment } from "react";
-import Inlined from "../Utils/Inlined";
 
 export const NavbarMenuItem = ({ text, href }: { text: any; href: string }) => {
   return (
