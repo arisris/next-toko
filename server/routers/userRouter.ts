@@ -51,12 +51,11 @@ export const userRouter = createRouter()
     }),
     async resolve({ ctx, input }) {
       ctx.auth.mustBeReallyUser();
-      console.log(input);
-      let items = await ctx.prisma.user.update({
+      await ctx.prisma.user.update({
         where: { id: ctx.auth.user.id },
         data: input
       });
-      return items;
+      return true;
     }
   })
   .mutation("destroy", {

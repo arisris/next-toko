@@ -1,15 +1,31 @@
-import { inferMutationInput, trpc } from "@/lib/trpc";
+import { trpc } from "@/lib/trpc";
 import { Block, Button, List, ListInput } from "konsta/react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
+import { z } from "zod";
+import { ChangeEvent } from "react";
 import { UserModel } from "@/lib/zod";
+import moment from "moment";
+import { ToastPosition, ToastType, useToast } from "@/lib/hooks/useToast";
+
+const inputSchema = UserModel.pick({
+  email: true,
+  username: true,
+  phone: true,
+  gender: true
+}).extend({
+  name: z.string().min(3).max(100),
+  brithDate: z.string().transform((c) => new Date(c))
+});
 
 export default function AdminProfile() {
-  const { data: user } = trpc.useQuery(["user.me"]);
-  const { control, handleSubmit, formState } = useForm({
-    resolver: zodResolver(UserModel)
+  const { data: user, ...userQuery } = trpc.useQuery(["user.me"]);
+  const update = trpc.useMutation(["user.profile.update"]);
+  const { control, handleSubmit } = useForm({
+    resolver: zodResolver(inputSchema)
   });
+  const toast = useToast();
   return user ? (
     <div className="grid grid-cols-12">
       <Block
@@ -27,23 +43,17 @@ export default function AdminProfile() {
           <Button>Change Photo</Button>
         </div>
         <List nested className="w-full lg:w-8/12">
-          <ListInput
-            name="username"
-            type="text"
-            label="Username"
-            value={user.username}
-            readOnly
-          />
           <Controller
             control={control}
-            name="name"
-            defaultValue={user.name}
+            name="username"
+            defaultValue={user.username}
             render={({ field, fieldState }) => (
               <ListInput
                 type="text"
-                label="Name"
+                label="Username"
                 error={fieldState.error?.message || null}
                 {...field}
+                readOnly
               />
             )}
           />
@@ -57,16 +67,31 @@ export default function AdminProfile() {
                 label="Email"
                 error={fieldState.error?.message || null}
                 {...field}
+                readOnly
               />
             )}
           />
           <Controller
             control={control}
-            name="phone"
-            defaultValue={user.phone || 0}
+            name="name"
+            defaultValue={user.name || ""}
             render={({ field, fieldState }) => (
               <ListInput
-                type="number"
+                type="text"
+                label="Name"
+                error={fieldState.error?.message || null}
+                {...field}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="phone"
+            defaultValue={user.phone || ""}
+            render={({ field, fieldState }) => (
+              <ListInput
+                type="text"
                 label="Phone Number"
                 error={fieldState.error?.message || null}
                 {...field}
@@ -76,10 +101,12 @@ export default function AdminProfile() {
           <Controller
             control={control}
             name="brithDate"
-            defaultValue={user.brithDate || ""}
+            defaultValue={moment(user.brithDate || undefined).format(
+              "yyyy-MM-DD"
+            )}
             render={({ field, fieldState }) => (
               <ListInput
-                type="datetime-local"
+                type="date"
                 label="Brith Date"
                 error={fieldState.error?.message || null}
                 {...field}
@@ -89,7 +116,7 @@ export default function AdminProfile() {
           <Controller
             control={control}
             name="gender"
-            defaultValue={user.gender}
+            defaultValue={user.gender || ""}
             render={({ field, fieldState }) => (
               <ListInput
                 label="Gender"
@@ -99,6 +126,9 @@ export default function AdminProfile() {
                 defaultValue={"Male"}
                 placeholder="Please choose..."
                 error={fieldState.error?.message || null}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  field.onChange(e.target.value);
+                }}
               >
                 <option defaultValue="Male">Male</option>
                 <option defaultValue="Female">Female</option>
@@ -108,8 +138,32 @@ export default function AdminProfile() {
 
           <Button
             className="mt-8"
-            onClick={handleSubmit((data) => {
-              console.log(data);
+            onClick={handleSubmit((data: any) => {
+              update
+                .mutateAsync(data)
+                .then((d) => {
+                  toast.message(
+                    {
+                      title: "Successful Update",
+                      message: "All Data Updated :D",
+                      type: ToastType.SUCCESS
+                    },
+                    ToastPosition.TOP_CENTER
+                  );
+                })
+                .catch((e) => {
+                  toast.message(
+                    {
+                      title: "Failed Update",
+                      message: e.message,
+                      type: ToastType.ERROR
+                    },
+                    ToastPosition.TOP_CENTER
+                  );
+                })
+                .finally(() => {
+                  userQuery.refetch();
+                });
             })}
           >
             Save Changes
