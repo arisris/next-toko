@@ -16,7 +16,8 @@ import {
   MdEdit,
   MdInventory,
   MdList,
-  MdLogout
+  MdLogout,
+  MdPeople
 } from "react-icons/md";
 import { signOut } from "next-auth/react";
 
@@ -27,12 +28,32 @@ const menuItemsData: NestedListMenuItemProps[] = [
     menuListItemActive: true
   },
   {
+    title: "Users",
+    colors: {
+      text: "text-blue-500"
+    },
+    media: <MdPeople size={24} />,
+    defaultOpen: true,
+    subMenu: [
+      {
+        title: "Manage User",
+        href: "/admin/users",
+        media: <MdList size={24} />
+      },
+      {
+        title: "Add User",
+        href: "/admin/users/add",
+        media: <MdAdd size={24} />
+      }
+    ]
+  },
+  {
     title: "Product",
     colors: {
       text: "text-blue-500"
     },
     media: <MdInventory size={24} />,
-    defaultOpen: true,
+    defaultOpen: false,
     subMenu: [
       {
         title: "Manage Product",
@@ -42,10 +63,6 @@ const menuItemsData: NestedListMenuItemProps[] = [
         title: "Add Product",
         media: <MdAdd size={24} />
       },
-      {
-        title: "Edit Product",
-        media: <MdEdit size={24} />
-      }
     ]
   },
   {
@@ -60,10 +77,6 @@ const menuItemsData: NestedListMenuItemProps[] = [
         title: "Add Categories",
         media: <MdAdd size={24} />
       },
-      {
-        title: "Edit Categories",
-        media: <MdEdit size={24} />
-      }
     ]
   }
 ];

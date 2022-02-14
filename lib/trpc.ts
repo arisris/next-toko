@@ -16,6 +16,10 @@ import type { Procedure } from "@trpc/server/dist/declarations/src/internals/pro
 export const trpc = createReactQueryHooks<AppRouter>();
 export const transformer = superjson;
 
+export const useTrpcQuery = trpc.useQuery;
+export const useTrpcInfiniteQuery = trpc.useInfiniteQuery;
+export const useTrpcMutation = trpc.useMutation;
+
 export const createQueryClient = () =>
   new QueryClient({
     defaultOptions: {

@@ -5,6 +5,7 @@ import { List, ListItem } from "konsta/react";
 import { PropsWithChildren } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import ListSkeleton from "../Skeleton/ListSkeleton";
+import NextLink from "next/link";
 
 export interface NestedListMenuItemProps extends PropsOf<typeof ListItem> {
   defaultOpen?: boolean;
@@ -41,8 +42,12 @@ export function NestedListMenuItem(props: NestedListMenuItemProps) {
         </>
       )}
     </Disclosure>
+  ) : otherProps.href ? (
+    <NextLink href={otherProps.href as string}>
+      <ListItem menuListItem={true} link={true} {...otherProps} />
+    </NextLink>
   ) : (
-    <ListItem menuListItem={true} link={!!otherProps.href} {...otherProps} />
+    <ListItem menuListItem={true} {...otherProps} />
   );
 }
 

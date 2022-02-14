@@ -51,12 +51,11 @@ export const userRouter = createRouter()
     }),
     async resolve({ ctx, input }) {
       ctx.auth.mustBeReallyUser();
-      console.log(input);
-      let items = await ctx.prisma.user.update({
+      await ctx.prisma.user.update({
         where: { id: ctx.auth.user.id },
         data: input
       });
-      return items;
+      return true;
     }
   })
   .mutation("destroy", {
@@ -74,8 +73,8 @@ export const userRouter = createRouter()
   .query("all", {
     input: z.object({
       search: z.string().nullish(),
-      limit: z.number(),
-      cursor: z.number()
+      limit: z.number().nullish(),
+      cursor: z.number().nullish()
     }),
     async resolve({ ctx, input }) {
       let limit = input.limit ?? 10;

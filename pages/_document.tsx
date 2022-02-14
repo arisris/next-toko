@@ -2,7 +2,7 @@ import Document, { Html, Head, Main, NextScript } from "next/document";
 export default class MyDocument extends Document {
   render() {
     return (
-      <Html lang="en" className="s">
+      <Html lang="en">
         <Head>
           <link href="/favicon.ico" rel="shortcut icon" />
           {/* <link
@@ -81,17 +81,7 @@ export default class MyDocument extends Document {
             content="/icons/ms-icon-144x144.png"
           /> */}
           <meta name="theme-color" content="#ffffff" />
-          {/* <meta name="google-site-verification" content="HqRlPHb6rKQHLdM0ifiL0wHexR1qaUVFr_5f0dr0bKI" /> */}
-          {/* WhY?: Alternative to google analytics help me to improve my site. Use self hosted umami writen in next.js hosted at vercel with planetscale serverless MySQL database. Its safe just me can control this */}
-          {/* {process.env.NODE_ENV === 'production' && (
-            <script
-              async
-              defer
-              data-website-id="11ffac4d-485a-45c7-a0fd-3d0a624ce238"
-              src="https://umamiapp.vercel.app/umami.js"
-            ></script>
-          )} */}
-          {/* <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500&amp;display=swap" rel="stylesheet" /> */}
+          <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500&amp;display=swap" rel="stylesheet" />
         </Head>
         <body className="bg-page-material-light text-page-material-dark dark:bg-page-material-dark dark:text-page-material-light">
           <Main />
