@@ -82,7 +82,7 @@ const ToastMessage = ({ message, title, type, timeOut }: ToastMessageType) => {
       show={show}
       as="div"
       className={clsx(
-        "min-w-[16rem] block p-4 transition-all my-2 rounded-md border text-white",
+        "min-w-[16rem] block px-4 py-1 transition-all my-2 rounded-md border text-white shadow-md",
         {
           "bg-red-500": type === ToastType.ERROR,
           "bg-green-500": type === ToastType.SUCCESS,

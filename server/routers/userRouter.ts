@@ -73,8 +73,8 @@ export const userRouter = createRouter()
   .query("all", {
     input: z.object({
       search: z.string().nullish(),
-      limit: z.number(),
-      cursor: z.number()
+      limit: z.number().nullish(),
+      cursor: z.number().nullish()
     }),
     async resolve({ ctx, input }) {
       let limit = input.limit ?? 10;
