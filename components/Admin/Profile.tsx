@@ -20,8 +20,8 @@ const inputSchema = UserModel.pick({
 });
 
 export default function AdminProfile() {
-  const { data: user, ...userQuery } = trpc.useQuery(["user.me"]);
-  const update = trpc.useMutation(["user.profile.update"]);
+  const { data: user, ...userQuery } = trpc.user.query.useQuery({ id: 1 });
+  const update = trpc.user.update.useMutation();
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(inputSchema)
   });
@@ -35,10 +35,11 @@ export default function AdminProfile() {
       >
         <div className="w-full lg:w-4/12 flex flex-col items-center gap-4">
           <Image
-            src={user.image}
+            src={user.image as string}
             width={240}
             height={240}
             className="rounded-md"
+            alt={""}
           />
           <Button>Change Photo</Button>
         </div>
@@ -138,7 +139,7 @@ export default function AdminProfile() {
 
           <Button
             className="mt-8"
-            onClick={handleSubmit((data: any) => {
+            onClick={handleSubmit((data: never) => {
               update
                 .mutateAsync(data)
                 .then((d) => {

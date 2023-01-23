@@ -10,7 +10,7 @@ generator zod {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -45,8 +45,8 @@ model User {
   permissions     Permission[]
   storeTeams      StoreTeam[]
 
-  @@index([membershipId], map: "user_membershipId_fkey")
-  @@index([roleId], map: "user_roleId_fkey")
+  @@index([membershipId])
+  @@index([roleId])
   @@map("user")
 }
 
@@ -156,8 +156,8 @@ model Product {
   productCategories ProductCategories[]
   productTags       ProductTags[]
 
-  @@index([authorId], map: "product_authorId_fkey")
-  @@index([storeFrontId], map: "product_storeFrontId_fkey")
+  @@index([authorId])
+  @@index([storeFrontId])
   @@index([storeId, authorId])
   @@map("product")
 }
@@ -174,7 +174,7 @@ model StoreFront {
   store       Store     @relation(fields: [storeId], references: [id])
   products    Product[]
 
-  @@index([storeId], map: "store_front_storeId_fkey")
+  @@index([storeId])
   @@map("store_front")
 }
 
@@ -191,7 +191,7 @@ model ProductCategories {
   subProductCategories ProductCategories[] @relation("ProductCategoriesToProductCategories")
   products             Product[]
 
-  @@index([productCategoriesId], map: "product_categories_productCategoriesId_fkey")
+  @@index([productCategoriesId])
   @@map("product_categories")
 }
 
@@ -224,9 +224,9 @@ model ProductComments {
   product           Product                @relation(fields: [productId], references: [id])
   comments          ProductComments[]      @relation("ProductCommentsToProductComments")
 
-  @@index([authorId], map: "product_comments_authorId_fkey")
-  @@index([productCommentsId], map: "product_comments_productCommentsId_fkey")
-  @@index([productId], map: "product_comments_productId_fkey")
+  @@index([authorId])
+  @@index([productCommentsId])
+  @@index([productId])
   @@map("product_comments")
 }
 
@@ -259,7 +259,7 @@ model DataProvince {
   storeLocation StoreLocation[]
   userLocation  UserLocation[]
 
-  @@index([countryId], map: "data_province_countryId_fkey")
+  @@index([countryId])
   @@map("data_province")
 }
 
@@ -277,7 +277,7 @@ model DataCity {
   storeLocation StoreLocation[]
   userLocation  UserLocation[]
 
-  @@index([provinceId], map: "data_city_provinceId_fkey")
+  @@index([provinceId])
   @@map("data_city")
 }
 
@@ -295,7 +295,7 @@ model DataDistrict {
   storeLocation StoreLocation[]
   userLocation  UserLocation[]
 
-  @@index([cityId], map: "data_district_cityId_fkey")
+  @@index([cityId])
   @@map("data_district")
 }
 
@@ -312,7 +312,7 @@ model DataVillage {
   storeLocation StoreLocation[]
   userLocation  UserLocation[]
 
-  @@index([districtId], map: "data_village_districtId_fkey")
+  @@index([districtId])
   @@map("data_village")
 }
 
@@ -333,12 +333,12 @@ model StoreLocation {
   store      Store         @relation(fields: [storeId], references: [id])
   village    DataVillage?  @relation(fields: [villageId], references: [id])
 
-  @@index([cityId], map: "store_location_cityId_fkey")
-  @@index([countryId], map: "store_location_countryId_fkey")
-  @@index([districtId], map: "store_location_districtId_fkey")
-  @@index([provinceId], map: "store_location_provinceId_fkey")
-  @@index([storeId], map: "store_location_storeId_fkey")
-  @@index([villageId], map: "store_location_villageId_fkey")
+  @@index([cityId])
+  @@index([countryId])
+  @@index([districtId])
+  @@index([provinceId])
+  @@index([storeId])
+  @@index([villageId])
   @@map("store_location")
 }
 
@@ -359,12 +359,12 @@ model UserLocation {
   user       User          @relation(fields: [userId], references: [id])
   village    DataVillage?  @relation(fields: [villageId], references: [id])
 
-  @@index([cityId], map: "user_location_cityId_fkey")
-  @@index([countryId], map: "user_location_countryId_fkey")
-  @@index([districtId], map: "user_location_districtId_fkey")
-  @@index([provinceId], map: "user_location_provinceId_fkey")
-  @@index([userId], map: "user_location_userId_fkey")
-  @@index([villageId], map: "user_location_villageId_fkey")
+  @@index([cityId])
+  @@index([countryId])
+  @@index([districtId])
+  @@index([provinceId])
+  @@index([userId])
+  @@index([villageId])
   @@map("user_location")
 }
 
@@ -384,7 +384,7 @@ model Cart {
   userId Int
   user   User @relation(fields: [userId], references: [id])
 
-  @@index([userId], map: "Cart_userId_fkey")
+  @@index([userId])
 }
 
 enum ProductCommentsType {

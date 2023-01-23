@@ -12,7 +12,9 @@ import { FaWhatsapp } from "react-icons/fa";
 import { Fab } from "konsta/react";
 import { useClickAway } from "ahooks";
 
-type FrontPageLayoutNavbarHeaderCallback = (e: { isNavHidden: boolean }) => any;
+type FrontPageLayoutNavbarHeaderCallback = (e: {
+  isNavHidden: boolean;
+}) => never;
 type FrontPageLayoutProps = {
   children: JSX.Element;
   title?: string;
@@ -47,18 +49,18 @@ export default function FrontPageLayout({
 
   useEffect(() => {
     const showScrollable = () => {
-      navbarRef.current.style.transform = "translateY(0)";
-      navbarBottomRef.current.style.transform = "translateY(0)";
+      navbarRef.current!.style.transform = "translateY(0)";
+      navbarBottomRef.current!.style.transform = "translateY(0)";
     };
     const hideScrollable = () => {
-      navbarRef.current.style.transform = "translateY(-100%)";
-      navbarBottomRef.current.style.transform = "translateY(10vh)";
+      navbarRef.current!.style.transform = "translateY(-100%)";
+      navbarBottomRef.current!.style.transform = "translateY(10vh)";
     };
     if (wrapperRef?.current) {
       isNavHidden ? hideScrollable() : showScrollable();
       let prevScroll = wrapperRef.current.scrollTop;
       wrapperRef.current.onscroll = () => {
-        let currentScroll = wrapperRef.current.scrollTop;
+        let currentScroll = wrapperRef.current!.scrollTop;
         setIsNavHidden(prevScroll < currentScroll);
         prevScroll = currentScroll;
       };
@@ -67,6 +69,7 @@ export default function FrontPageLayout({
 
   return (
     <section
+      // @ts-expect-error
       ref={wrapperRef}
       className="fixed overflow-auto flex flex-col w-full h-screen"
     >
@@ -79,22 +82,24 @@ export default function FrontPageLayout({
       </Head>
       <header className={clsx("min-h-[4rem]", headerClass)}>
         <nav
+          // @ts-expect-error
           ref={navbarRef}
           className="fixed flex flex-col z-10 w-full bg-bars-material-light dark:bg-bars-material-dark shadow-md transition-all duration-300 ease-in-out"
         >
           <div className="container mx-auto flex gap-2 items-center">
             <div className="flex gap-2 flex-grow">
-              <Link href="/">
-                <a className="ml-2 md:ml-0 flex items-center font-bold whitespace-nowrap p-2 hover:bg-gray-100 dark:hover:bg-bars-ios-dark text-primary">
-                  {/* <img
+              <Link
+                href="/"
+                className="ml-2 md:ml-0 flex items-center font-bold whitespace-nowrap p-2 hover:bg-gray-100 dark:hover:bg-bars-ios-dark text-primary"
+              >
+                {/* <img
                     className="hidden sm:block fill-current"
                     src="/assets/logo.svg"
                   /> */}
-                  <span className="hidden sm:block fill-current text-[20px] tracking-wide bg-gradient-to-r from-blue-900 via-primary to-blue-900 bg-clip-text text-transparent px-4 py-1">
-                    NextToko
-                  </span>
-                  <span className="block sm:hidden">NT</span>
-                </a>
+                <span className="hidden sm:block fill-current text-[20px] tracking-wide bg-gradient-to-r from-blue-900 via-primary to-blue-900 bg-clip-text text-transparent px-4 py-1">
+                  NextToko
+                </span>
+                <span className="block sm:hidden">NT</span>
               </Link>
               <FrontPageSearchForm />
             </div>
@@ -111,12 +116,21 @@ export default function FrontPageLayout({
           </div>
         )}
       </header>
-      <main className="flex-auto lg:mt-4" ref={contentRef}>
+      <main
+        className="flex-auto lg:mt-4"
+        // @ts-expect-error
+        ref={contentRef}
+      >
         <section className="container mx-auto">{children}</section>
       </main>
-      <footer className="container mx-auto" ref={footerRef}>
+      <footer
+        className="container mx-auto"
+        // @ts-expect-error
+        ref={footerRef}
+      >
         {/* Mobile only */}
         <FrontPageFooterMenu
+          // @ts-expect-error
           ref={navbarBottomRef}
           className={clsx(
             "fixed bottom-0 inset-x-0 lg:hidden z-0 transition-all duration-300 ease-in-out"

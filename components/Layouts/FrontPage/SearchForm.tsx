@@ -7,20 +7,20 @@ import { useRef, useState } from "react";
 import Overlays from "../Overlays";
 
 export default function FrontPageSearchForm() {
-  const ref = useRef<HTMLFormElement>();
-  const inputRef = useRef<HTMLInputElement>();
+  const ref = useRef<HTMLFormElement | undefined>();
+  const inputRef = useRef<HTMLInputElement | undefined>();
   const [focus, setFocus] = useState(false);
 
   useClickAway(() => setFocus(false), [ref]);
   useKeyPress(
     "/",
     (e) =>
-      !focus && (e.preventDefault(), setFocus(true), inputRef.current.focus())
+      !focus && (e.preventDefault(), setFocus(true), inputRef.current!.focus())
   );
   useKeyPress(
     "Escape",
     (e) =>
-      focus && (e.preventDefault(), setFocus(false), inputRef.current.blur())
+      focus && (e.preventDefault(), setFocus(false), inputRef.current!.blur())
   );
 
   return (
@@ -34,9 +34,15 @@ export default function FrontPageSearchForm() {
           relative: !focus
         })}
       >
-        <form ref={ref} method="GET" action="/search">
+        <form
+          // @ts-expect-error
+          ref={ref}
+          method="GET"
+          action="/search"
+        >
           <div className={clsx("relative z-10", focus && " ")}>
             <input
+              // @ts-expect-error
               ref={inputRef}
               type="search"
               name="q"
@@ -78,18 +84,22 @@ export default function FrontPageSearchForm() {
               {Array(3)
                 .fill(null)
                 .map((_, i) => (
-                  <Link key={i} href={`/search?q=${i}`}>
-                    <a className="hover:underline whitespace-nowrap">
-                      Product {i}
-                    </a>
+                  <Link
+                    key={`key${i}`}
+                    href={`/search?q=${i}`}
+                    className="hover:underline whitespace-nowrap"
+                  >
+                    Product {i}
                   </Link>
                 ))}
             </div>
             {[0].map((i) => (
-              <Link key={i} href={`/search?q=${i}`}>
-                <a className="block min-w-full p-2 font-semibold hover:bg-gray-50 dark:hover:bg-bars-ios-dark hover:underline">
-                  Search product {i}
-                </a>
+              <Link
+                key={i}
+                href={`/search?q=${i}`}
+                className="block min-w-full p-2 font-semibold hover:bg-gray-50 dark:hover:bg-bars-ios-dark hover:underline"
+              >
+                Search product {i}
               </Link>
             ))}
           </Transition>

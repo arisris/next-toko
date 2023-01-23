@@ -9,14 +9,13 @@ import { useRef, useState } from "react";
 export default function FrontPageCategoriesMenu(props: {
   isNavHidden?: boolean;
 }) {
-  /** @type {import('react').MutableRefObject<HTMLElement>} */
   const ref = useRef<HTMLDivElement>();
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
   const handleToggle = () => {
     if (open) {
-      ref.current.classList.add("p-0", "opacity-0");
+      ref.current!.classList.add("p-0", "opacity-0");
       let t = setTimeout(() => {
         setOpen(false);
         document.body.classList.remove("overflow-hidden");
@@ -37,6 +36,7 @@ export default function FrontPageCategoriesMenu(props: {
 
   return (
     <div
+      // @ts-expect-error
       ref={ref}
       className={clsx(
         "flex lg:items-center lg:bg-none lg:p-0 lg:relative lg:h-auto",
@@ -65,14 +65,14 @@ export default function FrontPageCategoriesMenu(props: {
         {Array(4)
           .fill(null)
           .map((_, i) => (
-            <Link key={i} href={`/cat/${i}`}>
+            <Link key={`key${i}`} href={`/cat/${i}`}>
               <Button
-                component="a"
                 inline
                 clear
                 className="capitalize"
                 colors={{
-                  text: "text-bars-material-dark dark:text-bars-material-light"
+                  textIos:
+                    "text-bars-material-dark dark:text-bars-material-light"
                 }}
               >
                 Menu {i}

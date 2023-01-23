@@ -1,16 +1,19 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { DataProvinceModel } from "@/lib/zod";
-import { createRouter } from "@/server/createRouter";
+import { t } from "@/server/trpc";
 import { z } from "zod";
-export const dataProvinceRouter = createRouter()
-  .mutation("store", {
-    input: z
-      .object({
-        data: DataProvinceModel.omit({ id: true })
-      })
-      .required(),
-    async resolve({ ctx, input }) {
+
+export const dataProvinceRouter = t.router({
+  store: t.procedure
+    .input(
+      z
+        .object({
+          data: DataProvinceModel.omit({ id: true })
+        })
+        .required()
+    )
+    .mutation(async ({ ctx, input }) => {
       ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.dataProvince.create({
         // @ts-expect-error
@@ -19,14 +22,15 @@ export const dataProvinceRouter = createRouter()
         }
       });
       return items;
-    }
-  })
-  .mutation("update", {
-    input: z.object({
-      id: z.number(),
-      data: DataProvinceModel
     }),
-    async resolve({ ctx, input }) {
+  update: t.procedure
+    .input(
+      z.object({
+        id: z.number(),
+        data: DataProvinceModel
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
       ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.dataProvince.update({
         where: { id: input.id },
@@ -35,30 +39,32 @@ export const dataProvinceRouter = createRouter()
         }
       });
       return items;
-    }
-  })
-  .mutation("destroy", {
-    input: z.object({
-      id: z.number()
     }),
-    async resolve({ ctx, input }) {
+  delete: t.procedure
+    .input(
+      z.object({
+        id: z.number()
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
       ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.dataProvince.delete({
         where: { id: input.id }
       });
       return items;
-    }
-  })
-  .query("all", {
-    input: z.object({
-      search: z.string().nullish(),
-      limit: z.number(),
-      cursor: z.number()
     }),
-    async resolve({ ctx, input }) {
+  all: t.procedure
+    .input(
+      z.object({
+        search: z.string().nullish(),
+        limit: z.number(),
+        cursor: z.number()
+      })
+    )
+    .query(async ({ ctx, input }) => {
       let limit = input.limit ?? 10;
       let cursor = input.cursor;
-      let where: Prisma.DataProvinceWhereInput;
+      let where: Prisma.DataProvinceWhereInput | undefined;
       if (input.search) {
         // where.name = {
         //   contains: input.search
@@ -80,16 +86,17 @@ export const dataProvinceRouter = createRouter()
         next = nextItem!.id;
       }
       return { items, next };
-    }
-  })
-  .query("byId", {
-    input: z.object({
-      id: z.number()
     }),
-    async resolve({ ctx, input }) {
+  query: t.procedure
+    .input(
+      z.object({
+        id: z.number()
+      })
+    )
+    .query(async ({ ctx, input }) => {
       let items = await ctx.prisma.dataProvince.findUnique({
         where: { id: input.id }
       });
       return items;
-    }
-  });
+    })
+});

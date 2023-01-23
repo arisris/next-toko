@@ -1,17 +1,19 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { UserModel } from "@/lib/zod";
-import { createRouter } from "@/server/createRouter";
+import { t } from "@/server/trpc";
 import { z } from "zod";
-import { omit } from "lodash";
-export const userRouter = createRouter()
-  .mutation("store", {
-    input: z
-      .object({
-        data: UserModel.omit({ id: true })
-      })
-      .required(),
-    async resolve({ ctx, input }) {
+
+export const userRouter = t.router({
+  store: t.procedure
+    .input(
+      z
+        .object({
+          data: UserModel.omit({ id: true })
+        })
+        .required()
+    )
+    .mutation(async ({ ctx, input }) => {
       ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.user.create({
         // @ts-expect-error
@@ -20,16 +22,16 @@ export const userRouter = createRouter()
         }
       });
       return items;
-    }
-  })
-  .mutation("update", {
-    input: z.object({
-      id: z.number(),
-      data: UserModel
     }),
-    async resolve({ ctx, input }) {
+  update: t.procedure
+    .input(
+      z.object({
+        id: z.number(),
+        data: UserModel
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
       ctx.auth.mustBeReallyUser();
-      console.log(input);
       let items = await ctx.prisma.user.update({
         where: { id: input.id },
         data: {
@@ -37,49 +39,32 @@ export const userRouter = createRouter()
         }
       });
       return items;
-    }
-  })
-  .mutation("profile.update", {
-    input: UserModel.pick({
-      name: true,
-      username: true,
-      email: true,
-      brithDate: true,
-      gender: true,
-      phone: true,
-      image: true
     }),
-    async resolve({ ctx, input }) {
-      ctx.auth.mustBeReallyUser();
-      await ctx.prisma.user.update({
-        where: { id: ctx.auth.user.id },
-        data: input
-      });
-      return true;
-    }
-  })
-  .mutation("destroy", {
-    input: z.object({
-      id: z.number()
-    }),
-    async resolve({ ctx, input }) {
+  delete: t.procedure
+    .input(
+      z.object({
+        id: z.number()
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
       ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.user.delete({
         where: { id: input.id }
       });
       return items;
-    }
-  })
-  .query("all", {
-    input: z.object({
-      search: z.string().nullish(),
-      limit: z.number().nullish(),
-      cursor: z.number().nullish()
     }),
-    async resolve({ ctx, input }) {
+  all: t.procedure
+    .input(
+      z.object({
+        search: z.string().nullish(),
+        limit: z.number(),
+        cursor: z.number()
+      })
+    )
+    .query(async ({ ctx, input }) => {
       let limit = input.limit ?? 10;
       let cursor = input.cursor;
-      let where: Prisma.UserWhereInput;
+      let where: Prisma.UserWhereInput | undefined;
       if (input.search) {
         // where.name = {
         //   contains: input.search
@@ -101,24 +86,17 @@ export const userRouter = createRouter()
         next = nextItem!.id;
       }
       return { items, next };
-    }
-  })
-  .query("byId", {
-    input: z.object({
-      id: z.number()
     }),
-    async resolve({ ctx, input }) {
+  query: t.procedure
+    .input(
+      z.object({
+        id: z.number()
+      })
+    )
+    .query(async ({ ctx, input }) => {
       let items = await ctx.prisma.user.findUnique({
         where: { id: input.id }
       });
       return items;
-    }
-  })
-  .query("me", {
-    input: z.array(z.string()).default([]),
-    async resolve({ ctx, input }) {
-      // always hidden password
-      let user = omit(ctx.auth.user, ["password", ...input]);
-      return user;
-    }
-  });
+    })
+});

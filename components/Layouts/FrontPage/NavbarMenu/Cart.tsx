@@ -9,7 +9,7 @@ export default function FrontPageNavbarMenuCart({ session }: { session: SessionC
     <NavbarMenu
       button={
         <Button clear inline colors={{
-          text: "text-bars-material-dark dark:text-bars-material-light"
+          textIos: "text-bars-material-dark dark:text-bars-material-light"
         }}>
           <FaShoppingCart size={24} />
         </Button>

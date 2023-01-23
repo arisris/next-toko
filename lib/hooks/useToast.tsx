@@ -40,10 +40,12 @@ const Context = createContext<{
   setMessages: Dispatch<SetStateAction<ToastMessageType[]>>;
   position: ToastPosition;
   setPosition: Dispatch<SetStateAction<ToastPosition>>;
-}>(null);
+} | null>(null);
 
 export const useToast = () => {
-  const { messages, setMessages, setPosition } = useContext(Context);
+  const ctx = useContext(Context);
+  if (!ctx) throw new Error("Not Initialized");
+  const { messages, setMessages, setPosition } = ctx;
   const message = (message: ToastMessageType, position?: ToastPosition) => {
     setPosition(position || ToastPosition.BOTTOM_RIGHT);
     setMessages([
@@ -59,9 +61,16 @@ export const useToast = () => {
   return { message };
 };
 
-const ToastMessage = ({ message, title, type, timeOut }: ToastMessageType) => {
+const ToastMessage = ({
+  message,
+  title,
+  type,
+  timeOut = 0
+}: ToastMessageType) => {
   const [show, setShow] = useState(false);
-  const { messages, setMessages, position } = useContext(Context);
+  const ctx = useContext(Context);
+  if (!ctx) throw new Error("Not Initialized");
+  const { messages, setMessages, position } = ctx;
   const destroy = () =>
     setMessages(messages.filter((i) => i.timeOut !== timeOut));
   useEffect(() => {
@@ -103,7 +112,8 @@ const ToastMessage = ({ message, title, type, timeOut }: ToastMessageType) => {
         <div>
           <Link
             colors={{
-              text: "text-white"
+              textIos: "text-white",
+              textMaterial: "text-white"
             }}
             onClick={(e) => destroy()}
           >
@@ -136,7 +146,7 @@ export const ToastContextProvider = (props: { children: ReactElement }) => {
         })}
       >
         {messages.map((toast, index) => (
-          <ToastMessage key={index} {...toast} />
+          <ToastMessage key={`key${index}`} {...toast} />
         ))}
       </div>
     );
@@ -145,7 +155,7 @@ export const ToastContextProvider = (props: { children: ReactElement }) => {
   return (
     <Context.Provider
       value={{
-        messages: messages.filter((i) => i.timeOut > Date.now()),
+        messages: messages.filter((i) => i.timeOut || 0 > Date.now()),
         setMessages: setMessages,
         position,
         setPosition

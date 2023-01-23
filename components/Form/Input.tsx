@@ -52,7 +52,7 @@ const TextInput = forwardRef<HTMLInputElement, HTMLProps<HTMLInputElement>>(
                 "-top-2.5 text-xs px-1 py-[1px] bg-primary text-white rounded !z-20":
                   focus
               },
-              !focus && !isEmpty && "opacity-0"
+              !(focus || isEmpty ) && "opacity-0"
             )}
           >
             {label}

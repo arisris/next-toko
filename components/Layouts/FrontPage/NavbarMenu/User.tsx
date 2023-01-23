@@ -13,13 +13,11 @@ export default function FrontPageNavbarMenuUser({
     <NavbarMenu
       button={
         sessionData?.user?.image ? (
-          <Link
-            tabbar
-            className="p-2 gap-2"
-          >
+          <Link tabbar className="p-2 gap-2">
             <img
               src={sessionData.user.image}
               className="w-6 h-6 rounded-full"
+              alt={""}
             />
             <strong className="hidden lg:inline-flex truncate text-bars-material-dark dark:text-bars-material-light capitalize">
               {sessionData.user.name}
@@ -32,29 +30,31 @@ export default function FrontPageNavbarMenuUser({
         )
       }
     >
-      {sessionData?.user?.name && (
+      {sessionData?.user?.name ? (
         <>
           <div className="flex flex-col items-center justify-center gap-1">
             <p>Wellcome Back!</p>
             <img
-              src={sessionData.user.image}
+              src={sessionData.user.image!}
               className="w-14 h-14 rounded-full"
+              alt={""}
             />
             <strong>{sessionData.user.name}</strong>
           </div>
           <hr />
         </>
+      ) : (
+        <div></div>
       )}
       <NavbarMenuItem text="My account" href="/accounts" />
       <NavbarMenuItem text="Settings" href="#" />
       <hr className="my-2" />
-      <a
-        href="#signOut"
+      <Link
         onClick={(e) => (e.preventDefault(), signOut())}
         className="block px-3 py-2 hover:transition-all hover:pl-5 hover:bg-gray-100 dark:hover:bg-bars-ios-dark"
       >
         SignOut
-      </a>
+      </Link>
     </NavbarMenu>
   );
 }

@@ -1,6 +1,6 @@
 // @ts-nocheck
 const screenSize = require("./lib/screen-size");
-const konsta = require("konsta/config")({});
+const konstaConfig = require("konsta/config");
 const colors = require("./lib/colors");
 const getColors = (prefix) => {
   const out = {};
@@ -12,15 +12,16 @@ const getColors = (prefix) => {
   });
   return out;
 };
-module.exports = {
-  mode: "jit",
+
+/** @type {import("tailwindcss").Config} */
+const tailwindConfig = {
   darkMode: "class",
   theme: {
     fontFamily: {
       rubik: ["Rubik", "Arial", "Helvetica", "sans-serif"]
     },
     screens: Object.entries(screenSize).reduce(
-      (a, [k, v]) => ((a[k] = v + "px"), a),
+      (a, [k, v]) => ((a[k] = `${v}px`), a),
       {}
     ),
     container: {
@@ -30,41 +31,29 @@ module.exports = {
         "2xl": "5rem"
       }
     },
-    extend: {
-      ...konsta.theme.extend,
-      colors: {
-        ...konsta.theme.extend.colors,
-        green: getColors("green-"),
-        gray: getColors("grey-"),
-        purple: getColors("purple-"),
-        blue: getColors("blue-"),
-        primary: {
-          ...konsta.theme.extend.colors.primary,
-          DEFAULT: colors["green-500"],
-          light: colors["green-400"],
-          dark: colors["green-700"]
-        }
+    colors: {
+      green: getColors("green-"),
+      gray: getColors("grey-"),
+      purple: getColors("purple-"),
+      blue: getColors("blue-"),
+      primary: {
+        DEFAULT: colors["green-500"],
+        light: colors["green-400"],
+        dark: colors["green-700"]
       }
     }
   },
+  content: [
+    "./lib/**/*.(ts|tsx)",
+    "./components/**/*.(ts|tsx)",
+    "./pages/**/*.(ts|tsx)",
+    "./layouts/**/*.(ts|tsx)",
+    "./hooks/**/*.(ts|tsx)"
+  ],
   variants: {
     typography: ["dark"]
   },
-  purge: {
-    content: [
-      "./lib/**/*.(ts|tsx)",
-      "./components/**/*.(ts|tsx)",
-      "./pages/**/*.(ts|tsx)",
-      "./layouts/**/*.(ts|tsx)",
-      "./hooks/**/*.(ts|tsx)",
-      ...konsta.content
-    ],
-    options: {}
-  },
-  plugins: [
-    require("@tailwindcss/typography"),
-    require("@tailwindcss/forms")({ strategy: "class" }),
-    require("./styles/plugins/scrollbar"),
-    ...konsta.plugins
-  ]
+  plugins: [require("./styles/plugins/scrollbar")]
 };
+
+module.exports = konstaConfig(tailwindConfig);

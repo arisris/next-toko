@@ -1,16 +1,17 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 @import "./homepage-carousel.css";
-@layer base {
-  * {
-    @apply dark:border-list-divider-dark;
-  }
-  html,
-  body {
-    @apply font-rubik;
-  }
-  /* svg rect {
-    fill: currentColor;
-  } */
+
+/* * {
+  @apply dark:border-list-divider-dark;
+} */
+
+html,
+body {
+  @apply font-rubik;
 }
+
+/* svg rect {
+  fill: currentColor;
+} */

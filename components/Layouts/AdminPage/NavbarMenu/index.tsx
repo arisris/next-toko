@@ -30,7 +30,7 @@ const menuItemsData: NestedListMenuItemProps[] = [
   {
     title: "Users",
     colors: {
-      text: "text-blue-500"
+      primaryTextIos: "text-blue-500"
     },
     media: <MdPeople size={24} />,
     defaultOpen: true,
@@ -50,7 +50,7 @@ const menuItemsData: NestedListMenuItemProps[] = [
   {
     title: "Product",
     colors: {
-      text: "text-blue-500"
+      primaryTextIos: "text-blue-500"
     },
     media: <MdInventory size={24} />,
     defaultOpen: false,
@@ -62,7 +62,7 @@ const menuItemsData: NestedListMenuItemProps[] = [
       {
         title: "Add Product",
         media: <MdAdd size={24} />
-      },
+      }
     ]
   },
   {
@@ -76,26 +76,27 @@ const menuItemsData: NestedListMenuItemProps[] = [
       {
         title: "Add Categories",
         media: <MdAdd size={24} />
-      },
+      }
     ]
   }
 ];
 
 export default function SidebarAdminMenu() {
-  const { data: user } = trpc.useQuery(["user.me"]);
+  const { data: user } = { data: {} as Record<string, unknown> };
   const dialog = useHeadlessuiDialog();
   return (
     <Card className="relative mb-[1000px] z-0 !m-0 !p-0 !shadow-none">
       {user ? (
-        <List className="!my-0 !-mx-4" hairlines={false}>
+        <List className="!my-0 !-mx-4">
           <ListItem
             media={
               <Image
-                src={user.image}
+                src={user.image as string}
                 width="64"
                 height="64"
                 className="rounded-full"
                 priority
+                alt={""}
               />
             }
             // @ts-ignore
@@ -138,7 +139,6 @@ export default function SidebarAdminMenu() {
             mediaClassName="text-green-500 -mr-1"
             strongTitle
             title="Saldo"
-            hairlines={false}
             titleWrapClassName="text-xl tracking-wide"
           />
           <ListItem title="Sisa Saldo" after={<span>RP. 520.105</span>} />

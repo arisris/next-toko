@@ -4,6 +4,7 @@ import {
   Dispatch,
   Fragment,
   ReactElement,
+  ReactNode,
   SetStateAction,
   useContext,
   useEffect,
@@ -35,19 +36,21 @@ const defaultClasses = {
 };
 
 const Context = createContext<{
-  state: [ReactElement, Dispatch<SetStateAction<ReactElement>>];
+  state: [ReactNode, Dispatch<SetStateAction<ReactNode>>];
   config: [
     Partial<typeof defaultClasses>,
     Dispatch<SetStateAction<Partial<typeof defaultClasses>>>
   ];
-}>(null);
+} | null>(null);
 export function useHeadlessuiDialog(
   config?: Omit<Partial<typeof defaultClasses>, "useRoot">
 ) {
+  const ctx = useContext(Context);
+  if (!ctx) throw new Error("Undefined");
   const {
     config: [, setConfig],
     state: [body, setBody]
-  } = useContext(Context);
+  } = ctx;
   useEffect(() => {
     if (config) {
       setConfig((prev) => ({ ...prev, ...config }));
@@ -61,11 +64,12 @@ export function useHeadlessuiDialog(
 }
 
 export const UseHeadlessuiDialogComponent = () => {
+  const ctx = useContext(Context);
+  if (!ctx) throw new Error("Undefined");
   const {
     config: [config],
     state: [body, setBody]
-  } = useContext(Context);
-  if (!config) throw new Error("HeadlessUI dialog is not configure correctly!");
+  } = ctx;
   return (
     <Transition appear show={!!body} as={Fragment}>
       <Dialog
@@ -75,7 +79,6 @@ export const UseHeadlessuiDialogComponent = () => {
       >
         <Transition.Child as={Fragment} {...config.overlayTransitionClasses}>
           <Dialog.Overlay
-            tabIndex={1}
             className={config.overlayClasses}
             onClick={() => setBody(null)}
           />

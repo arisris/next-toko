@@ -8,7 +8,7 @@ export default function FrontPageNavbarMenuAuth() {
   return (
     <div className="flex gap-2">
       <Button component="a" className="px-6" colors={{
-          text: "text-bars-material-dark dark:text-bars-material-light"
+          textIos: "text-bars-material-dark dark:text-bars-material-light"
         }} small onClick={() => signIn()}>
         Login
       </Button>

@@ -22,7 +22,7 @@ const TabBtn = ({ label = "" }) => {
           segmentedStrong={selected}
           raised
           colors={{
-            text: "text-block-strong-dark dark:text-block-strong-light"
+            textIos: "text-block-strong-dark dark:text-block-strong-light"
           }}
           className="capitalize min-w-[120px] px-8"
         >

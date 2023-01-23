@@ -20,7 +20,7 @@ let arr: { name: string; fileName: string; output: string }[] = [];
 
 modelName.forEach((m) => {
   arr.push({
-    name: m,
+    name: m, 
     fileName: `${m}Router.ts`,
     output: `import { Prisma, PrismaClient } from "@prisma/client";
     import { TRPCError } from "@trpc/server";

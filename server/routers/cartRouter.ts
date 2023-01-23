@@ -1,16 +1,19 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { CartModel } from "@/lib/zod";
-import { createRouter } from "@/server/createRouter";
+import { t } from "@/server/trpc";
 import { z } from "zod";
-export const cartRouter = createRouter()
-  .mutation("store", {
-    input: z
-      .object({
-        data: CartModel.omit({ id: true })
-      })
-      .required(),
-    async resolve({ ctx, input }) {
+
+export const cartRouter = t.router({
+  store: t.procedure
+    .input(
+      z
+        .object({
+          data: CartModel.omit({ id: true })
+        })
+        .required()
+    )
+    .mutation(async ({ ctx, input }) => {
       ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.cart.create({
         // @ts-expect-error
@@ -19,14 +22,15 @@ export const cartRouter = createRouter()
         }
       });
       return items;
-    }
-  })
-  .mutation("update", {
-    input: z.object({
-      id: z.number(),
-      data: CartModel
     }),
-    async resolve({ ctx, input }) {
+  update: t.procedure
+    .input(
+      z.object({
+        id: z.number(),
+        data: CartModel
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
       ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.cart.update({
         where: { id: input.id },
@@ -35,30 +39,32 @@ export const cartRouter = createRouter()
         }
       });
       return items;
-    }
-  })
-  .mutation("destroy", {
-    input: z.object({
-      id: z.number()
     }),
-    async resolve({ ctx, input }) {
+  delete: t.procedure
+    .input(
+      z.object({
+        id: z.number()
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
       ctx.auth.mustBeReallyUser();
       let items = await ctx.prisma.cart.delete({
         where: { id: input.id }
       });
       return items;
-    }
-  })
-  .query("all", {
-    input: z.object({
-      search: z.string().nullish(),
-      limit: z.number(),
-      cursor: z.number()
     }),
-    async resolve({ ctx, input }) {
+  all: t.procedure
+    .input(
+      z.object({
+        search: z.string().nullish(),
+        limit: z.number(),
+        cursor: z.number()
+      })
+    )
+    .query(async ({ ctx, input }) => {
       let limit = input.limit ?? 10;
       let cursor = input.cursor;
-      let where: Prisma.CartWhereInput;
+      let where: Prisma.CartWhereInput | undefined;
       if (input.search) {
         // where.name = {
         //   contains: input.search
@@ -80,16 +86,17 @@ export const cartRouter = createRouter()
         next = nextItem!.id;
       }
       return { items, next };
-    }
-  })
-  .query("byId", {
-    input: z.object({
-      id: z.number()
     }),
-    async resolve({ ctx, input }) {
+  query: t.procedure
+    .input(
+      z.object({
+        id: z.number()
+      })
+    )
+    .query(async ({ ctx, input }) => {
       let items = await ctx.prisma.cart.findUnique({
         where: { id: input.id }
       });
       return items;
-    }
-  });
+    })
+});
