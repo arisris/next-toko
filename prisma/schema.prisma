@@ -10,8 +10,8 @@ generator zod {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -29,7 +29,7 @@ model User {
   /// @zod.min(10, {message: "Phone number must be at least 10 characters"})
   phone           String?
   phoneVerified   DateTime?
-  aboutMe         String?           @db.Text
+  aboutMe         String?
   createdAt       DateTime?         @default(now())
   updatedAt       DateTime?         @updatedAt
   roleId          Int?
@@ -56,13 +56,13 @@ model Accounts {
   type                     String
   provider                 String
   providerAccountId        String
-  refresh_token            String?   @db.Text
+  refresh_token            String?
   refresh_token_expires_in Int?
-  access_token             String?   @db.Text
+  access_token             String?
   expires_at               Int?
   token_type               String?
   scope                    String?
-  id_token                 String?   @db.Text
+  id_token                 String?
   session_state            String?
   oauth_token_secret       String?
   oauth_token              String?
@@ -78,7 +78,7 @@ model Accounts {
 model Membership {
   id          Int       @id @default(autoincrement())
   name        String
-  description String?   @db.Text
+  description String?
   pricing     String?
   isActive    Boolean?  @default(false)
   createdAt   DateTime? @default(now())
@@ -118,7 +118,7 @@ model Store {
   name          String
   createdAt     DateTime?       @default(now())
   updatedAt     DateTime?       @updatedAt
-  description   String?         @db.Text
+  description   String?
   owner         User            @relation(fields: [ownerId], references: [id])
   products      Product[]
   storeFront    StoreFront[]
@@ -146,7 +146,9 @@ model Product {
   authorId          Int
   storeFrontId      Int
   name              String
-  description       String?             @db.Text
+  description       String?
+  price             Float
+  stock             Int
   createdAt         DateTime?           @default(now())
   updatedAt         DateTime?           @updatedAt
   author            User                @relation(fields: [authorId], references: [id])
@@ -155,6 +157,7 @@ model Product {
   productComments   ProductComments[]
   productCategories ProductCategories[]
   productTags       ProductTags[]
+  cartItems         CartItem[]
 
   @@index([authorId])
   @@index([storeFrontId])
@@ -166,7 +169,7 @@ model StoreFront {
   id          Int       @id @default(autoincrement())
   storeId     Int
   name        String
-  description String    @db.Text
+  description String
   image       String?
   icon        String?
   createdAt   DateTime? @default(now())
@@ -182,7 +185,7 @@ model ProductCategories {
   id                   Int                 @id @default(autoincrement())
   productCategoriesId  Int?
   name                 String
-  description          String              @db.Text
+  description          String
   image                String?
   icon                 String?
   createdAt            DateTime?           @default(now())
@@ -198,7 +201,7 @@ model ProductCategories {
 model ProductTags {
   id          Int       @id @default(autoincrement())
   name        String
-  description String    @db.Text
+  description String
   image       String?
   icon        String?
   createdAt   DateTime? @default(now())
@@ -213,10 +216,10 @@ model ProductComments {
   productId         Int
   authorId          Int
   productCommentsId Int?
-  type              ProductCommentsType?   @default(REVIEW)
-  status            ProductCommentsStatus? @default(PENDING)
+  type              String?
+  status            String?
   rating            Int?                   @default(0)
-  description       String?                @db.Text
+  description       String?
   createdAt         DateTime?              @default(now())
   updatedAt         DateTime?              @updatedAt
   author            User                   @relation(fields: [authorId], references: [id])
@@ -372,27 +375,29 @@ model DataBank {
   id      Int     @id @default(autoincrement())
   name    String
   type    String
-  code    String  @db.VarChar(3)
+  code    String
   address String?
-  phone   String? @db.VarChar(41)
-  fax     String? @db.VarChar(51)
+  phone   String?
+  fax     String?
   website String?
 }
 
 model Cart {
-  id     Int  @id @default(autoincrement())
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+  id     Int        @id @default(autoincrement())
+  userId Int        @unique
+  user   User       @relation(fields: [userId], references: [id])
+  items  CartItem[]
 
   @@index([userId])
 }
 
-enum ProductCommentsType {
-  REVIEW
-  DISCUSSION
-}
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  cartId    Int
+  productId Int
+  quantity  Int
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
 
-enum ProductCommentsStatus {
-  APPROVED
-  PENDING
+  @@unique([cartId, productId])
 }

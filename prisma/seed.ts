@@ -31,9 +31,12 @@ async function createUser() {
 			.update(faker.internet.email())
 			.digest("hex")}`,
 	});
-	const users = await prisma.user.createMany({
-		data: fakeArray(5).map(() => fakeUser()),
-	});
+	const usersData = fakeArray(5).map(() => fakeUser());
+	const users = [];
+	for (const userData of usersData) {
+		const user = await prisma.user.create({ data: userData });
+		users.push(user);
+	}
 	return {
 		admin,
 		users,
@@ -41,18 +44,19 @@ async function createUser() {
 }
 
 async function createPermissionRole(users) {
-	await prisma.role.createMany({
-		data: [
-			{
-				name: Role.ADMIN,
-				displayName: "Admin",
-			},
-			{
-				name: Role.USER,
-				displayName: "User",
-			},
-		],
-	});
+	const roles = [
+		{
+			name: Role.ADMIN,
+			displayName: "Admin",
+		},
+		{
+			name: Role.USER,
+			displayName: "User",
+		},
+	];
+	for (const role of roles) {
+		await prisma.role.create({ data: role });
+	}
 	await prisma.user.update({
 		where: { id: users.admin.id },
 		data: {
@@ -71,9 +75,55 @@ async function createPermissionRole(users) {
 	});
 }
 
+async function createProducts(admin) {
+	const store = await prisma.store.create({
+		data: {
+			name: "Admin Store",
+			ownerId: admin.id,
+		},
+	});
+
+	const storeFront = await prisma.storeFront.create({
+		data: {
+			name: "Main Storefront",
+			storeId: store.id,
+			description: "This is the main storefront",
+		},
+	});
+
+	const productCategory = await prisma.productCategories.create({
+		data: {
+			name: "Default Category",
+			description: "Default category for all products",
+		},
+	});
+
+	const fakeProduct = (): Prisma.ProductCreateManyInput => ({
+		name: faker.commerce.productName(),
+		description: faker.commerce.productDescription(),
+		price: parseFloat(faker.commerce.price()),
+		stock: faker.datatype.number(100),
+		storeId: store.id,
+		authorId: admin.id,
+		storeFrontId: storeFront.id,
+	});
+
+	for (let i = 0; i < 20; i++) {
+		await prisma.product.create({
+			data: {
+				...fakeProduct(),
+				productCategories: {
+					connect: { id: productCategory.id },
+				}
+			}
+		});
+	}
+}
+
 async function main() {
 	const users = await createUser();
 	await createPermissionRole(users);
+	await createProducts(users.admin);
 }
 
 main().catch((e) => {

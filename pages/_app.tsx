@@ -6,7 +6,7 @@ import store from "@/store/index";
 import { AppProps, NextComponentTypeWithProps } from "next/app";
 import { ReactElement } from "react";
 import { trpc } from "@/lib/trpc";
-import { configResponsive } from "ahooks";
+import { configResponsive } from "ahooks/es/configResponsive";
 import screenSize from "@/lib/screen-size";
 import { UseHeadlessuiDialogContextProvider } from "@/lib/hooks/useHeadlessuiDialog";
 import { ToastContextProvider } from "@/lib/hooks/useToast";

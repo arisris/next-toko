@@ -1,102 +1,96 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-import { TRPCError } from "@trpc/server";
-import { CartModel } from "@/lib/zod";
 import { t } from "@/server/trpc";
 import { z } from "zod";
 
 export const cartRouter = t.router({
-  store: t.procedure
-    .input(
-      z
-        .object({
-          data: CartModel.omit({ id: true })
-        })
-        .required()
-    )
-    .mutation(async ({ ctx, input }) => {
-      ctx.auth.mustBeReallyUser();
-      let items = await ctx.prisma.cart.create({
-        // @ts-expect-error
-        data: {
-          // todo
-        }
+  get: t.procedure.query(async ({ ctx }) => {
+    ctx.auth.mustBeReallyUser();
+    const userId = ctx.auth.user.id;
+
+    let cart = await ctx.prisma.cart.findUnique({
+      where: { userId },
+      include: {
+        items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+    });
+
+    if (!cart) {
+      cart = await ctx.prisma.cart.create({
+        data: { userId },
+        include: {
+          items: {
+            include: {
+              product: true,
+            },
+          },
+        },
       });
-      return items;
-    }),
-  update: t.procedure
+    }
+
+    return cart;
+  }),
+
+  add: t.procedure
     .input(
       z.object({
-        id: z.number(),
-        data: CartModel
+        productId: z.number(),
+        quantity: z.number().min(1),
       })
     )
     .mutation(async ({ ctx, input }) => {
       ctx.auth.mustBeReallyUser();
-      let items = await ctx.prisma.cart.update({
-        where: { id: input.id },
-        data: {
-          // todo
-        }
-      });
-      return items;
-    }),
-  delete: t.procedure
-    .input(
-      z.object({
-        id: z.number()
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      ctx.auth.mustBeReallyUser();
-      let items = await ctx.prisma.cart.delete({
-        where: { id: input.id }
-      });
-      return items;
-    }),
-  all: t.procedure
-    .input(
-      z.object({
-        search: z.string().nullish(),
-        limit: z.number(),
-        cursor: z.number()
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      let limit = input.limit ?? 10;
-      let cursor = input.cursor;
-      let where: Prisma.CartWhereInput | undefined;
-      if (input.search) {
-        // where.name = {
-        //   contains: input.search
-        // };
-        // where.OR = {
-        //   name: {
-        //     startsWith: input.search
-        //   }
-        // };
+      const userId = ctx.auth.user.id;
+      const { productId, quantity } = input;
+
+      const cart = await ctx.prisma.cart.findUnique({ where: { userId } });
+      if (!cart) {
+        await ctx.prisma.cart.create({ data: { userId } });
       }
-      let items = await ctx.prisma.cart.findMany({
-        take: limit + 1,
-        cursor: cursor ? { id: cursor } : undefined,
-        where
+
+      const cartItem = await ctx.prisma.cartItem.findFirst({
+        where: { cart: { userId }, productId },
       });
-      let next: typeof cursor | null = null;
-      if (items.length > limit) {
-        let nextItem = items.pop();
-        next = nextItem!.id;
+
+      if (cartItem) {
+        return ctx.prisma.cartItem.update({
+          where: { id: cartItem.id },
+          data: { quantity: cartItem.quantity + quantity },
+        });
+      } else {
+        return ctx.prisma.cartItem.create({
+          data: {
+            cart: { connect: { userId } },
+            product: { connect: { id: productId } },
+            quantity,
+          },
+        });
       }
-      return { items, next };
     }),
-  query: t.procedure
+
+  remove: t.procedure
+    .input(z.object({ cartItemId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      ctx.auth.mustBeReallyUser();
+      return ctx.prisma.cartItem.delete({
+        where: { id: input.cartItemId },
+      });
+    }),
+
+  updateQuantity: t.procedure
     .input(
       z.object({
-        id: z.number()
+        cartItemId: z.number(),
+        quantity: z.number().min(1),
       })
     )
-    .query(async ({ ctx, input }) => {
-      let items = await ctx.prisma.cart.findUnique({
-        where: { id: input.id }
+    .mutation(async ({ ctx, input }) => {
+      ctx.auth.mustBeReallyUser();
+      return ctx.prisma.cartItem.update({
+        where: { id: input.cartItemId },
+        data: { quantity: input.quantity },
       });
-      return items;
-    })
+    }),
 });
