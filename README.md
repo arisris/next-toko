@@ -1,77 +1,61 @@
-## Next.js simple eCommerce
+# Next.js simple eCommerce
 
-This is Really Work in progress
-
-Test test test.
+This is a simple eCommerce application built with Next.js, tRPC, Prisma, and Tailwind CSS.
 
 [![Demo](https://img.youtube.com/vi/Eqtq1SDo5ZI/0.jpg)](https://www.youtube.com/watch?v=Eqtq1SDo5ZI)
 
-### Simple Usage
+## Features
 
-Create mysql database in your local computer
+*   **Homepage:** Displays a grid of products.
+*   **Customer/Store Page:** A full-featured store page with product filtering, sorting, and infinite scrolling.
+*   **Product Detail Page:** View details for a single product.
+*   **Cart:** Fully functional shopping cart. Add, remove, and update quantities.
+*   **Admin Dashboard:** A dashboard for administrators to view site statistics, including user counts, product counts, and user signups over time.
+*   **Seller Dashboard:** A dashboard for sellers to manage their products (list, add, edit, delete).
+*   **Authentication:** Users can sign in with a GitHub account.
 
-copy .env.example > .env
+## Simple Usage
 
-edit .env and change DATABASE_URL
+The project is now configured to use SQLite, so no external database setup is required. The database file will be created automatically at `prisma/dev.db`.
 
-In this case i use "pnpm" for now i'm not sure that with other package manager can work. so
-install "pnpm" first
+In this case we use "pnpm". It is recommended to install "pnpm" first.
 
 ```bash
 $_ npm -g i pnpm
 ```
 
-Follow instruction
+Follow these instructions to get started:
 
 ```bash
 $ git clone https://github.com/arisris/next-toko.git
 $ cd next-toko
 $ pnpm install
 $ pnpm prisma migrate dev
-$ pnpm prisma generate
-$ pnpm prisma migrate reset
 $ pnpm dev
 ```
 
-To generate crud router for first time based on your data
+The `prisma migrate dev` command will create the SQLite database and run the seed script to populate it with initial data.
 
-```bash
-$ pnpm ts-node -T ./prisma/generateCrudRouter.ts
-```
+You can then access the application at http://localhost:3000.
 
-The output is located at _/server/generated_
-Now rename _/server/generated_ _to /server/routers_
+-   **Test login:** Use the GitHub provider at http://localhost:3000/api/auth/signin
+-   **Admin page:** http://localhost:3000/admin (you will need to be logged in as an admin)
+-   **Seller page:** http://localhost:3000/seller (you will need to be logged in as a user with a store)
 
-To generate some indonesian region
+## TODO
 
-```bash
-$ pnpm ts-node -T ./prisma/seed-region.ts
-```
-
-After this you already have some seed data in DATABASE
-
-Test login with github account at http://localhost:3000/api/auth/signin
-
-Test admin page. located at http://localhost:3000/admin
-
-TRPC server located at http://localhost:3000/api/trpc
-
-Thats it. Thankyou
-
-### TODO
-
-- [ ] Prepare move from graphql to trpc
-- [ ] Admin Page
-- [ ] Customer Page
-- [ ] Seller Page
-- [ ] Cart Page
-- [ ] Homepage
+- [x] Prepare move from graphql to trpc
+- [x] Admin Page
+- [x] Customer Page
+- [x] Seller Page
+- [x] Cart Page
+- [x] Homepage
 - [ ] ....??
 
-### Contribute
+## Contribute
 
-So I'm really looking forward to your contribution to this repository
+So I'm really looking forward to your contribution to this repository.
 
-### Links
+## Links
 
 [Arisris.com](https://arisris.com/)

@@ -20,8 +20,10 @@ import { storeLocationRouter } from "./storeLocationRouter";
 import { userLocationRouter } from "./userLocationRouter";
 import { dataBankRouter } from "./dataBankRouter";
 import { cartRouter } from "./cartRouter";
+import { adminRouter } from "./adminRouter";
 
 export const appRouter = t.router({
+  admin: adminRouter,
   user: userRouter,
   accounts: accountsRouter,
   membership: membershipRouter,

@@ -40,7 +40,7 @@ export class Authorization {
     return this.#user;
   }
   isAdmin() {
-    return this.hasRole("admin");
+    return this.hasRole("ADMIN");
   }
   mustBeReallyAdmin() {
     mustBeReally(this.isAdmin(), {

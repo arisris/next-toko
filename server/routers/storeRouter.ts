@@ -98,5 +98,11 @@ export const storeRouter = t.router({
         where: { id: input.id }
       });
       return items;
-    })
+    }),
+  myStore: t.procedure.query(async ({ ctx }) => {
+    ctx.auth.mustBeReallyUser();
+    return ctx.prisma.store.findUnique({
+      where: { ownerId: ctx.auth.user.id },
+    });
+  }),
 });
