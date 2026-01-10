@@ -30,3 +30,25 @@ params: 18
     at async render_endpoint (node_modules/@sveltejs/kit/src/runtime/server/endpoint.js:47:20)
     at async resolve (node_modules/@sveltejs/kit/src/runtime/server/respond.js:580:17)
     at async Object.handle (src/hooks.server.ts:25:20)
+2:33:09 PM [vite] (client) page reload .svelte-kit/generated/client/app.js
+2:33:15 PM [vite] (client) page reload .svelte-kit/generated/client/app.js
+2:33:25 PM [vite] (client) page reload .svelte-kit/generated/client/app.js
+2:33:32 PM [vite] (client) page reload .svelte-kit/generated/client/app.js
+2:36:28 PM [vite] (client) page reload .svelte-kit/generated/client/app.js
+2:39:39 PM [vite] (client) page reload .svelte-kit/generated/client/app.js
+2:42:52 PM [vite] (client) page reload .svelte-kit/generated/client/nodes/2.js
+2:42:52 PM [vite] (client) page reload .svelte-kit/generated/client/app.js
+2:43:11 PM [vite] (client) page reload .svelte-kit/generated/client/app.js
+2:43:11 PM [vite] (client) hmr update /.svelte-kit/generated/root.svelte
+2:43:11 PM [vite] (ssr) page reload .svelte-kit/generated/root.svelte
+2:43:16 PM [vite] (client) page reload .svelte-kit/generated/client/app.js
+2:43:25 PM [vite] (client) page reload .svelte-kit/generated/client/app.js
+2:46:36 PM [vite] (client) page reload .svelte-kit/generated/client/nodes/0.js
+2:46:36 PM [vite] (client) page reload .svelte-kit/generated/client/nodes/1.js
+2:46:36 PM [vite] (client) page reload .svelte-kit/generated/client/nodes/2.js
+2:46:36 PM [vite] (client) page reload .svelte-kit/generated/client/app.js
+2:46:36 PM [vite] (client) page reload .svelte-kit/generated/client/matchers.js
+2:46:36 PM [vite] (ssr) page reload .svelte-kit/generated/server/internal.js
+2:46:36 PM [vite] (client) page reload .svelte-kit/generated/root.js
+2:46:36 PM [vite] (ssr) page reload .svelte-kit/generated/root.js
+2:46:36 PM [vite] (ssr) page reload .svelte-kit/generated/root.svelte
