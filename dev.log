@@ -1,3 +1,32 @@
+$ vite dev
+1:29:59 PM [vite] (client) Forced re-optimization of dependencies
 
-> next-toko@1.0.0 dev /app
-> next dev
+  VITE v7.3.1  ready in 1679 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+1:40:42 PM [vite] (client) hmr update /src/app.css
+1:40:42 PM [vite] (ssr) page reload src/lib/server/db/schema.ts
+1:42:25 PM [vite] (client) page reload .svelte-kit/generated/client/app.js
+1:42:33 PM [vite] (client) hmr update /src/routes/+page.svelte, /src/app.css
+1:42:33 PM [vite] (ssr) page reload src/routes/+page.svelte
+1:44:12 PM [vite] (client) page reload .svelte-kit/generated/client/nodes/0.js
+1:44:12 PM [vite] (client) page reload .svelte-kit/generated/client/nodes/1.js
+1:44:12 PM [vite] (client) page reload .svelte-kit/generated/client/nodes/2.js
+1:44:12 PM [vite] (client) page reload .svelte-kit/generated/client/app.js
+1:44:12 PM [vite] (client) page reload .svelte-kit/generated/client/matchers.js
+1:44:12 PM [vite] (ssr) page reload .svelte-kit/generated/server/internal.js
+1:44:12 PM [vite] (client) page reload .svelte-kit/generated/root.js
+1:44:12 PM [vite] (ssr) page reload .svelte-kit/generated/root.js
+1:44:12 PM [vite] (ssr) page reload .svelte-kit/generated/root.svelte
+
+[1;31m[500] GET /api/products[0m
+Error: Failed query: select "id", "storeId", "authorId", "storeFrontId", "name", "description", "price", "stock", "createdAt", "updatedAt" from "product" limit $1
+params: 18
+    at PostgresJsPreparedQuery.queryWithCache (file:/app/node_modules/drizzle-orm/pg-core/session.js:41:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async file:///app/node_modules/drizzle-orm/postgres-js/session.js:37:20
+    at async GET (src/routes/api/products/+server.ts:11:17)
+    at async render_endpoint (node_modules/@sveltejs/kit/src/runtime/server/endpoint.js:47:20)
+    at async resolve (node_modules/@sveltejs/kit/src/runtime/server/respond.js:580:17)
+    at async Object.handle (src/hooks.server.ts:25:20)

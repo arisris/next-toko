@@ -1,20 +1,25 @@
-.vercel
-.next
-node_modules/
-out/
-.bak/
-prisma/migrations
-server/generated
+node_modules
 
-#files
+# Output
+.output
+.vercel
+.netlify
+.wrangler
+/.svelte-kit
+/build
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
 .env
-.env.local
-package-lock.json
-public/sw.js
-public/workbox-*.js
-public/worker-*.js
-test.js
-test.mjs
-yarn-error.log
-total.util.js
-yarn.lock
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+node_modules
+_legacy
