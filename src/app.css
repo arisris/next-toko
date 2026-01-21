@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --font-serif: "Merriweather", serif;
+}
